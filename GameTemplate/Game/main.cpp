@@ -17,7 +17,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	//プレイヤー
 	Player player;
-
+	
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{

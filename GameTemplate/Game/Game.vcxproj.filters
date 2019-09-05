@@ -31,6 +31,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{48b58c60-bbe2-40d8-9d2f-e81d065b6820}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gameObject">
+      <UniqueIdentifier>{ff96b4e1-af41-4915-a095-a586bee289c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -108,6 +111,12 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ysGameObjectManager.cpp">
+      <Filter>gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObject\ysGameObject.cpp">
+      <Filter>gameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -193,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ysGameObjectManager.h">
+      <Filter>gameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject\ysGameObject.h">
+      <Filter>gameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
