@@ -111,10 +111,10 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="ysGameObjectManager.cpp">
+    <ClCompile Include="gameObject\ysGameObject.cpp">
       <Filter>gameObject</Filter>
     </ClCompile>
-    <ClCompile Include="gameObject\ysGameObject.cpp">
+    <ClCompile Include="gameObject\ysGameObjectManager.cpp">
       <Filter>gameObject</Filter>
     </ClCompile>
   </ItemGroup>
@@ -202,10 +202,10 @@
     </ClInclude>
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ysGameObjectManager.h">
+    <ClInclude Include="gameObject\ysGameObject.h">
       <Filter>gameObject</Filter>
     </ClInclude>
-    <ClInclude Include="gameObject\ysGameObject.h">
+    <ClInclude Include="gameObject\ysGameObjectManager.h">
       <Filter>gameObject</Filter>
     </ClInclude>
   </ItemGroup>
