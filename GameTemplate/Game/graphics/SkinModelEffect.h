@@ -16,6 +16,7 @@ protected:
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
 
 public:
+	//‰ü‘¢—\’è.DirectX3_5
 	ModelEffect()
 	{
 		m_psShader.Load("Assets/shader/model.fx", "PSMain", Shader::EnType::PS);

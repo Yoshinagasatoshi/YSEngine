@@ -109,13 +109,21 @@
       <Filter>level</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp">
       <Filter>gameObject</Filter>
     </ClCompile>
     <ClCompile Include="gameObject\ysGameObjectManager.cpp">
       <Filter>gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Sprite.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Sprite_Reserve.cpp">
+      <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +215,12 @@
     </ClInclude>
     <ClInclude Include="gameObject\ysGameObjectManager.h">
       <Filter>gameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Sprite.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Sprite_Reserve.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

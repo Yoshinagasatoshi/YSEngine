@@ -2,8 +2,7 @@
 /*
   ゲームオブジェクトの基底クラス。
 */
-namespace ysEngine {
-	class ysGameObjecManager;
+	class ysGameObjectManager;
 	class IGameObject{
 	public:
 		using IGameObjectIsBase = IGameObject;
@@ -39,6 +38,10 @@ namespace ysEngine {
 		/// Update関数が呼ばれた後に呼ばれる更新処理
 		/// </summary>
 		virtual void PreUpdate(){}
+		/// <summary>
+		/// 描画
+		/// </summary>
+		virtual void Draw() {}
 
 		void StartWrapper()
 		{
@@ -67,6 +70,17 @@ namespace ysEngine {
 				PreUpdate();
 			}
 		}
+		void DrawWrapper()
+		{
+			if (m_isActive && m_isStart && !m_isDead && !m_isRegist) {
+				Draw();
+			}
+		}
+		//殺してください関数。受理するだけで内容をすぐ消すわけではない。
+		bool RequestDelete()
+		{
+			return m_isRequestdelete;
+		}
 		friend class ysGameObjectManager;
 	private:
 	protected:
@@ -75,5 +89,5 @@ namespace ysEngine {
 		bool m_isRegistDeadList = false; //死亡リストに積まれている。
 		bool m_isRegist = false;         //!<GameObjectManager>に登録されているかどうか
 		bool m_isActive = true;          //Activeフラグ
+		bool m_isRequestdelete = false;
 	};
-}

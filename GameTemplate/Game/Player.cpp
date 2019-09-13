@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
-
-
+#include <iostream>
+#include "gameObject/ysGameObjectManager.h"
 Player::Player()
 {
 	//cmoファイルの読み込み。
@@ -28,6 +28,13 @@ void Player::Update()
 	}
 	if (m_position.y > 0.0f) {
 		m_position.y -= 30.0f;
+	}
+	//deleteがちゃんとできているかどうか試し
+	//リクエストを送っているだけなのでunitychanは消えない
+	timer++;
+	if (timer > 100)
+	{
+		g_goMgr.DeleteGOObject(this);
 	}
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position,m_rotation,m_scale);

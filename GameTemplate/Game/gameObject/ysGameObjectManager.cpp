@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "ysGameObjectManager.h"
+//ysGameObjectManagerクラスのインスタンス。
+ysGameObjectManager g_goMgr;
 
-
-namespace ysEngine {
 	void ysGameObjectManager::Start()
 	{
 		for (GameObjectList objList : m_gameObjectListArray) {
@@ -39,16 +39,40 @@ namespace ysEngine {
 		}
 	}
 
+	void ysGameObjectManager::Draw()
+	{
+		for (GameObjectList objList : m_gameObjectListArray) {
+			for (IGameObject* obj : objList) {
+				obj->DrawWrapper();
+			}
+		}
+	}
+
 	void ysGameObjectManager::Execute()
 	{
-		//Start関数の処理から始まる。
-		Start();
-		//Update
-		Update();
+		//登録されているゲームオブジェクトの更新処理を呼ぶ。
+		for (auto go : IGameObjectList) {
+			go->Update();
+			go->Draw();
+		}
+
+		//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
+		for (auto it = IGameObjectList.begin(); it != IGameObjectList.end();) {
+			if ((*it)->RequestDelete()) {
+				//削除リクエストを受けているので削除
+				delete* it;
+				it = IGameObjectList.erase(it);
+			}
+			else {
+				//リクエストを受けていないため
+				it++;
+			}
+		}
 	}
 
 	void ysGameObjectManager::Init(int gameObjectPrioMax)
 	{
-		
+		m_gameObjectListArray.resize(gameObjectPrioMax);
+		m_deleteObjectArray[0].resize(gameObjectPrioMax);
+		m_deleteObjectArray[1].resize(gameObjectPrioMax);
 	}
-}
