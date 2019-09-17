@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "Player.h"
+#include "Enemy.h"
+#include "BackGround.h"
 #include "level/Level.h"
 #include "gameObject/ysGameObjectManager.h"
 ///////////////////////////////////////////////////////////////////
@@ -16,6 +18,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D.SetFar(10000.0f);
 	//プレイヤー
 	Player* player = g_goMgr.NewGameObject<Player>();
+	Enemy* enemy = g_goMgr.NewGameObject<Enemy>();
+	BackGround* layer = g_goMgr.NewGameObject<BackGround>();
+
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{

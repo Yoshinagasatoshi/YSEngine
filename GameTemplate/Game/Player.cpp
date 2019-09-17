@@ -5,7 +5,7 @@
 Player::Player()
 {
 	//cmoファイルの読み込み。
-	m_model.Init(L"Assets/modelData/unityChan.cmo");
+	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
 }
 
 
@@ -37,11 +37,11 @@ void Player::Update()
 		g_goMgr.DeleteGOObject(this);
 	}
 	//ワールド行列の更新。
-	m_model.UpdateWorldMatrix(m_position,m_rotation,m_scale);
+	m_playerModel.UpdateWorldMatrix(m_position,m_rotation,m_scale);
 }
 void Player::Draw()
 {
-	m_model.Draw(
+	m_playerModel.Draw(
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);

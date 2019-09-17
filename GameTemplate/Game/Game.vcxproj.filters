@@ -34,6 +34,9 @@
     <Filter Include="gameObject">
       <UniqueIdentifier>{ff96b4e1-af41-4915-a095-a586bee289c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\modelData\stage">
+      <UniqueIdentifier>{da7f8d16-2ac5-4c5d-8962-dba3988b8429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -125,6 +128,8 @@
     <ClCompile Include="graphics\Sprite_Reserve.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -222,9 +227,20 @@
     <ClInclude Include="graphics\Sprite_Reserve.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\asigaru.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>
