@@ -119,9 +119,6 @@
     <ClCompile Include="gameObject\ysGameObjectManager.cpp">
       <Filter>gameObject</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>system</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\Sprite.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -130,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -229,6 +229,8 @@
     </ClInclude>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameData.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

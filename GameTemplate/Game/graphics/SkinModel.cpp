@@ -2,15 +2,27 @@
 #include "SkinModel.h"
 #include "SkinModelDataManager.h"
 
+SkinModel::SkinModel()
+{
+	
+}
 SkinModel::~SkinModel()
 {
 	if (m_cb != nullptr) {
 		//定数バッファを解放。
 		m_cb->Release();
 	}
+	if (m_lightCb != nullptr) {
+		//ライト定数バッファを開放
+		m_lightCb->Release();
+	}
 	if (m_samplerState != nullptr) {
 		//サンプラステートを解放。
 		m_samplerState->Release();
+	}
+	if (m_albedoTextureSRV != nullptr) {
+		//アルベドテクスチャを開放。
+		m_albedoTextureSRV->Release();
 	}
 }
 void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
@@ -21,8 +33,14 @@ void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 	//定数バッファの作成。
 	InitConstantBuffer();
 
+	//ディレクションライトの初期化
+	InitDirectionLight();
+
 	//サンプラステートの初期化。
 	InitSamplerState();
+
+	//アルベドテクスチャの初期化。
+	InitAlbedoTexture();
 
 	//SkinModelDataManagerを使用してCMOファイルのロード。
 	m_modelDx = g_skinModelDataManager.Load(filePath, m_skeleton);
@@ -67,6 +85,10 @@ void SkinModel::InitConstantBuffer()
 																//CPUアクセスが不要な場合は0。
 	//作成。
 	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_cb);
+	//続いて、ライト用の定数バッファを作成。
+	//作成するバッファのサイズを変更するだけ。
+	bufferDesc.ByteWidth = sizeof(SDirectionLight);				//SDirectionLightは16byteの倍数になっているので、切り上げはやらない。
+	g_graphicsEngine->GetD3DDevice()->CreateBuffer(&bufferDesc, NULL, &m_lightCb);
 }
 void SkinModel::InitSamplerState()
 {
@@ -79,6 +101,49 @@ void SkinModel::InitSamplerState()
 	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	g_graphicsEngine->GetD3DDevice()->CreateSamplerState(&desc, &m_samplerState);
 }
+void SkinModel::InitDirectionLight()
+{
+	//とりあえず４本ディレクションライトを初期化
+	m_dirLight.direction[0] = { 0.0f,0.0f,0.0f,0.0f };
+	m_dirLight.color[0] = { 1.0f,0.0f,0.0f,1.0f };
+
+	m_dirLight.direction[1] = { 0.0f,-1.0f,0.0f,0.0f };
+	m_dirLight.color[1] = { 0.0f,0.25f,0.0f,1.0f };
+
+	m_dirLight.direction[2] = { 0.0f,0.0f,0.0f,0.0f };
+	m_dirLight.color[2] = { 0.0f,0.0f,1.0f,1.0f };
+
+	m_dirLight.direction[3] = { 0.0f,0.707f,-0.707f,0.0f };
+	m_dirLight.color[3] = { 1.0f,1.0f,1.0f,1.0f };
+}
+
+void SkinModel::InitAlbedoTexture()
+{
+	//ファイル名を使って、テクスチャをロードして、ShaderResouceViewを作成する。
+	HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(),
+		L"Assets/modelData/_Users_GC1831_Desktop_photos_yari.png.dds",
+		0,
+		D3D11_USAGE_DEFAULT,
+		D3D11_BIND_SHADER_RESOURCE,
+		0,
+		0,
+		false,
+		nullptr,
+		&m_albedoTextureSRV
+	);
+}
+
+void SkinModel::Update()
+{
+	//ライトを回す。
+	CQuaternion qRot;
+	qRot.SetRotationDeg(CVector3::AxisY(), 2.0f);
+	for (int i = 0; i < Lightnumber; i++) {
+		qRot.Multiply(m_dirLight.direction[i]);
+	}
+}
+
 void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
 {
 	//3dsMaxと軸を合わせるためのバイアス。
@@ -100,7 +165,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//順番を間違えたら結果が変わるよ。
 	m_worldMatrix.Mul(scaleMatrix, rotMatrix);
 	m_worldMatrix.Mul(m_worldMatrix, transMatrix);
-
+	
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
@@ -116,11 +181,15 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	vsCb.mProj = projMatrix;
 	vsCb.mView = viewMatrix;
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
+	//ライト用の定数バッファを更新
+	d3dDeviceContext->UpdateSubresource(m_lightCb, 0 ,nullptr,&m_dirLight,0,0);
 	//定数バッファをGPUに転送。
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb);
-	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb);
+	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_lightCb);
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
+	//アルベドテクスチャを設定する。
+	d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
 	//ボーン行列をGPUに転送。
 	m_skeleton.SendBoneMatrixArrayToGPU();
 

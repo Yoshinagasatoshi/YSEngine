@@ -29,7 +29,7 @@
 		/// <summary>
 		/// 更新
 		/// </summary>
-		virtual void Update(){}
+		virtual void Update() {};
 		/// <summary>
 		/// Update関数が呼ばれる前に呼ばれる更新処理
 		/// </summary>

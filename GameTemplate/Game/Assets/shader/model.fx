@@ -27,7 +27,19 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mView;
 	float4x4 mProj;
 };
-
+/// <summary>
+/// ライトの数
+/// </summary>
+static const int Light_number = 4;
+/// <summary>
+/// ライト用の定数バッファ
+/// </summary>
+cbuffer LightCB : register(b0) {
+	//ディレクションライトのベクトル
+	float3 dligDirection[Light_number];
+	//ディレクションライトの色
+	float4 dligColor[Light_number];
+}
 
 /////////////////////////////////////////////////////////////
 //各種構造体
@@ -140,7 +152,19 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 //--------------------------------------------------------------------------------------
 // ピクセルシェーダーのエントリ関数。
 //--------------------------------------------------------------------------------------
-float4 PSMain( PSInput In ) : SV_Target0
+float4 PSMain(PSInput In) : SV_Target0
 {
-	return albedoTexture.Sample(Sampler, In.TexCoord);
+	/// <summary>
+	/// ライトのコード
+	/// </summary>
+	//albedoテクスチャからカラーをフェッチする。
+	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
+	float3 lig;
+    for (int i = 0; i < Light_number; i++) {
+	lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
+	}
+	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	finalColor.xyz = albedoColor.xyz * lig;
+	return finalColor;
+	//return albedoTexture.Sample(Sampler, In.TexCoord);
 }

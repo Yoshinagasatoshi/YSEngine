@@ -17,11 +17,18 @@ class SkinModel
 public:
 	//メッシュが見つかったときのコールバック関数。
 	using OnFindMesh = std::function<void(const std::unique_ptr<DirectX::ModelMeshPart>&)>;
+	/*
+	*@brief コンストラクタ。
+	*/
+	SkinModel();
 	/*!
 	*@brief	デストラクタ。
 	*/
 	~SkinModel();
-	
+	/// <summary>
+	/// アップデート
+	/// </summary>
+	void Update();
 	/*!
 	*@brief	初期化。
 	*@param[in]	filePath		ロードするcmoファイルのファイルパス。
@@ -88,6 +95,15 @@ private:
 	*@brief	定数バッファの作成。
 	*/
 	void InitConstantBuffer();
+	/// <summary>
+	/// アルベドテクスチャの初期化。
+	/// </summary>
+	void InitAlbedoTexture();
+
+	/// <summary>
+	/// ディレクションライトの初期化。
+	/// </summary>
+	void InitDirectionLight();
 	/*!
 	*@brief	スケルトンの初期化。
 	*@param[in]	filePath		ロードするcmoファイルのファイルパス。
@@ -101,11 +117,20 @@ private:
 		CMatrix mView;
 		CMatrix mProj;
 	};
-	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
-	ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
-	Skeleton			m_skeleton;						//!<スケルトン。
-	CMatrix				m_worldMatrix;					//!<ワールド行列。
-	DirectX::Model*		m_modelDx;						//!<DirectXTKが提供するモデルクラス。
-	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
+	//ライトの定数バッファ
+	struct SDirectionLight {
+		CVector4 direction[4];
+		CVector4 color[4];
+	};
+	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	   //!<FBXの上方向。
+	ID3D11Buffer*		m_cb = nullptr;					   //!<定数バッファ。
+	ID3D11Buffer*       m_lightCb = nullptr;               //!<ライト用定数バッファ。
+	SDirectionLight     m_dirLight;                        //!<ディレクションライト
+	Skeleton			m_skeleton;						   //!<スケルトン。
+	CMatrix				m_worldMatrix;					   //!<ワールド行列。
+	DirectX::Model*		m_modelDx;					   	   //!<DirectXTKが提供するモデルクラス。
+	ID3D11SamplerState* m_samplerState = nullptr;		   //!<サンプラステート。
+	ID3D11ShaderResourceView* m_albedoTextureSRV = nullptr;//!<アルベドテクスチャ。
+	const int Lightnumber = 4;
 };
 

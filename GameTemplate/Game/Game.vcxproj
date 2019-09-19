@@ -102,6 +102,8 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp" />
     <ClCompile Include="gameObject\ysGameObjectManager.cpp" />
     <ClCompile Include="graphics\animation\Animation.cpp" />
@@ -140,6 +142,8 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="gameObject\ysGameObject.h" />
     <ClInclude Include="gameObject\ysGameObjectManager.h" />
     <ClInclude Include="graphics\animation\Animation.h" />

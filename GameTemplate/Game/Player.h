@@ -8,6 +8,10 @@ public:
 	~Player();
 	void Update();
 	void Draw();
+	CVector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	int timer = 0;
 	SkinModel m_playerModel;	//スキンモデル。
