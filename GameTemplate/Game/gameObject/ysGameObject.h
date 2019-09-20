@@ -77,7 +77,12 @@
 			}
 		}
 		//殺してください関数。受理するだけで内容をすぐ消すわけではない。
-		bool RequestDelete()
+		void RequestDelete()
+		{
+			m_isRequestdelete = true;
+		}
+		//死んでるかどうかを確認する関数。
+		bool isRequestDelete()
 		{
 			return m_isRequestdelete;
 		}

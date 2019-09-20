@@ -102,6 +102,7 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy_asigaru.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Enemy_asigaru.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="gameObject\ysGameObject.h" />

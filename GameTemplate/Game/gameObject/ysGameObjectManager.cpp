@@ -58,7 +58,7 @@ ysGameObjectManager g_goMgr;
 
 		//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
 		for (auto it = IGameObjectList.begin(); it != IGameObjectList.end();) {
-			if ((*it)->RequestDelete()) {
+			if ((*it)->isRequestDelete()) {
 				//削除リクエストを受けているので削除
 				delete* it;
 				it = IGameObjectList.erase(it);
@@ -72,6 +72,7 @@ ysGameObjectManager g_goMgr;
 
 	void ysGameObjectManager::Init(int gameObjectPrioMax)
 	{
+		IGameObjectList.reserve(gameObjectPrioMax);
 		m_gameObjectListArray.resize(gameObjectPrioMax);
 		m_deleteObjectArray[0].resize(gameObjectPrioMax);
 		m_deleteObjectArray[1].resize(gameObjectPrioMax);

@@ -31,10 +31,47 @@
 				}
 			}
 		}
+		//配列
+		template <class T>
+		T* FindGOObject(IGameObject* go)
+		{
+			//配列カウント
+			int hairetunumber = 0;
+			//リストから検索して、見つかったら返す
+			for (auto it = IGameObjectList.begin();
+				it != IGameObjectList.end();
+				it++) {
+				i++;
+				if ((*it) == go) {
+					T* p = dynamic_cast<T*>(go);
+					if (p == nullptr && enableErrorMessage == true) {
+						//型変換に失敗
+						MessageBox("型変換に失敗しました");
+					}
+					return p;
+				}
+			}
+		}
+		//findGO?先生のやつをまねたけど
+		template<class T>
+		T* FindGameObject(const char* objactName, bool enableErrorMessage)
+		{
+			unsigned int nameKey = CUtil::MakeHash(ObjectName);
+			for (auto go : goList) {
+				if (go->m_nameKey == nameKey) {
+					//発見
+					T* p = dynamic_cast<T*>(go);
+					if (p == nullptr && enableErrorMessage == true) {
+						//型変換に失敗
+						MessageBox("型変換に失敗しました");
+					}
+					return p;
+				}
+			}
+		}
 		//実行。
 		void Execute();
 	private:
-		
 		//初期化。
 		void Init(int gameObjectPropMax);
 		

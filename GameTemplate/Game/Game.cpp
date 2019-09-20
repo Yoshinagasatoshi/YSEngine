@@ -20,10 +20,13 @@ Game::Game()
 				//インスタンスの作成
 				Enemy* enemy = g_goMgr.NewGameObject<Enemy>();
 				enemy->SetPos(objdata.position);
+				enemy->SetPlayer(player);
 				//可変長配列に↑のインスタンスを追加
 				return true;
 			}
 		});
+	//Enemy enemy = new Enemy;
+	//m_Player->SetEnemy(enemy);
 }
 
 Game::~Game()
