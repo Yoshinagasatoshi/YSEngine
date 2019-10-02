@@ -158,6 +158,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	/// ライトのコード
 	/// </summary>
 	//albedoテクスチャからカラーをフェッチする。
+	//拡散反射
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
 	float3 lig;
     for (int i = 0; i < Light_number; i++) {
@@ -165,6 +166,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	}
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;
+
 	return finalColor;
 	//return albedoTexture.Sample(Sampler, In.TexCoord);
 }

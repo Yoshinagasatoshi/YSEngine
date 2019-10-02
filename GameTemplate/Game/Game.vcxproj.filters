@@ -37,6 +37,9 @@
     <Filter Include="Assets\modelData\stage">
       <UniqueIdentifier>{da7f8d16-2ac5-4c5d-8962-dba3988b8429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="culling">
+      <UniqueIdentifier>{328c16a9-146d-4449-967f-b51ce527fa3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -131,6 +134,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="Enemy_asigaru.cpp" />
+    <ClCompile Include="graphics\SkinModelRender.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\SkinModelData.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -233,11 +243,15 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="Enemy_asigaru.h" />
+    <ClInclude Include="graphics\SkinModelRender.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\SkinModelData.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\stage.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
@@ -247,5 +261,10 @@
     <MeshContentTask Include="Assets\modelData\asigaru.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\modelData\unityChan.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
   </ItemGroup>
 </Project>

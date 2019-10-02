@@ -104,6 +104,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy_asigaru.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp" />
     <ClCompile Include="gameObject\ysGameObjectManager.cpp" />
@@ -116,8 +117,10 @@
     <ClCompile Include="graphics\ShaderResources.cpp" />
     <ClCompile Include="graphics\Skeleton.cpp" />
     <ClCompile Include="graphics\SkinModel.cpp" />
+    <ClCompile Include="graphics\SkinModelData.cpp" />
     <ClCompile Include="graphics\SkinModelDataManager.cpp" />
     <ClCompile Include="graphics\SkinModelEffect.cpp" />
+    <ClCompile Include="graphics\SkinModelRender.cpp" />
     <ClCompile Include="graphics\Sprite.cpp" />
     <ClCompile Include="graphics\Sprite_Reserve.cpp" />
     <ClCompile Include="HID\Pad.cpp" />
@@ -145,6 +148,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy_asigaru.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="gameObject\ysGameObject.h" />
     <ClInclude Include="gameObject\ysGameObjectManager.h" />
@@ -157,8 +161,10 @@
     <ClInclude Include="graphics\ShaderResources.h" />
     <ClInclude Include="graphics\Skeleton.h" />
     <ClInclude Include="graphics\SkinModel.h" />
+    <ClInclude Include="graphics\SkinModelData.h" />
     <ClInclude Include="graphics\SkinModelDataManager.h" />
     <ClInclude Include="graphics\SkinModelEffect.h" />
+    <ClInclude Include="graphics\SkinModelRender.h" />
     <ClInclude Include="graphics\SkinModelShaderConst.h" />
     <ClInclude Include="graphics\Sprite.h" />
     <ClInclude Include="graphics\Sprite_Reserve.h" />
@@ -183,10 +189,11 @@
     <MeshContentTask Include="Assets\modelData\asigaru.fbx" />
     <MeshContentTask Include="Assets\modelData\busyo.fbx" />
     <MeshContentTask Include="Assets\modelData\stage.fbx" />
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
+    <None Include="Assets\modelData\unityChan.fbx">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).cmo</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\modelData\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

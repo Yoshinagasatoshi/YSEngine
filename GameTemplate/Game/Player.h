@@ -1,13 +1,19 @@
 #pragma once
 #include "character/CharacterController.h"
 #include "gameObject/ysGameObject.h"
+//プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
 public:
 	Player();
 	~Player();
+	//毎回の更新処理
 	void Update();
+	//毎度の描画処理
 	void Draw();
+	//恒例の移動処理
+	void Move();
+	//キャラクターのコリジョン初期化
 	void CharaconInit();
 	CVector3& GetPosition()
 	{

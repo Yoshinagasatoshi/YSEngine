@@ -104,13 +104,13 @@ void SkinModel::InitSamplerState()
 void SkinModel::InitDirectionLight()
 {
 	//とりあえず４本ディレクションライトを初期化
-	m_dirLight.direction[0] = { 0.0f,0.0f,0.0f,0.0f };
+	m_dirLight.direction[0] = { 1.0f,0.0f,0.0f,0.0f };
 	m_dirLight.color[0] = { 1.0f,0.0f,0.0f,1.0f };
 
-	m_dirLight.direction[1] = { 0.0f,-1.0f,0.0f,0.0f };
+	m_dirLight.direction[1] = { 0.0f,-0.707f,-0.707f,0.0f };
 	m_dirLight.color[1] = { 0.0f,0.25f,0.0f,1.0f };
 
-	m_dirLight.direction[2] = { 0.0f,0.0f,0.0f,0.0f };
+	m_dirLight.direction[2] = { -1.0f,0.0f,0.0f,0.0f };
 	m_dirLight.color[2] = { 0.0f,0.0f,1.0f,1.0f };
 
 	m_dirLight.direction[3] = { 0.0f,0.707f,-0.707f,0.0f };
@@ -133,7 +133,8 @@ void SkinModel::InitAlbedoTexture()
 		&m_albedoTextureSRV
 	);
 }
-
+//ここを読んだら光が回りだす。
+//特に意味はない
 void SkinModel::Update()
 {
 	//ライトを回す。
@@ -146,6 +147,7 @@ void SkinModel::Update()
 
 void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
 {
+	//Update();
 	//3dsMaxと軸を合わせるためのバイアス。
 	CMatrix mBias = CMatrix::Identity();
 	if (m_enFbxUpAxis == enFbxUpAxisZ) {
@@ -189,7 +191,7 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//アルベドテクスチャを設定する。
-	d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
+	//d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
 	//ボーン行列をGPUに転送。
 	m_skeleton.SendBoneMatrixArrayToGPU();
 

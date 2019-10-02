@@ -3,6 +3,7 @@
 class Player;
 class Enemy;
 class BackGround;
+class GameCamera;
 class Game : public IGameObject
 {
 public:
@@ -16,5 +17,6 @@ private:
 	Player* m_player;
 	Enemy* m_enemy;
 	BackGround* m_backGround;
+	GameCamera* m_gameCamera;
 };
 
