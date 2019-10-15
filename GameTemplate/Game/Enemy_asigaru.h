@@ -38,5 +38,12 @@ public:
 	CVector3 moveSpeed;
 	CVector3 moveV = CVector3::Zero();
 	int i = 0;
+private:
+	enum AsigaruState {
+		Asigaru_idle = 0, 
+		Asigaru_totugeki,
+		Asigaru_sentou
+	};
+	AsigaruState m_state;
 };
 
