@@ -6,6 +6,7 @@
 #include "BackGround.h"
 #include "GameCamera.h"
 #include "level/Level.h"
+//#include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
@@ -14,6 +15,7 @@ Game::Game()
 	m_player = g_goMgr.NewGameObject<Player>();
 	m_backGround = g_goMgr.NewGameObject<BackGround>();
 	m_gameCamera = g_goMgr.NewGameObject<GameCamera>();
+//	m_ui = g_goMgr.NewGameObject<UI>();
 	m_gameCamera->SetPlayerInfo(m_player);
 	Level level;
 	level.Init(L"Assets/level/musou_stage.tkl",

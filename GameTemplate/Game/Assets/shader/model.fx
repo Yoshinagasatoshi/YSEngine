@@ -31,14 +31,23 @@ cbuffer VSPSCb : register(b0){
 /// ライトの数
 /// </summary>
 static const int Light_number = 4;
+/*
+ディレクションライト
+*/
+struct SDirectionLight {
+	//ディレクションライトのベクトル
+	float4 Direction[Light_number];
+	//ディレクションライトの色
+	float4 Color[Light_number];
+};
 /// <summary>
 /// ライト用の定数バッファ
 /// </summary>
 cbuffer LightCB : register(b0) {
-	//ディレクションライトのベクトル
-	float3 dligDirection[Light_number];
-	//ディレクションライトの色
-	float4 dligColor[Light_number];
+	SDirectionLight directionLight; //ディレクションライト
+	float3          eyePos;         //カメラの視点
+	float           specPow;        //スペキュラライトの絞り
+	float3          Amblight;
 }
 
 /////////////////////////////////////////////////////////////
@@ -75,6 +84,7 @@ struct PSInput{
 	float3 Normal		: NORMAL;
 	float3 Tangent		: TANGENT;
 	float2 TexCoord 	: TEXCOORD0;
+	float3 worldPos		: TEXCOORD1;	//ワールド座標。解説６
 };
 /*!
  *@brief	スキン行列を計算。
@@ -100,6 +110,10 @@ PSInput VSMain( VSInputNmTxVcTangent In )
 {
 	PSInput psInput = (PSInput)0;
 	float4 pos = mul(mWorld, In.Position);
+
+	//ワールド座標をピクセルシェーダに渡す。
+	psInput.worldPos = pos;
+
 	pos = mul(mView, pos);
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
@@ -117,6 +131,7 @@ PSInput VSMain( VSInputNmTxVcTangent In )
 PSInput VSMainSkin( VSInputNmTxWeights In ) 
 {
 	PSInput psInput = (PSInput)0;
+	
 	///////////////////////////////////////////////////
 	//ここからスキニングを行っている箇所。
 	//スキン行列を計算。
@@ -140,9 +155,13 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 		//mulは乗算命令。
 	    pos = mul(skinning, In.Position);
 	}
+	
 	psInput.Normal = normalize( mul(skinning, In.Normal) );
 	psInput.Tangent = normalize( mul(skinning, In.Tangent) );
 	
+	//ワールド座標をピクセルシェーダに渡す。
+	psInput.worldPos = pos;
+
 	pos = mul(mView, pos);
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
@@ -162,7 +181,26 @@ float4 PSMain(PSInput In) : SV_Target0
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
 	float3 lig;
     for (int i = 0; i < Light_number; i++) {
-	lig += max(0.0f, dot(In.Normal * -1.0f, dligDirection[i])) * dligColor[i];
+	lig += max(0.0f, dot(In.Normal * -1.0f, directionLight.Direction[i].rgb)) * directionLight.Color[i];
+	}
+	//for (int i = 0; i < Light_number; i++)
+	////ディレクションライトの鏡面反射光を計算する。
+	{
+		//実習　鏡面反射を計算しなさい。
+		//１　反射ベクトルRを求める
+		float3 R = directionLight.Direction[0].rgb
+			+ 2 * dot(In.Normal, -directionLight.Direction[0].rgb)
+			* In.Normal;
+		//-toEyeDir + 2 * dot(In.Normal, -directionLight.direction) * In.NORMAL;
+	//２　視点からライトを当てる物体に伸びるベクトルEを求める。
+		float3 E = normalize(In.worldPos - eyePos);
+		//１と２で求まったベクトルの内積を計算する。
+		float specPower = max(0, dot(R, -E));
+		//3 スペキュラ反射をライトに追加する。
+		lig += directionLight.Color[0].xyz * pow(specPower, specPow);
+	
+		//4　環境光を当てる。
+		lig += Amblight;
 	}
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;

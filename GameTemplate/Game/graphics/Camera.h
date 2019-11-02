@@ -46,6 +46,20 @@ public:
 		return m_up;
 	}
 	/*!
+	 * @brief	カメラの前方向を取得。
+	 */
+	CVector3 GetForword()
+	{
+		return m_forward;
+	}
+	/*!
+	 * @brief	カメラの横方向を取得。
+	 */
+	CVector3 GetRight()
+	{
+		return m_right;
+	}
+	/*!
 	 * @brief	視点を設定。
 	 */
 	void SetPosition( CVector3 pos )
@@ -65,6 +79,20 @@ public:
 	void SetUp( CVector3 up )
 	{
 		m_up = up;
+	}
+	/*!
+	 *   カメラの前方向を設定。
+	 */
+	void SetForward(CVector3 forword)
+	{
+		m_forward = forword;
+	}
+	/*!
+	 *   カメラの横方向を設定。
+	 */
+	void SetRight(CVector3 right)
+	{
+		m_right = right;
 	}
 	/*!
 	 * @brief	遠平面を設定。
@@ -90,12 +118,15 @@ public:
 private:
 	CMatrix	m_viewMatrix = CMatrix::Identity();		//ビュー行列。
 	CMatrix m_projMatrix = CMatrix::Identity();		//プロジェクション行列。
+	CMatrix m_viewMatrixInv;                        //ビュー行列
 	CVector3 m_target = CVector3::Zero();			//注視点。
 	CVector3 m_position = CVector3::Zero();			//視点。
 	CVector3 m_up = CVector3::Up();					//上方向。
+	CVector3 m_forward = CVector3::Front();         //前方向。
+	CVector3 m_right = CVector3::Right();           //横方向。   
 	float m_viewAngle = CMath::DegToRad(60.0f);		//画角。
 	float m_far = 10000.0f;							//遠い平面までの距離。
-	float m_near = 1.0f;							//近平面までの距離。
+	float m_near = 1.0f;							//近平面までの距離。 
 };
 
 extern Camera g_camera3D;		//!<3Dカメラ。

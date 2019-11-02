@@ -1,5 +1,6 @@
 #pragma once
 #include "gameObject/ysGameObject.h"
+//lass UI;
 class Player;
 class Enemy;
 class BackGround;
@@ -18,5 +19,6 @@ private:
 	Enemy* m_enemy;
 	BackGround* m_backGround;
 	GameCamera* m_gameCamera;
+//	UI* m_ui;
 };
 

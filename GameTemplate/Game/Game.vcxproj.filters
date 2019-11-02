@@ -141,6 +141,7 @@
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -250,21 +251,19 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="GameCamera.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\modelData\unityChan.fbx">
       <Filter>Assets\modelData</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@
 			IGameObjectList.push_back(newObj);
 			return newObj;
 		}
-		//デリート・放課後版
+		//デリート
 		void DeleteGOObject(IGameObject* go)
 		{
 			//リストから検索して、見つかったら削除する。

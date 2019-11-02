@@ -117,15 +117,23 @@ private:
 		CMatrix mView;
 		CMatrix mProj;
 	};
-	//ライトの定数バッファ
+	//ディレクションライトの定数バッファ
 	struct SDirectionLight {
 		CVector4 direction[4];
 		CVector4 color[4];
 	};
+	//ライトの定数バッファ
+	struct SLight {
+		SDirectionLight     directionLight; //ディレクションライト
+		CVector3            eyePos;         //視点の座標
+		float               specPow;        //鏡面販社の絞り
+		CVector3            AmbLight;       //アンビエントライト
+	};
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	   //!<FBXの上方向。
 	ID3D11Buffer*		m_cb = nullptr;					   //!<定数バッファ。
 	ID3D11Buffer*       m_lightCb = nullptr;               //!<ライト用定数バッファ。
-	SDirectionLight     m_dirLight;                        //!<ディレクションライト
+	//SDirectionLight     m_dirLight;                        //!<ディレクションライト
+	SLight              m_light;                           //ライトの構造体
 	Skeleton			m_skeleton;						   //!<スケルトン。
 	CMatrix				m_worldMatrix;					   //!<ワールド行列。
 	DirectX::Model*		m_modelDx;					   	   //!<DirectXTKが提供するモデルクラス。
