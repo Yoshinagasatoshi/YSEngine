@@ -42,9 +42,9 @@ public:
 	AnimationClip m_busyoAnimeClip[animClip_num];
 private:
 	void AttackMove();									//無双の攻撃の処理を書く
-	int i = 0;											//アニメーションの格納
-	int a = 0;
-	int timer = 0;
+	int m_animStep = 0;									//アニメーションがどの段階か
+	int m_oldAnimStep= 0;								
+	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。
 	SkinModel m_playerModel;							//スキンモデル。
 	CVector3 m_position = CVector3::Zero();				//プレイヤーの位置
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転

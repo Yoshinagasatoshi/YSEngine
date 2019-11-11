@@ -75,7 +75,7 @@ void Player::Update()
 		if (!m_Jumpfrag) {
 			m_moveSpeed.y = 6000.0f;
 			m_Jumpfrag = true;
-			i = 0;
+			m_animStep = 0;
 		}
 		m_busyoAnime.Play(animClip_idle, 0.5f);
 	}
@@ -106,43 +106,43 @@ void Player::Turn()
 }
 void Player::AttackMove()
 {
-	if (g_pad->IsTrigger(enButtonB)&&timer>10.0f) {
+	if (g_pad->IsTrigger(enButtonB)&&m_playTimer>10.0f) {
 		//判定します。
 		//ストラテジーパターン予備軍
-		switch (i)
+		switch (m_animStep)
 		{
 		case 0:
 			m_busyoAnime.Play(animClip_ATK1, 0.5f);
-			i++;
+			m_animStep++;
 			break;
 		case 1:
 			m_busyoAnime.Play(animClip_ATK2, 0.5f);
-			i++;
+			m_animStep++;
 			break;
 		case 2:
 			m_busyoAnime.Play(animClip_ATK3, 0.5f);
-			i++;
+			m_animStep++;
 			break;
 		case 3:
 			m_busyoAnime.Play(animClip_ATK4, 0.5f);
-			i++;
+			m_animStep++;
 			break;
 		case 4:
 			m_busyoAnime.Play(animClip_ATK5, 0.5f);
-			i++;
+			m_animStep++;
 			break;
 		}
 	}
-	timer++;
-	if (i != 0) {
-		if (i != a) {
-			timer = 0;
-			a = i;
+	m_playTimer++;
+	if (m_animStep != 0) {
+		if (m_animStep != m_oldAnimStep) {
+			m_playTimer = 0;
+			m_oldAnimStep = m_animStep;
 		}
-		if (timer >= 40) {
-			i = 0;
-			a = 0;
-			timer = 0;
+		if (m_playTimer >= 40) {
+			m_animStep = 0;
+			m_oldAnimStep = 0;
+			m_playTimer = 0;
 			m_busyoAnime.Play(animClip_idle, 1.0f);
 		}
 	}

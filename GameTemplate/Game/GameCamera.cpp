@@ -19,7 +19,7 @@ void GameCamera::Update()
 	//Y軸での回転
 	CQuaternion qRot;
 	//ベクトルクラス作ろう
-	qRot.SetRotationDeg(m_AxisY, 2.0 * x);
+	qRot.SetRotationDeg(m_AxisY, 2.0f * x);
 	qRot.Multiply(m_toPos);
 	//X軸での回転
 	/*CVector3 axisX;

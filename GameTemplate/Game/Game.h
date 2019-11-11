@@ -1,6 +1,7 @@
 #pragma once
 #include "gameObject/ysGameObject.h"
-//lass UI;
+#include "GameData.h"
+//class UI;
 class Player;
 class Enemy;
 class BackGround;
@@ -15,10 +16,11 @@ public:
 	void Update();
 private:
 	//ÉvÉåÉCÉÑÅ[
-	Player* m_player;
-	Enemy* m_enemy;
-	BackGround* m_backGround;
-	GameCamera* m_gameCamera;
+	Player* m_player = nullptr;
+	Enemy* m_enemy = nullptr;
+	BackGround* m_backGround = nullptr;
+	GameCamera* m_gameCamera = nullptr;
+	GameData* m_gamedata = nullptr;
 //	UI* m_ui;
 };
 

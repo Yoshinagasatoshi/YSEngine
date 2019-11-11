@@ -16,11 +16,14 @@ public:
 	virtual ~Enemy();
 	//virtual void Update();
 	//virtual void Draw();
-	virtual void Move() = 0;
-	//後で削除予定。レベルが機能しているかどうかの確認コード
+	//virtual void Move() = 0;
 	CVector3 SetPos(const CVector3 position)
 	{
 		return m_position = position;
+	}
+	CQuaternion SetRot(const CQuaternion qrot)
+	{
+		return m_rotation = qrot;
 	}
 	void SetPlayerInfo(Player* pl)
 	{
