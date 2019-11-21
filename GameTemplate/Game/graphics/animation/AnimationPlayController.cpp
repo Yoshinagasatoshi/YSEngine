@@ -16,14 +16,33 @@ void AnimationPlayController::Init(Skeleton* skeleton)
 	int numBones = skeleton->GetNumBones();
 	//ボーン行列をバシッと確保。
 	m_boneMatrix.resize(numBones);
+	m_skelton = skeleton;
 }
 	
-
+void AnimationPlayController::InvokeAnimationEvent(Animation* animation)
+{
+	auto& animEventArray = m_animationClip->GetAnimationEvent();
+	for (auto i = 0; i < m_animationClip->GetNumAnimationEvent(); i++) {
+		if (m_time > animEventArray[i].GetInvokeTime()
+			&& animEventArray[i].IsInvoked() == false) {
+			//アニメーションの起動時間を過ぎているかつ、イベントがまだ起動していない。
+			animation->NotifyAnimationEventToListener(
+				m_animationClip->GetName(), animEventArray[i].GetEventName()
+			);
+			animEventArray[i].SetInvokedFlag(true);
+		}
+	}
+}
 	
 void AnimationPlayController::StartLoop()
 {
 	m_currentKeyFrameNo = 0;
 	m_time = 0.0f;
+	//アニメーションイベントを全て未発生にする。
+	auto& animEventArray = m_animationClip->GetAnimationEvent();
+	for (auto i = 0; i < m_animationClip->GetNumAnimationEvent(); i++) {
+		animEventArray[i].SetInvokedFlag(false);
+	}
 }
 void AnimationPlayController::Update(float deltaTime, Animation* animation)
 {
@@ -34,6 +53,8 @@ void AnimationPlayController::Update(float deltaTime, Animation* animation)
 	const auto& topBoneKeyFrameList = m_animationClip->GetTopBoneKeyFrameList();
 	m_time += deltaTime;
 
+	//アニメーションイベントの発生
+	InvokeAnimationEvent(animation);
 	//補完時間も進めていく。
 	m_interpolateTime = min(1.0f, m_interpolateTime + deltaTime);
 	while (true) {

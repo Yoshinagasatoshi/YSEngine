@@ -3,9 +3,14 @@
 #include "gameObject/ysGameObject.h"
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
+/// <summary>
+/// 
+/// </summary>
+class Enemy;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
+	Enemy* enemy;
 public:
 	Player();
 	~Player();
@@ -19,14 +24,21 @@ public:
 	void Turn();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
+	//プレイヤーの位置を返す関数
 	CVector3& GetPosition()
 	{
 		return m_position;
 	}
-	//void SetEnemy(Enemy* enemy)
-	//{
-	//	m_enemy = enemy;
-	//}
+	//プレイヤーの回転
+	CQuaternion& GetRotation()
+	{
+		return m_rotation;
+	}
+	//プレイヤーにダメージが入れたいときに呼ぶ
+	void PlayerDamage()
+	{
+		m_damagefrag = true;
+	}
 	//足軽アニメ
 	Animation m_busyoAnime;
 	//色んな武将アニメを格納している配列
@@ -37,10 +49,24 @@ public:
 		animClip_ATK3,
 		animClip_ATK4,
 		animClip_ATK5,
+		animClip_SmallDamage,
 		animClip_num
 	};
 	AnimationClip m_busyoAnimeClip[animClip_num];
+	struct EnemeyData
+	{
+		CVector3 position = CVector3(NULL, NULL, NULL);
+		Enemy* enemy;
+	};
+
+	//敵情報のリクエストを受け取る
+	int RequestEnemyData(CVector3 position, Enemy* enemy);
 private:
+	//アニメーションイベントを呼び出すよ
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+	//囲いの最大数
+	static const int kakoi_max = 5;
+	EnemeyData m_enemydata[kakoi_max];
 	void AttackMove();									//無双の攻撃の処理を書く
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								
@@ -52,6 +78,7 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
 	CharacterController m_characon;						//キャラクターコントローラー
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
-	//Enemy* m_enemy = nullptr;
+	bool m_damagefrag = false;							//ダメージは受けたか？
+	int PL_HP = 5;										//今の体力
 };
 

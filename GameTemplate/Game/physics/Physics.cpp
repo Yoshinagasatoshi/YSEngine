@@ -2,7 +2,7 @@
 #include "physics/Physics.h"
 #include "Physics/RigidBody.h"
 
-
+using namespace std;
 PhysicsWorld g_physics;
 
 PhysicsWorld::~PhysicsWorld()
@@ -11,52 +11,56 @@ PhysicsWorld::~PhysicsWorld()
 }
 void PhysicsWorld::Release()
 {
-	delete dynamicWorld;
-	delete constraintSolver;
-	delete overlappingPairCache;
-	delete collisionDispatcher;
-	delete collisionConfig;
+	m_dynamicWorld.reset();
+	m_constraintSolver.reset();
+	m_overlappingPairCache.reset();
+	m_collisionDispatcher.reset();
+	m_collisionConfig.reset();
 
-	dynamicWorld = nullptr;
-	constraintSolver = nullptr;
-	overlappingPairCache = nullptr;
-	collisionDispatcher = nullptr;
-	collisionConfig = nullptr;
+	//dynamicWorld = nullptr;
+	//constraintSolver = nullptr;
+	//overlappingPairCache = nullptr;
+	//collisionDispatcher = nullptr;
+	//collisionConfig = nullptr;
 }
 void PhysicsWorld::Init()
 {
 	Release();
 	//ï®óùÉGÉìÉWÉìÇèâä˙âªÅB
 	///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
-	collisionConfig = new btDefaultCollisionConfiguration();
+	m_collisionConfig = make_unique<btDefaultCollisionConfiguration>();
+	//new btDefaultCollisionConfiguration();
 
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
-	collisionDispatcher = new	btCollisionDispatcher(collisionConfig);
+	m_collisionDispatcher = make_unique<btCollisionDispatcher>(m_collisionConfig.get());
+	//new	btCollisionDispatcher(collisionConfig);
 
 	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
-	overlappingPairCache = new btDbvtBroadphase();
+	m_overlappingPairCache = make_unique<btDbvtBroadphase>();
+	//new btDbvtBroadphase();
 
 	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
-	constraintSolver = new btSequentialImpulseConstraintSolver;
+	m_constraintSolver = make_unique<btSequentialImpulseConstraintSolver>();
+	//new btSequentialImpulseConstraintSolver;
 
-	dynamicWorld = new btDiscreteDynamicsWorld(
-		collisionDispatcher,
-		overlappingPairCache,
-		constraintSolver,
-		collisionConfig
+	m_dynamicWorld = make_unique<btDiscreteDynamicsWorld>(
+		m_collisionDispatcher.get(),
+		m_overlappingPairCache.get(),
+		m_constraintSolver.get(),
+		m_collisionConfig.get()
 		);
 
-	dynamicWorld->setGravity(btVector3(0, -10, 0));
+	m_dynamicWorld->setGravity(btVector3(0, -10, 0));
 }
 void PhysicsWorld::Update()
 {
-	dynamicWorld->stepSimulation(1.0f/60.0f);
+	m_dynamicWorld->stepSimulation(1.0f/60.0f);
 }
 void PhysicsWorld::AddRigidBody(RigidBody& rb)
 {
-	dynamicWorld->addRigidBody(rb.GetBody());
+	m_dynamicWorld->addRigidBody(rb.GetBody());
 }
 void PhysicsWorld::RemoveRigidBody(RigidBody& rb)
 {
-	dynamicWorld->removeRigidBody(rb.GetBody());
+	m_dynamicWorld->removeRigidBody(rb.GetBody());
 }

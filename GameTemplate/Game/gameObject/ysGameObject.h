@@ -42,6 +42,10 @@
 		/// •`‰æ
 		/// </summary>
 		virtual void Draw() {}
+		/// <summary>
+		/// deletego‚ªÀs‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+		/// </summary>
+		virtual void OnDestroy() {};
 
 		void StartWrapper()
 		{

@@ -57,7 +57,6 @@ public:
 		m_player = pl;
 	}
 private:
-	void kakomiUpdate();
 	//ˆÍ‚¢‚ÌÅ‘å”
 	static const int kakoi_max = 5;
 	CVector3 EnemySpot[kakoi_max];

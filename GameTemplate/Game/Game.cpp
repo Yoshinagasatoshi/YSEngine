@@ -21,7 +21,7 @@ Game::Game()
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata->SetPlayerInfo(m_player);
 	Level level;
-	level.Init(L"Assets/level/musou_siken.tkl",
+	level.Init(L"Assets/level/musou_stage.tkl",
 		[&](const LevelObjectData& objdata) {
 		//配置されているオブジェクトがasigaruならtrue
 		//wcscmpは文字列の比較を行う関数。
@@ -31,7 +31,6 @@ Game::Game()
 				enemy->SetPos(objdata.position);
 				//enemy->SetRot(objdata.rotation);
 				enemy->SetPlayerInfo(m_player);
-				enemy->SetGameDataInfo(m_gamedata);
 				//可変長配列に↑のインスタンスを追加
 				return true;
 			}

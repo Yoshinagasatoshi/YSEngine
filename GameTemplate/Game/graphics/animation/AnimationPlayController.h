@@ -41,6 +41,13 @@ public:
 		m_currentKeyFrameNo = 0;
 		m_time = 0.0f;
 		m_isPlaying = true;
+		m_freezeBoneTranslate = CVector3::Zero();
+		//アニメーションイベントの発生フラグを全てfalseにする。
+		auto& animEventArray = m_animationClip->GetAnimationEvent();
+		for (auto i = 0; i < m_animationClip->GetNumAnimationEvent(); i++) {
+			animEventArray[i].SetInvokedFlag(false);
+		}
+
 	}
 	void SetInterpolateTime(float interpolateTime)
 	{
@@ -83,8 +90,18 @@ public:
 	{
 		return m_isPlaying;
 	}
+	/*
+	フリーズしているボーンの平行移動量を取得する。
+	*/
+	CVector3 GetFreezeBoneTranslate() const
+	{
+		return m_freezeBoneTranslate;
+	}
 private:
-	
+	/// <summary>
+	/// アニメーションイベントを起動する。
+	/// </summary>
+	void InvokeAnimationEvent(Animation* animation);
 	/*!
 	*@brief	ループ再生開始する時の処理。
 	*/
@@ -97,4 +114,6 @@ private:
 	float					m_interpolateTime;			//!<補完時間
 	float					m_interpolateEndTime;		//!<補完終了時間
 	bool					m_isPlaying = false;		//!<再生中？
+	Skeleton* m_skelton = nullptr;						// スケルトン
+	CVector3				m_freezeBoneTranslate = CVector3::Zero(); //フリーズしているボーンの平行移動量。
 };

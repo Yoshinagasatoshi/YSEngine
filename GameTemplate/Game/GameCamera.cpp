@@ -10,6 +10,7 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {
+	const float RotAmount = 2.0f;
 	//注視点の計算
 	m_target = m_player->GetPosition();
 	CVector3 m_toCameraPosOld = m_toPos;
@@ -19,7 +20,7 @@ void GameCamera::Update()
 	//Y軸での回転
 	CQuaternion qRot;
 	//ベクトルクラス作ろう
-	qRot.SetRotationDeg(m_AxisY, 2.0f * x);
+	qRot.SetRotationDeg(m_AxisY, RotAmount * x);
 	qRot.Multiply(m_toPos);
 	//X軸での回転
 	/*CVector3 axisX;

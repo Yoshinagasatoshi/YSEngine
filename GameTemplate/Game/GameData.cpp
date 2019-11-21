@@ -33,16 +33,7 @@ GameData::~GameData()
 
 void GameData::Update()
 {
-	kakomiUpdate();
-}
 
-void GameData::kakomiUpdate()
-{
-	EnemySpot[0] = m_player->GetPosition() + CameraForword * kyori;
-	EnemySpot[1] = m_player->GetPosition() + CameraRight * kyori;
-	EnemySpot[2] = m_player->GetPosition() + CameraForword * half;
-	EnemySpot[3] = m_player->GetPosition() + CameraRight * half;
-	EnemySpot[4] = m_player->GetPosition();
 }
 
 void GameData::Draw()
