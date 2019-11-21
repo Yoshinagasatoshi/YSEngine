@@ -9,6 +9,7 @@ struct RigidBodyInfo {
 
 	CVector3 pos = CVector3::Zero();			//座標。
 	CQuaternion rot = CQuaternion::Identity();	//回転。
+	CVector3 localInteria;						//慣性テンソル
 	ICollider* collider = nullptr;				//コライダー。
 	float mass = 0.0f;							//質量。
 
