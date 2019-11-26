@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Physics/MeshCollider.h"
+#include "physics/MeshCollider.h"
 
 
 

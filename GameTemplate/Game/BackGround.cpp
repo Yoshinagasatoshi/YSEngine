@@ -5,6 +5,7 @@ BackGround::BackGround()
 {
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/stage.cmo");
+	//m_physicsStaticObject.CreateCommon(m_position, m_rotation);
 	m_physicsStaticObject.CreateMeshObject(m_model, m_position, m_rotation);
 }
 BackGround::~BackGround()

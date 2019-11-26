@@ -36,6 +36,23 @@ public:
 	* @brief	剛体を破棄。
 	*/
 	void RemoveRigidBody(RigidBody& rb);
+	/// <summary>
+	/// コリジョンオブジェクトをワールドに登録
+	/// </summary>
+	/// <param name="colliObj">コリジョンオブジェクト</param>
+	void AddCollisionObject(btCollisionObject& colliObj)
+	{
+		m_dynamicWorld->addCollisionObject(&colliObj);
+	}
+	/// <summary>
+	/// コリジョンオブジェクトをワールドから削除する。
+	/// </summary>
+	/// <param name="colliObj"></param>
+	void RemoveCollisionObject(btCollisionObject& colliObj)
+	{
+		m_dynamicWorld->removeCollisionObject(&colliObj);
+	}
+
 	void ConvexSweepTest(
 		const btConvexShape* castShape,
 		const btTransform& convexFromWorld,

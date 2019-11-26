@@ -97,6 +97,13 @@ public:
 		dst.y = y;
 		dst.z = z;
 	}
+	template<>
+	void CopyTo(btVector3& dst) const
+	{
+		dst.setX(x);
+		dst.setY(y);
+		dst.setZ(z);
+	}
 	/*!
 	* @brief	ベクトルの各要素を設定。
 	*/
@@ -342,6 +349,26 @@ public:
 		return DirectX::XMLoadFloat4(&vec);
 	}
 	CVector4(){}
+
+	/// <summary>
+	/// テンプレートの明示的特殊化
+	/// </summary>
+	template<class TVector4>
+	void CopyTo(TVector4& dst) const
+	{
+		dst.x = x;
+		dst.y = y;
+		dst.z = z;
+		dst.w = w;
+	}
+	template<>
+	void CopyTo(btQuaternion& dst) const
+	{
+		dst.setX(x);
+		dst.setY(y);
+		dst.setZ(z);
+		dst.setW(w);
+	}
 	/*!
 	*@brief	代入演算子。
 	*/

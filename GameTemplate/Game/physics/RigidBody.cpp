@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "Physics/RigidBody.h"
-#include "Physics/ICollider.h"
+#include "physics/RigidBody.h"
+#include "physics/ICollider.h"
 
+using namespace std;
 
 RigidBody::~RigidBody()
 {
@@ -9,11 +10,16 @@ RigidBody::~RigidBody()
 }
 void RigidBody::Release()
 {
-	delete rigidBody;
+	//旧コード。すべてコメントアウトしている。
+	/*delete rigidBody;
 	delete myMotionState;
 	rigidBody = nullptr;
-	myMotionState = nullptr;
+	myMotionState = nullptr;*/
 }
+/// <summary>
+/// 剛体を作る。
+/// </summary>
+/// <param name="rbInfo"></param>
 void RigidBody::Create(RigidBodyInfo& rbInfo)
 {
 
@@ -22,10 +28,24 @@ void RigidBody::Create(RigidBodyInfo& rbInfo)
 	transform.setIdentity();
 	transform.setOrigin(btVector3(rbInfo.pos.x, rbInfo.pos.y, rbInfo.pos.z));
 	transform.setRotation(btQuaternion(rbInfo.rot.x, rbInfo.rot.y, rbInfo.rot.z, rbInfo.rot.w));
-	myMotionState = new btDefaultMotionState;
-	myMotionState->setWorldTransform(transform);
-	btRigidBody::btRigidBodyConstructionInfo btRbInfo(rbInfo.mass, myMotionState, rbInfo.collider->GetBody(), btVector3(0, 0, 0));
+	m_myMotionState = make_unique<btDefaultMotionState>();
+	m_myMotionState->setWorldTransform(transform);
+	//btVector3 btLocalInteria;
+	//rbInfo.localInteria.CopyTo(btLocalInteria);
+	btRigidBody::btRigidBodyConstructionInfo btRbInfo(rbInfo.mass, m_myMotionState.get(), rbInfo.collider->GetBody(), btVector3(0, 0, 0));
 	//剛体を作成。
-	rigidBody = new btRigidBody(btRbInfo);
+	m_rigidBody = make_unique<btRigidBody>(btRbInfo);
+}
+
+void RigidBody::SetPositionAndRotation(const CVector3& pos, const CQuaternion& rot)
+{
 
 }
+//
+//void RigidBody::GetPositionAndRotation(CVector3& pos,CQuaternion& rot)const
+//{
+//	//btTransform trans;
+//	//m_myMotionState->getWorldTransform(trans);
+//	//pos.Set(trans.getOrigin());
+//	//pos.Set(trans.getRotation());
+//}

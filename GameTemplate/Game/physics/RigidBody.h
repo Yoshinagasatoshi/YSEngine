@@ -6,27 +6,56 @@ class ICollider;
 
 //剛体情報。
 struct RigidBodyInfo {
-
-	CVector3 pos = CVector3::Zero();			//座標。
-	CQuaternion rot = CQuaternion::Identity();	//回転。
+	RigidBodyInfo() :
+		collider(NULL),
+		mass(0.0f)
+	{
+		pos = CVector3::Zero();
+		rot = CQuaternion::Identity();
+		localInteria = CVector3::Zero();
+	}
+	CVector3 pos;			//座標。
+	CQuaternion rot;	//回転。
 	CVector3 localInteria;						//慣性テンソル
-	ICollider* collider = nullptr;				//コライダー。
+	ICollider* collider;				//コライダー。
 	float mass = 0.0f;							//質量。
 
 };
 //剛体クラス。
 class RigidBody
 {
-	btRigidBody*			rigidBody = nullptr;		//剛体。
-	btDefaultMotionState*	myMotionState = nullptr;	//モーションステート。
+	std::unique_ptr<btRigidBody>		 m_rigidBody;		//剛体。
+	std::unique_ptr<btDefaultMotionState>m_myMotionState;	//モーションステート。
+	bool m_isAddPhysicsWorld = false;			//物理ワールドに追加されてる？
 public:
-
 	~RigidBody();
 	void Release();
 	void Create(RigidBodyInfo& rbInfo);
 	btRigidBody* GetBody()
 	{
-		return rigidBody;
+		return m_rigidBody.get();
 	}
+	//物理ワールドに登録中の印をつける。
+	void SetMarkAddPhysicsWorld()
+	{
+		m_isAddPhysicsWorld = true;
+	}
+	//物理ワールドに登録中の印を外す。
+	void SetUnmarkAddPhysicsWorld()
+	{
+		m_isAddPhysicsWorld = false;
+	}
+	//物理ワールドに追加されている？
+	bool IsAddPhysicsWorld() const
+	{
+		return m_isAddPhysicsWorld;
+	}
+	/// <summary>
+	///物理オブジェクトの座標と回転を設定する
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <param name="rot"></param>
+	void SetPositionAndRotation(const CVector3& pos, const CQuaternion& rot);
+	void GetPositionAndRotation(CVector3& pos, CQuaternion& rot)const;
 };
 

@@ -3,7 +3,7 @@
  */
 
 #include "stdafx.h"
-#include "Physics/CapsuleCollider.h"
+#include "physics/CapsuleCollider.h"
 
 
 

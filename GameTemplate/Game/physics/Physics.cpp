@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "physics/Physics.h"
-#include "Physics/RigidBody.h"
+#include "physics/RigidBody.h"
 
 using namespace std;
 PhysicsWorld g_physics;
@@ -58,9 +58,15 @@ void PhysicsWorld::Update()
 }
 void PhysicsWorld::AddRigidBody(RigidBody& rb)
 {
-	m_dynamicWorld->addRigidBody(rb.GetBody());
+	if (rb.IsAddPhysicsWorld() == false) {
+		m_dynamicWorld->addRigidBody(rb.GetBody());
+		rb.SetMarkAddPhysicsWorld();
+	}
 }
 void PhysicsWorld::RemoveRigidBody(RigidBody& rb)
 {
-	m_dynamicWorld->removeRigidBody(rb.GetBody());
+	if (rb.IsAddPhysicsWorld() == true) {
+		m_dynamicWorld->removeRigidBody(rb.GetBody());
+		rb.SetUnmarkAddPhysicsWorld();
+	}
 }

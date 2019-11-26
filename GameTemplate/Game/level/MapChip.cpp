@@ -9,6 +9,8 @@ MapChip::MapChip(const LevelObjectData& objData)
 	m_model.Init(filePath);
 	m_model.UpdateWorldMatrix(objData.position, objData.rotation, CVector3::One());
 	//静的物理オブジェクトをメッシュコライダーから作成する。
+	
+	//m_physicsStaticObject.CreateCommon(objData.position, objData.rotation);
 	m_physicsStaticObject.CreateMeshObject(m_model, objData.position, objData.rotation);
 }
 
