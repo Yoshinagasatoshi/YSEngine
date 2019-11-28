@@ -154,6 +154,9 @@
     <ClCompile Include="physics\SphereCollider.cpp">
       <Filter>physics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\RenderTarget.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -275,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="physics\SphereCollider.h">
       <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\RenderTarget.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

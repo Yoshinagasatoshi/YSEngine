@@ -83,6 +83,7 @@ void Enemy_asigaru::Move()
 	int kakoi_num = m_player->RequestEnemyData(m_position, this);
 	//周辺を取り巻くやつらなのか？
 	if (kakoi_num != NomalMove) {
+		//ここから下は取り巻くやつの処理
 		CVector3 kaiten = m_playerPos - m_position;
 		//ここだけ動きと回転の処理を変える
 		idlePosInit();
@@ -91,8 +92,13 @@ void Enemy_asigaru::Move()
 		m_moveSpeed *= 30.0f;
 		float angle = atan2(kaiten.x,kaiten.z);
 		m_rotation.SetRotation(CVector3::AxisY(), angle);
-		
 		return;
+	}
+	else {
+		/// <summary>
+		/// ランダムなポイントを指して取り巻きのちょっと後ろ位を
+		/// うろうろしている感じ
+		/// </summary>
 	}
 }
 

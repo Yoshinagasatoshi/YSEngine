@@ -27,7 +27,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		//物理エンジンの更新。
 		g_physics.Update();
-		g_goMgr.Execute();
+		g_goMgr.Updater();
+		g_goMgr.Draw();
 		////プレイヤーの更新。
 		//player.Update();
 		//プレイヤーの描画。

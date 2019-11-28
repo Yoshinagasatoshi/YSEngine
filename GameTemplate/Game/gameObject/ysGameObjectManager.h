@@ -69,15 +69,17 @@
 				}
 			}
 		}
-		//実行。
+		//実行。ExecuteからDrawとUpdateに分離
 		void Execute();
+		void Updater();
+		void Draw();
 	private:
 		//初期化。
 		void Init(int gameObjectPropMax);
 		
 	private:
 		void Start();
-		void Draw();
+		//void Draw();
 		void PostUpdate();
 		void PreUpdate();
 		

@@ -12,14 +12,14 @@ ysGameObjectManager g_goMgr;
 		}
 	}
 
-	void ysGameObjectManager::Update()
-	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
-				obj->UpdateWrapper();
-			}
-		}
-	}
+	//void ysGameObjectManager::Update()
+	//{
+	//	for (GameObjectList objList : m_gameObjectListArray) {
+	//		for (IGameObject* obj : objList) {
+	//			obj->UpdateWrapper();
+	//		}
+	//	}
+	//}
 
 	void ysGameObjectManager::PostUpdate()
 	{
@@ -39,22 +39,35 @@ ysGameObjectManager g_goMgr;
 		}
 	}
 
-	void ysGameObjectManager::Draw()
+	//void ysGameObjectManager::Draw()
+	//{
+	//	for (GameObjectList objList : m_gameObjectListArray) {
+	//		for (IGameObject* obj : objList) {
+	//			obj->DrawWrapper();
+	//		}
+	//	}
+	//}
+
+	void ysGameObjectManager::Updater()
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
-				obj->DrawWrapper();
-			}
+		for (auto go : IGameObjectList) {
+			go->Update();
 		}
 	}
 
-	void ysGameObjectManager::Execute()
+	void ysGameObjectManager::Draw()
 	{
-		//登録されているゲームオブジェクトの更新処理を呼ぶ。
 		for (auto go : IGameObjectList) {
-			go->Update();
 			go->Draw();
 		}
+	}
+	void ysGameObjectManager::Execute()
+	{
+	//	//登録されているゲームオブジェクトの更新処理を呼ぶ。
+	//	for (auto go : IGameObjectList) {
+	//		go->Update();
+	//		go->Draw();
+	//	}
 
 		//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
 		for (auto it = IGameObjectList.begin(); it != IGameObjectList.end();) {

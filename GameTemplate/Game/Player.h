@@ -80,5 +80,10 @@ private:
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//ダメージは受けたか？
 	int PL_HP = 5;										//今の体力
+	float SpeedAmount = 1000.0f;						//平面の移動量
+	float gravity = 600.0f;								//重力
+	float JumpPower = 1200.0f;							//飛
+	//重力が強くかかるようになる奴
+	float gravity_keisuu = 0.1f;
 };
 

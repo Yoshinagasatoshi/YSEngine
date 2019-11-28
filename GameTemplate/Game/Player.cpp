@@ -55,12 +55,13 @@ void Player::CharaconInit()
 }
 void Player::Update()
 {
+	//平面の移動量はアプデごとにリセットする
+	m_moveSpeed.x = 0.0f;
+	m_moveSpeed.z = 0.0f;
 	//入力量を受け取る
 	float WideMove   = g_pad->GetLStickXF();
 	float heightMove = g_pad->GetLStickYF();
-	const float SpeedAmount = 600.0f;
-	const float gravity = 480.0f;
-	const float JumpPower = 6000.0f;
+
 
 	//カメラの前方向と右方向を取得
 	CVector3 CameraForward = g_camera3D.GetForword();
@@ -70,16 +71,15 @@ void Player::Update()
 	CameraForward.Normalize();
 	CameraRight.y = 0.0f;
 	CameraRight.Normalize();
-	m_moveSpeed = CVector3::Zero();
 	m_moveSpeed += CameraForward * heightMove * SpeedAmount;
 	m_moveSpeed += CameraRight * WideMove * SpeedAmount;
-	m_moveSpeed.y -= gravity;
+	m_moveSpeed.y -= gravity * gravity_keisuu;
 
 	//地面ついてる？
 	if (m_characon.IsOnGround()) {
 		//重力はいらない
-		m_moveSpeed.y = 0.0f;
 		AttackMove();
+		gravity_keisuu = 0.1f;
 		//ジャンプしてた？
 		if (m_Jumpfrag) {
 			m_Jumpfrag = false;
@@ -88,10 +88,11 @@ void Player::Update()
 	//ステートごとにの処理に後でする。
 	if (g_pad->IsTrigger(enButtonA)) {
 		if (!m_Jumpfrag) {
-			m_moveSpeed.y = JumpPower;
+			m_moveSpeed.y += JumpPower;
 			m_Jumpfrag = true;
 			m_animStep = 0;
 		}
+		gravity_keisuu += 0.1f;
 		m_busyoAnime.Play(animClip_idle, 0.5f);
 	}
 	//ここら辺の処理ではほかに関数を使った方がいいかも

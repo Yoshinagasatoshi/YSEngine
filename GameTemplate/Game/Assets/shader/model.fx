@@ -208,3 +208,6 @@ float4 PSMain(PSInput In) : SV_Target0
 	return finalColor;
 	//return albedoTexture.Sample(Sampler, In.TexCoord);
 }
+//-----------------------------------------------
+// シルエット描画用のピクセルシェーダーのエントリー関数
+//-----------------------------------------------
