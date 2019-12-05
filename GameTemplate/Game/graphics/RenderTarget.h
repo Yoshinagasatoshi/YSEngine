@@ -43,7 +43,7 @@ public:
 	/// シェーダーリソースビューを取得
 	/// </summary>
 	/// <returns>レンダリングターゲットのSRV</returns>
-	ID3D11ShaderResourceView* GetRT_ShaderResorceView()
+	ID3D11ShaderResourceView* GetRenderTargetSRV()
 	{
 		return m_RT_SRV;
 	}

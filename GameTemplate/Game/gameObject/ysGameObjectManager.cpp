@@ -48,7 +48,7 @@ ysGameObjectManager g_goMgr;
 	//	}
 	//}
 
-	void ysGameObjectManager::Updater()
+	void ysGameObjectManager::Update()
 	{
 		for (auto go : IGameObjectList) {
 			go->Update();
@@ -59,6 +59,13 @@ ysGameObjectManager g_goMgr;
 	{
 		for (auto go : IGameObjectList) {
 			go->Draw();
+		}
+	}
+
+	void ysGameObjectManager::PostRender()
+	{
+		for (auto go : IGameObjectList) {
+			go->PostRender();
 		}
 	}
 	void ysGameObjectManager::Execute()

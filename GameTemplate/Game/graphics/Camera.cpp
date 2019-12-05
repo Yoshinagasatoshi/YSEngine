@@ -2,6 +2,7 @@
 #include "Camera.h"
 
 Camera g_camera3D;		//3Dカメラ。
+Camera g_camera2D;		//2Dカメラ。
 
 void Camera::Update()
 {

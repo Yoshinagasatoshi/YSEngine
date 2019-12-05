@@ -4,6 +4,11 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Enemy.h"
 
+
+const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
+const float PLAYER_COLLIDER_HEIGHT = 20.0f;		//プレイヤーのカプセルコライダーの高さ。
+const float PLAYER_COLLIDER_RADIUS = 20.0f;		//プレイヤーのカプセルコライダーの半径。
+
 Player::Player()
 {
 	CharaconInit();
@@ -48,8 +53,8 @@ void Player::CharaconInit()
 
 	//キャラコンの初期化
 	m_characon.Init(
-		20.0f,//コライダーの半径の長さ
-		20.0f,//コライダーの高さ
+		PLAYER_COLLIDER_RADIUS,//コライダーの半径の長さ
+		PLAYER_COLLIDER_HEIGHT,//コライダーの高さ
 		m_position
 	);
 }
@@ -188,7 +193,7 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
 	for (int i = 0; i < kakoi_max; i++)
 	{
-		const float posClearRange = 600.0f * 600.0f;
+		
 		//一番最初にエネミーの空いている所に情報を入れる
 		if (m_enemydata[i].position.y == NULL) {
 			m_enemydata[i].position = pos;

@@ -69,8 +69,8 @@ private:
 	EnemeyData m_enemydata[kakoi_max];
 	void AttackMove();									//無双の攻撃の処理を書く
 	int m_animStep = 0;									//アニメーションがどの段階か
-	int m_oldAnimStep= 0;								
-	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。
+	int m_oldAnimStep= 0;								//古いアニメーションステート
+	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	SkinModel m_playerModel;							//スキンモデル。
 	CVector3 m_position = CVector3::Zero();				//プレイヤーの位置
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転

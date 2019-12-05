@@ -71,17 +71,20 @@
 		}
 		//ÀsBExecute‚©‚çDraw‚ÆUpdate‚É•ª—£
 		void Execute();
-		void Updater();
+		//void Update();
 		void Draw();
+		//2d‚à’Ç‰Á
 	private:
 		//‰Šú‰»B
 		void Init(int gameObjectPropMax);
-		
-	private:
+
 		void Start();
 		//void Draw();
 		void PostUpdate();
+		void PostRender();
 		void PreUpdate();
+	private:
+		
 		
 		
 	private:

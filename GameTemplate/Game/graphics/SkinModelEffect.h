@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/Shader.h"
+#include <array> 
 
 /*!
 *@brief	モデルエフェクト。
@@ -12,9 +13,14 @@ protected:
 	Shader* m_pPSShader = nullptr;
 	Shader m_vsShader;
 	Shader m_psShader;
+	Shader m_psSilhouette;
 	bool isSkining;
 	ID3D11ShaderResourceView* m_albedoTex = nullptr;
-
+	std::array<ID3D11ShaderResourceView*, 4> m_albedoTextureStack = { nullptr };
+	int m_albedoTextureStackPos = 0;
+	//レンダーモードは今はつけない
+	//bool m_renderMode = 0;
+	ID3D11DepthStencilState* m_silhouetteDepthStensilState = nullptr;
 public:
 	//改造予定.DirectX3_5
 	ModelEffect()
@@ -39,6 +45,20 @@ public:
 	void SetAlbedoTexture(ID3D11ShaderResourceView* tex)
 	{
 		m_albedoTex = tex;
+	}
+	/// <summary>
+	/// 現在のアルベドテクスチャをスタックに避難させる。
+	/// </summary>
+	void PushAlbedoTexture()
+	{
+		m_albedoTextureStack[m_albedoTextureStackPos] = m_albedoTex;
+		m_albedoTex = nullptr;
+		m_albedoTextureStackPos++;
+	}
+	void PopAlbedoTexture()
+	{
+		m_albedoTextureStackPos--;
+		SetAlbedoTexture(m_albedoTextureStack[m_albedoTextureStackPos]);
 	}
 	void SetMatrialName(const wchar_t* matName)
 	{

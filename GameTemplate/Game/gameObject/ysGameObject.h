@@ -43,6 +43,14 @@
 		/// </summary>
 		virtual void Draw() {}
 		/// <summary>
+		/// ポストレンダ
+		/// </summary>
+		virtual void PostRender(){}
+		/// <summary>
+		/// レンダ
+		/// </summary>
+		virtual void Render(){}
+		/// <summary>
 		/// deletegoが実行されたときに呼ばれる
 		/// </summary>
 		virtual void OnDestroy() {};

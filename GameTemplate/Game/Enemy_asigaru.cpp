@@ -3,6 +3,9 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
 
+const float BattleRange = 150.0f * 150.0f;
+const float VililanceRange = 500.0f * 500.0f;
+
 Enemy_asigaru::IdlePos Enemy_asigaru::m_idlePos[5];
 //コンストラクタ
 Enemy_asigaru::Enemy_asigaru()
@@ -138,8 +141,7 @@ void Enemy_asigaru::idlePosInit()
 void Enemy_asigaru::StateJudge()
 {
 	//～～Range
-	const float BattleRange = 150.0f * 150.0f;
-	const float VililanceRange = 500.0f * 500.0f;
+	
 	m_playerPos = m_player->GetPosition();
 	CVector3 kyori = m_playerPos - m_position;
 	//y成分を0にする。
@@ -149,11 +151,11 @@ void Enemy_asigaru::StateJudge()
 	switch (m_asigaruState)
 	{
 	case Asigaru_sentou:
-	if (kyori.LengthSq() > BattleRange) {
-		m_asigaruState = Asigaru_tikazuki;
-	}
-	//sentouの処理
-	m_moveSpeed = CVector3::Zero();
+		if (kyori.LengthSq() > BattleRange) {
+			m_asigaruState = Asigaru_tikazuki;
+		}
+		//sentouの処理
+		m_moveSpeed = CVector3::Zero();
 		Move();
 		m_player->PlayerDamage();
 		break;

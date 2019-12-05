@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SkinModelEffect.h"
 #include "Skeleton.h"
 
 /*!
@@ -60,6 +61,16 @@ public:
 	*  カメラ座標系の3Dモデルをスクリーン座標系に変換する行列です。
 	*/
 	void Draw( CMatrix viewMatrix, CMatrix projMatrix );
+
+	/// <summary>
+	// マテリアルに対してクエリを行う
+	/// </summary>
+	void QueryMaterials(std::function<void(SkinModelEffect*)> func)
+	{
+		m_modelDx->UpdateEffects([&](DirectX::IEffect* material) {
+			func(reinterpret_cast<SkinModelEffect*>(material));
+			});
+	}
 	/*!
 	*@brief	スケルトンの取得。
 	*/

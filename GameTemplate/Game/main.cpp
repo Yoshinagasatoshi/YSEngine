@@ -15,27 +15,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D.SetTarget({ 0.0f, 100.0f, 0.0f });
 	g_camera3D.SetFar(10000.0f);
 
-	g_goMgr.NewGameObject<Game>();
+	Game* game = g_goMgr.NewGameObject<Game>();
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
 		//描画開始。
-		g_graphicsEngine->BegineRender();
+		//g_graphicsEngine->BegineRender();
 		//ゲームパッドの更新。	
 		for (auto& pad : g_pad) {
 			pad.Update();
 		}
 		//物理エンジンの更新。
 		g_physics.Update();
-		g_goMgr.Updater();
-		g_goMgr.Draw();
-		////プレイヤーの更新。
-		//player.Update();
-		//プレイヤーの描画。
-		//player.Draw();
-		////カメラの更新。
+		g_goMgr.Update();
+		game->Render();
+		//カメラの更新。
 		g_camera3D.Update();
 		//描画終了。
-		g_graphicsEngine->EndRender();
+		//g_graphicsEngine->EndRender();
 	}
 }
