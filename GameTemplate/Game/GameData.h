@@ -12,8 +12,9 @@ class GameData : public IGameObject
 public:
 	GameData();
 	~GameData();
-	void Update();
-	void Draw();
+	void Update() {};
+	void Draw() {};
+	void RandomPos();
 	static GameData& GetInstans()
 	{
 		static GameData gamedata;

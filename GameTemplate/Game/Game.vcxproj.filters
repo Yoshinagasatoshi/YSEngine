@@ -157,6 +157,7 @@
     <ClCompile Include="graphics\RenderTarget.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="DebugWireframe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -282,6 +283,7 @@
     <ClInclude Include="graphics\RenderTarget.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="DebugWireframe.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\modelData\unityChan.fbx">

@@ -58,7 +58,11 @@ public:
 		CVector3 position = CVector3(NULL, NULL, NULL);
 		Enemy* enemy;
 	};
-
+	//プレイヤーに切られたとき
+	void isDead()
+	{
+		m_attack = true;
+	}
 	//敵情報のリクエストを受け取る
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
 private:
@@ -85,5 +89,6 @@ private:
 	float JumpPower = 1200.0f;							//飛
 	//重力が強くかかるようになる奴
 	float gravity_keisuu = 0.1f;
+	bool m_attack = false;
 };
 

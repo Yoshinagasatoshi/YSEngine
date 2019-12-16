@@ -43,4 +43,5 @@ private:
 	D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
+	bool m_attack = false;
 };

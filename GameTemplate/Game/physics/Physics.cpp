@@ -1,9 +1,32 @@
 #include "stdafx.h"
+#include "Physics/RigidBody.h"
 #include "physics/Physics.h"
-#include "physics/RigidBody.h"
-
+#include "DebugWireframe.h"
 using namespace std;
 PhysicsWorld g_physics;
+
+namespace {
+	struct MyContactResultCallback : public btCollisionWorld::ContactResultCallback {
+		using ContactResultCallback = function<void(const btCollisionObject& contactCollisionObject)>;
+		ContactResultCallback m_cb;
+		btCollisionObject* m_me = nullptr;
+		virtual btScalar	addSingleResult(
+			btManifoldPoint& cp,
+			const btCollisionObjectWrapper* colObj0Wrap,
+			int partId0,
+			int index0,
+			const btCollisionObjectWrapper* colObj1Wrap,
+			int partId1,
+			int index1
+		) override
+		{
+			if (m_me == colObj0Wrap->getCollisionObject()) {
+				m_cb(*colObj1Wrap->getCollisionObject());
+			}
+			return 0.0f;
+		}
+	};
+}
 
 PhysicsWorld::~PhysicsWorld()
 {
@@ -69,4 +92,18 @@ void PhysicsWorld::RemoveRigidBody(RigidBody& rb)
 		m_dynamicWorld->removeRigidBody(rb.GetBody());
 		rb.SetUnmarkAddPhysicsWorld();
 	}
+}
+void PhysicsWorld::DebugWire()
+{
+	DebugWireframe m_dwf;
+}
+void PhysicsWorld::ContactTest(
+	btCollisionObject* colObj,
+	std::function<void(const btCollisionObject& contactCollisionObject)> cb
+) 
+{
+	MyContactResultCallback myContactResultCallback;
+	myContactResultCallback.m_cb = cb;
+	myContactResultCallback.m_me = colObj;
+	m_dynamicWorld->contactTest(colObj, myContactResultCallback);
 }

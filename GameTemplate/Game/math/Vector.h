@@ -69,6 +69,15 @@ public:
 		vec = _v.vec;
 		return *this;
 	}
+	//追加　overroad
+	/*CVector3& operator=(const btVector3& _v)
+	{
+		vec.x = _v.x();
+		vec.y = _v.y();
+		vec.z = _v.z();
+
+		return *this;
+	}*/
 	CVector3() {}
 	/*!
 	* @brief	コンストラクタ。

@@ -14,10 +14,10 @@ Game::Game()
 {
 	InitCamera();
 	//プレイヤー
-	m_player = g_goMgr.NewGameObject<Player>();
-	m_backGround = g_goMgr.NewGameObject<BackGround>();
-	m_gameCamera = g_goMgr.NewGameObject<GameCamera>();
-	m_gamedata = g_goMgr.NewGameObject<GameData>();
+	m_player = g_goMgr.NewGameObject<Player>("Player");
+	m_backGround = g_goMgr.NewGameObject<BackGround>("BackGround");
+	m_gameCamera = g_goMgr.NewGameObject<GameCamera>("GameCamera");
+	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 //	m_ui = g_goMgr.NewGameObject<UI>();
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata->SetPlayerInfo(m_player);
@@ -28,7 +28,7 @@ Game::Game()
 		//wcscmpは文字列の比較を行う関数。
 			if (wcscmp(objdata.name, L"asigaru") == 0) {
 				//インスタンスの作成
-				m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>();
+				m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
 				m_enemy->SetPos(objdata.position);
 				//enemy->SetRot(objdata.rotation);
 				m_enemy->SetPlayerInfo(m_player);
@@ -154,13 +154,15 @@ void Game::PostRender()
 
 void Game::InitCamera()
 {	
+	const float camera2Dpos_z = -600.0f;
+
 	g_camera3D.Update();
 	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
 	g_camera2D.SetWidth(FRAME_BUFFER_W);
 	g_camera2D.SetHeight(FRAME_BUFFER_H);
 	//-600がちょうどいい感じ
 	//何故かはわからないです…
-	g_camera2D.SetPosition({ 0.0f, 0.0f, -600.0f });
+	g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
 	g_camera2D.SetTarget(CVector3::Zero());
 	g_camera2D.Update();
 }

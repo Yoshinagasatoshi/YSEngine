@@ -3,11 +3,12 @@
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
 #include "character/CharacterController.h"
-#include "GameData.h"
 #include "math/Matrix.h"
+#include "physics/PhysicsGhostObject.h"
 /// <summary>
 /// Enemyの派生クラス足軽
 /// </summary>
+class GameData;
 class Enemy_asigaru : public Enemy
 {
 public:
@@ -20,18 +21,24 @@ public:
 	//動き
 	void Move();
 	void Turn();
-	//戦闘距離に入った時に呼ばれるムーヴ
-	void SentouMove();
+	//死んだときのムーヴ
+	void DeadMove();
 	//idlePosの初期化
 	void idlePosInit();
 	//距離による判定処理関数
 	void StateJudge();
+	//ゴーストのInit
+	void ghostInit();
+
 	static Enemy& GetInstans()
 	{
 		static Enemy enemy;
 		return enemy;
 	}
 
+	PhysicsGhostObject* GetGhostObject(){
+		return &m_ghostObject;
+	}
 	//キャラの状態の種類
 	enum AsigaruState {
 		Asigaru_totugeki = 0,
@@ -64,7 +71,8 @@ private:
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
-	
+	//ghost!
+	PhysicsGhostObject m_ghostObject;
 	//足軽の初期ステートは？
 	AsigaruState m_asigaruState = Asigaru_totugeki;
 	//足軽の前にやっていたステート,アニメを流すかの判定に使用
@@ -76,5 +84,9 @@ private:
 	//回るぞ
 	//CMatrix a;
 	float kaiten = 0.0f;
+	GameData* gamedata = nullptr;
+
+	//試しに書いているコード
+	bool isdeadfrag = false;
 };
 

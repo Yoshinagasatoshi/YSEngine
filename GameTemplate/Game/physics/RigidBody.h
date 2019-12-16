@@ -1,7 +1,4 @@
 #pragma once
-
-
-
 class ICollider;
 
 //剛体情報。
@@ -14,7 +11,7 @@ struct RigidBodyInfo {
 		rot = CQuaternion::Identity();
 		localInteria = CVector3::Zero();
 	}
-	CVector3 pos;			//座標。
+	CVector3 pos;		//座標。
 	CQuaternion rot;	//回転。
 	CVector3 localInteria;						//慣性テンソル
 	ICollider* collider;				//コライダー。

@@ -14,6 +14,7 @@ void Camera::Update()
 		m_up
 	);
 	//ビュー行列の逆行列を計算。
+	//これでカメラ行列になる
 	m_viewMatrixInv.Inverse(m_viewMatrix);
 
 	m_forward.Set(m_viewMatrixInv.m[2][0], m_viewMatrixInv.m[2][1], m_viewMatrixInv.m[2][2]);

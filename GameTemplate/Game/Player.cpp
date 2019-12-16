@@ -3,7 +3,7 @@
 #include <iostream>
 #include "gameObject/ysGameObjectManager.h"
 #include "Enemy.h"
-
+#include "Enemy_asigaru.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
 const float PLAYER_COLLIDER_HEIGHT = 20.0f;		//プレイヤーのカプセルコライダーの高さ。
@@ -14,7 +14,7 @@ Player::Player()
 	CharaconInit();
 	//cmoファイルの読み込み。
 	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
-	m_busyoAnimeClip[animClip_idle].Load(L"Assets/animData/busyo_idle.tka");
+	m_busyoAnimeClip[animClip_idle].Load(L"Assets/animData/busyo_walk.tka");
 	m_busyoAnimeClip[animClip_idle].SetLoopFlag(true);
 	//攻撃アニメロード
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
@@ -113,8 +113,9 @@ void Player::Update()
 	}
 	Turn();
 	//ワールド行列の更新。
+	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	m_position = m_characon.Execute(1.0f/60.0f,m_moveSpeed);
+	
 	m_busyoAnime.Update(1.0f / 30.0f);
 }
 void Player::Draw()

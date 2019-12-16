@@ -106,5 +106,6 @@
 		bool m_isRegistDeadList = false; //死亡リストに積まれている。
 		bool m_isRegist = false;         //!<GameObjectManager>に登録されているかどうか
 		bool m_isActive = true;          //Activeフラグ
+		unsigned int m_nameKey = 0;		 //名前キー
 		bool m_isRequestdelete = false;
 	};

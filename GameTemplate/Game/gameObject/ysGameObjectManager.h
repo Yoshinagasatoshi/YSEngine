@@ -3,6 +3,7 @@
 */
 #pragma once
 #include "gameObject/ysGameObject.h"
+#include "util/Util.h"
 	class ysGameObjectManager
 	{
 	public:
@@ -10,12 +11,29 @@
 		~ysGameObjectManager() {}
 		//アップデート
 		void Update();
-		//newGO・放課後版
+		/// <summary>
+		/// ゲームオブジェクトの名前キーを作成
+		/// </summary>
+		static unsigned int MakeGameObjectNameKey(const char* objectName)
+		{
+			static const unsigned int defaultNameKey = Util::MakeHash("Undefined");
+			unsigned int hash;
+			if (objectName == nullptr) {
+				hash = defaultNameKey;
+			}
+			else {
+				hash = Util::MakeHash(objectName);
+			}
+			return hash;
+		}
+		//newGO
 		template <class T>
-		T* NewGameObject()
+		T* NewGameObject(const char* objectName)
 		{
 			T* newObj = new T;
 			IGameObjectList.push_back(newObj);
+			unsigned int hash = MakeGameObjectNameKey(objectName);
+			newObj->m_nameKey = hash;
 			return newObj;
 		}
 		//デリート
@@ -32,31 +50,35 @@
 			}
 		}
 		//配列
-		template <class T>
-		T* FindGOObject(IGameObject* go)
-		{
-			//配列カウント
-			int hairetunumber = 0;
-			//リストから検索して、見つかったら返す
-			for (auto it = IGameObjectList.begin();
-				it != IGameObjectList.end();
-				it++) {
-				i++;
-				if ((*it) == go) {
-					T* p = dynamic_cast<T*>(go);
-					if (p == nullptr && enableErrorMessage == true) {
-						//型変換に失敗
-						MessageBox("型変換に失敗しました");
-					}
-					return p;
-				}
-			}
-		}
-		//findGO?先生のやつをまねたけど
+		//template <class T>
+		//T* FindGOObject(IGameObject* go)
+		//{
+		//	//配列カウント
+		//	int hairetunumber = 0;
+		//	//リストから検索して、見つかったら返す
+		//	for (auto it = IGameObjectList.begin();
+		//		it != IGameObjectList.end();
+		//		it++) {
+		//		i++;
+		//		if ((*it) == go) {
+		//			T* p = dynamic_cast<T*>(go);
+		//			if (p == nullptr && enableErrorMessage == true) {
+		//				//型変換に失敗
+		//				MessageBox("型変換に失敗しました");
+		//			}
+		//			return p;
+		//		}
+		//	}
+		//}
+		//findGO
+
+		/// <summary>
+		/// ゲームオブジェクト名の検索。重い
+		/// </summary>
 		template<class T>
 		T* FindGameObject(const char* objactName, bool enableErrorMessage)
 		{
-			unsigned int nameKey = CUtil::MakeHash(ObjectName);
+			unsigned int nameKey = Util::MakeHash(ObjectName);
 			for (auto go : goList) {
 				if (go->m_nameKey == nameKey) {
 					//発見
@@ -66,6 +88,23 @@
 						MessageBox("型変換に失敗しました");
 					}
 					return p;
+				}
+			}
+		}
+		template<class T>
+		void FindGameObjects(const char* objectName, std::function<bool(T* go)> func)
+		{
+			unsigned int nameKey = Util::MakeHash(objectName);
+			for (auto goList : m_gameObjectListArray) {
+				for (auto go : goList) {
+					if (go->m_nameKey == nameKey) {
+						//見つけた。
+						T* p = dynamic_cast<T*>(go);
+						if (func(p) == false) {
+							//クエリ中断。
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -104,3 +143,43 @@
 	};
 	//外部アクセスをするので、extern宣言がいる。
 	extern ysGameObjectManager g_goMgr;
+	/// <summary>
+	/// ゲームオブジェクト生成のヘルパー関数
+	/// </summary>
+	template<class T>
+	static inline T* NewGO(const char* objectName)
+	{
+		return ysGameObjectManager().NewGameObject<T>(objectName);
+	}
+	/// <summary>
+	/// ゲームオブジェクト削除のヘルパー関数
+	/// NewGOを使用して作成したオブジェクトは必ずDeleteGOを実行すること
+	/// </summary>
+	/// <param name="go">削除するゲームオブジェクト</param>
+	static inline void DeleteGO(IGameObject* go)
+	{
+		ysGameObjectManager().DeleteGOObject(go);
+	}
+	/// <summary>
+	/// ゲームオブジェクト検索のヘルパー関数
+	/// 同名のゲームオブジェクト全てに対してQueryを行いたい場合に使用する。
+	/// objectName	ゲームオブジェクトの名前
+	/// func		ゲームオブジェクトが見つかった時に呼ばれるコールバック関数。
+	/// <param name="objectName"></param>
+	/// <param name="func"></param>
+	/// </summary>
+	template<class T>
+	static inline void QueryGOs(const char* objectName, std::function<bool(T* go)>func)
+	{
+		return ysGameObjectManager().FindGameObjects<T>(objectName,func);
+	}
+	/// <summary>
+	/// ゲームオブジェクトを名前指定で削除
+	/// </summary>
+	static inline void DeleteGOs(const char* objectName)
+	{
+		QueryGOs<IGameObject>(objectName, [](auto go) {
+			DeleteGO(go);
+			return true;
+		});
+	}

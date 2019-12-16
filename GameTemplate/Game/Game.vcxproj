@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
+    <ClCompile Include="DebugWireframe.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy_asigaru.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="character\CharacterController.h" />
+    <ClInclude Include="DebugWireframe.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy_asigaru.h" />
     <ClInclude Include="Game.h" />
@@ -207,10 +209,10 @@
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\asigaru.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\stage.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

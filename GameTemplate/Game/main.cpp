@@ -14,8 +14,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D.SetPosition({ 0.0f, 100.0f, 300.0f });
 	g_camera3D.SetTarget({ 0.0f, 100.0f, 0.0f });
 	g_camera3D.SetFar(10000.0f);
-
-	Game* game = g_goMgr.NewGameObject<Game>();
+	Game* game = g_goMgr.NewGameObject<Game>("Game");
+	//DebugWireframe* DBF = new DebugWireframe;
+	//DBF->Prepare();
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
@@ -28,6 +29,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//物理エンジンの更新。
 		g_physics.Update();
 		g_goMgr.Update();
+		
+		g_physics.DebugWire();
 		game->Render();
 		//カメラの更新。
 		g_camera3D.Update();
