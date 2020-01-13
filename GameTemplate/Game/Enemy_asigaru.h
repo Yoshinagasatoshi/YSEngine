@@ -30,9 +30,9 @@ public:
 	//ゴーストのInit
 	void ghostInit();
 
-	static Enemy& GetInstans()
+	static Enemy_asigaru& GetInstans()
 	{
-		static Enemy enemy;
+		static Enemy_asigaru enemy;
 		return enemy;
 	}
 
@@ -44,6 +44,7 @@ public:
 		Asigaru_totugeki = 0,
 		Asigaru_tikazuki,
 		Asigaru_sentou,
+		Asigaru_attack,
 		Asigaru_damage,
 		Asigaru_dead,
 		Asigaru_anim_num
@@ -86,7 +87,23 @@ private:
 	float kaiten = 0.0f;
 	GameData* gamedata = nullptr;
 
+	//時間系
+	//計測時間
+	float m_frameTimer = 0.0f;
+	//攻撃時間。この時間を超えると攻撃フラグがたつ
+	float m_kougekiframenum = 99.9f;
+	//攻撃時間が何秒か抽選する関数
+	//計測時間も初期化する
+	float AttackframeNum()
+	{
+		m_kougekiframenum = 100.0f + rand() % 500;
+		return m_kougekiframenum;
+	}
 	//試しに書いているコード
-	bool isdeadfrag = false;
+	bool m_isDeadfrag = false;
+	//攻撃中のフラグ
+	bool m_isAttack = false;
+	//プレイヤーが死んでいる状態かどうかを受け取る変数
+	bool m_player_isdead;
 };
 

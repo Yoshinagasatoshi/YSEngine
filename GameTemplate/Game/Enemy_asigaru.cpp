@@ -2,11 +2,15 @@
 #include "Enemy_asigaru.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
+#include "Player.h"
 
-const float BattleRange = 150.0f * 150.0f;
-const float VililanceRange = 500.0f * 500.0f;
-const float grabity = -30.0f;
+const float BattleRange = 180.0f * 180.0f;
+const float VililanceRange = 600.0f * 600.0f;
+const float grabity = -9.8f;
 
+/// <summary>
+/// boid 方を　試したい。
+/// </summary>
 Enemy_asigaru::IdlePos Enemy_asigaru::m_idlePos[5];
 //コンストラクタ
 Enemy_asigaru::Enemy_asigaru()
@@ -21,7 +25,8 @@ Enemy_asigaru::Enemy_asigaru()
 	//アニメーションを格納だ
 	m_asigaruAnimeClip[Asigaru_totugeki].Load(L"Assets/animData/asigaru_totugeki.tka");
 	m_asigaruAnimeClip[Asigaru_tikazuki].Load(L"Assets/animData/asigaru_tikazuki.tka");
-	m_asigaruAnimeClip[Asigaru_sentou].Load(L"Assets/animData/asigaru_Normal_Attack.tka");
+	m_asigaruAnimeClip[Asigaru_sentou].Load(L"Assets/animData/asigaru_tikazuki.tka");
+	m_asigaruAnimeClip[Asigaru_attack].Load(L"Assets/animData/asigaru_Normal_Attack.tka");
 	m_asigaruAnimeClip[Asigaru_damage].Load(L"Assets/animData/asigaru_damage.tka");
 	m_asigaruAnimeClip[Asigaru_dead].Load(L"Assets/animData/asigaru_dead.tka");
 
@@ -37,12 +42,14 @@ Enemy_asigaru::Enemy_asigaru()
 		Asigaru_anim_num
 	);
 
-	
-	//m_asigaruAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
-	//	(void)clipName;
-	//	MessageBox(NULL, "attack", "attack", MB_OK);
-	//	}
-	//);
+	ghostInit();
+	m_asigaruAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
+		(void)clipName;
+		if (m_isAttack) {
+			MessageBox(NULL, "attack", "attack", MB_OK);
+		}
+		}
+	);
 }
 //デストラクタ
 Enemy_asigaru::~Enemy_asigaru()
@@ -54,13 +61,15 @@ void Enemy_asigaru::CharaconInit()
 	//重てぇ！！！！！！！！！！！！
 	//キャラコンの初期化
 	m_characon.Init(
-		3.0f,
-		3.0f,
+		20.0f,
+		5.0f,
 		m_position
 	);
 }
 void Enemy_asigaru::Update()
 {
+	//Y成分の移動速度をバックアップしておく。
+	float ySpeed = m_moveSpeed.y;
 	if (!m_characonState) {
 		m_characonState = true;
 		CharaconInit();
@@ -69,14 +78,26 @@ void Enemy_asigaru::Update()
 	Turn();
 
 	StateJudge();
+	QueryGOs<Player>("Player", [&](Player* pl) {
+		PhysicsGhostObject* ghostobject = pl->GetGhostObject();
+		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
+		if (ghostobject->IsSelf(contactObject) == true) {
+			//通っているのは確認完了
+			m_isDeadfrag = true;
+		}
+		});
+		return true;
+	});
 
-	ghostInit();
-	m_moveSpeed.y = grabity;
-	if (isdeadfrag) {
+	
+	if (m_isDeadfrag) {
 		DeadMove();
 	}
 	//ワールド座標の更新
+	m_moveSpeed.y = ySpeed + grabity;
+	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
+	m_ghostObject.SetPosition(m_position);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_asigaruAnime.Update(1.0f / 30.0f);
 }
@@ -89,10 +110,12 @@ void Enemy_asigaru::Draw()
 	);
 }
 
+//ここが　取り巻く処理を書いている場所
 void Enemy_asigaru::Move()
 {
 	const int NomalMove = -1;
 	int kakoi_num = m_player->RequestEnemyData(m_position, this);
+	int a = kakoi_num;
 	//周辺を取り巻くやつらなのか？
 	if (kakoi_num != NomalMove) {
 		//ここから下は取り巻くやつの処理
@@ -102,22 +125,32 @@ void Enemy_asigaru::Move()
 		m_moveSpeed = m_idlePos[kakoi_num].idlePos - m_position;
 		m_moveSpeed.Normalize();
 		m_moveSpeed *= 30.0f;//30倍
-		float angle = atan2(kaiten.x,kaiten.z);
-		m_rotation.SetRotation(CVector3::AxisY(), angle);
-		return;
+
+	float angle = atan2(kaiten.x,kaiten.z);
+	m_rotation.SetRotation(CVector3::AxisY(), angle);
+	return;
 	}
 	else {
 		CVector3 kaiten = m_playerPos - m_position;
 		float angle = atan2(kaiten.x, kaiten.z);
 		m_rotation.SetRotation(CVector3::AxisY(), angle);
-		CVector3 aa = CVector3::Zero();
-		aa.x = rand() % 100;
-		aa.z = rand() % 100;
-		if (kaiten.LengthSq() < BattleRange * 2) {
-			CVector3 a = (m_position + aa) - m_playerPos;
-			a.Normalize();
-			m_moveSpeed = a * 10.0f;//10倍
+
+		if (kaiten.LengthSq() < BattleRange) {
+			int i = 0;
+			i = rand() % 5;
+			CVector3 panko = CVector3::Zero();
+			panko = m_idlePos[i].idlePos - m_position;
+			m_moveSpeed = panko * 10.0f;
+
+			//m_moveSpeed = CVector3::Zero();
+			if (panko.x < 2.0f|| panko.z < 2.0f) 
+			{
+				panko.Normalize();
+				m_moveSpeed = panko * 10.0f;//10倍
+			}
+
 		}
+
 	}
 }
 
@@ -146,11 +179,11 @@ void Enemy_asigaru::idlePosInit()
 	//後でレベルに変える。
 	m_playerPos = m_player->GetPosition();
 
-	m_idlePos[0].idlePos = m_playerPos + CVector3{100.0f,0.0f,0.0f};
-	m_idlePos[1].idlePos = m_playerPos + CVector3{ -100.0f,0.0f,0.0f };
+	m_idlePos[0].idlePos = m_playerPos + CVector3{150.0f,0.0f,0.0f};
+	m_idlePos[1].idlePos = m_playerPos + CVector3{ -150.0f,0.0f,0.0f };
 	m_idlePos[2].idlePos = m_playerPos + CVector3{ 100.0f,0.0f,100.0f };
 	m_idlePos[3].idlePos = m_playerPos + CVector3{ -100.0f,0.0f,100.0f };
-	m_idlePos[4].idlePos = m_playerPos + CVector3{ 0.0f,0.0f,-100.0f };
+	m_idlePos[4].idlePos = m_playerPos + CVector3{ 0.0f,0.0f,-150.0f };
 }
 
 //距離による判定処理
@@ -161,21 +194,48 @@ void Enemy_asigaru::StateJudge()
 	CVector3 kyori = m_playerPos - m_position;
 	//y成分を0にする。
 	kyori.y = 0.0f;
-
+	
+	m_player_isdead = m_player->GetPlayerDead();
 	//ステートごとの処理を書く
 	switch (m_asigaruState)
 	{
+	case Asigaru_attack:
+		if (!m_player_isdead)
+		{
+			//プレイヤーが死んでいなかったらこの処理を行う
+
+			if (!m_isAttack) {
+				m_isAttack = true;
+			}
+		}
+		Move();
+		m_moveSpeed = CVector3::Zero();
+		if (!m_asigaruAnime.IsPlaying()) {
+			m_asigaruState = Asigaru_sentou;
+		}
+		break;
 	case Asigaru_sentou:
+		if (m_isAttack) {
+			m_isAttack = false;
+		}
 		if (kyori.LengthSq() > BattleRange) {
 			m_asigaruState = Asigaru_tikazuki;
+			m_frameTimer = 0.0f;
+			m_kougekiframenum = AttackframeNum();
 		}
 		//sentouの処理
 		m_moveSpeed = CVector3::Zero();
+		m_frameTimer += 1.0f;
+
+		if (m_frameTimer >= m_kougekiframenum)
+		{
+			m_frameTimer = 0.0f;
+			m_kougekiframenum = AttackframeNum();
+			m_player->PlayerDamage();
+			m_asigaruState = Asigaru_attack;
+		}
 		Move();
-		m_player->PlayerDamage();
 		break;
-
-
 	case Asigaru_tikazuki:
 		if (kyori.LengthSq() < BattleRange) {
 			kyori.Normalize();
@@ -183,7 +243,7 @@ void Enemy_asigaru::StateJudge()
 
 			//視野角入ってる？
 			if (fabsf(angle) < PI * 0.25f) {
-					m_asigaruState = Asigaru_sentou;
+				m_asigaruState = Asigaru_sentou;
 			}
 		}
 		else if (kyori.LengthSq() > VililanceRange)
@@ -193,7 +253,7 @@ void Enemy_asigaru::StateJudge()
 		//tikazukiの処理
 		kyori.Normalize();
 		m_moveSpeed = kyori * 50.0f;
-		Move();
+		//Move();
 		break;
 
 
@@ -213,16 +273,17 @@ void Enemy_asigaru::StateJudge()
 		m_rotation.Multiply(ADDrot);
 		break;
 	}
-	m_asigaruAnime.Play(m_asigaruState, 0.2f);
+		m_asigaruAnime.Play(m_asigaruState, 0.2f);
 }
 
-//呼ばれているが、見えないねえ…
+//呼ばれているけど見えない
+//ちゃんとある
 void Enemy_asigaru::ghostInit()
 {
 	m_ghostObject.CreateBox(
 		m_position,
 		m_rotation,
-		m_scale
+		m_scale * 10
 	);
 }
 

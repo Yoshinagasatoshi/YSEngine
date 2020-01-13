@@ -1,4 +1,5 @@
 #pragma once
+#include "math/Vector.h"
 class ICollider;
 
 //剛体情報。
@@ -52,7 +53,28 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <param name="rot"></param>
-	void SetPositionAndRotation(const CVector3& pos, const CQuaternion& rot);
-	void GetPositionAndRotation(CVector3& pos, CQuaternion& rot)const;
+	void GetPositionAndRotation(CVector3& pos, CQuaternion& rot)const
+	{
+		btTransform trans;
+		m_myMotionState->getWorldTransform(trans);
+		pos.Set(trans.getOrigin());
+		rot.Set(trans.getRotation());
+	}
+	/// <summary>
+	/// 物理オブジェクトの座標と回転を設定
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="rot">回転</param>
+	void SetPositionAndRotation(const CVector3& pos, const CQuaternion& rot)
+	{
+		btTransform trans;
+		btVector3 btPos;
+		pos.CopyTo(btPos);
+		trans.setOrigin(btPos);
+		btQuaternion btRot;
+		rot.CopyTo(btRot);
+		trans.setRotation(btRot);
+		m_rigidBody->setWorldTransform(trans);
+	}
 };
 

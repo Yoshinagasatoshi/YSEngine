@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "Physics/RigidBody.h"
 #include "physics/Physics.h"
 #include "DebugWireframe.h"
+#include "character/CharacterController.h"
+
 using namespace std;
 PhysicsWorld g_physics;
 
@@ -97,6 +98,7 @@ void PhysicsWorld::DebugWire()
 {
 	DebugWireframe m_dwf;
 }
+
 void PhysicsWorld::ContactTest(
 	btCollisionObject* colObj,
 	std::function<void(const btCollisionObject& contactCollisionObject)> cb
@@ -106,4 +108,20 @@ void PhysicsWorld::ContactTest(
 	myContactResultCallback.m_cb = cb;
 	myContactResultCallback.m_me = colObj;
 	m_dynamicWorld->contactTest(colObj, myContactResultCallback);
+}
+
+void PhysicsWorld::ContactTest(
+	RigidBody& rb,
+	std::function<void(const btCollisionObject& contactCollsionObject)> cb
+)
+{
+	ContactTest(rb.GetBody(), cb);
+}
+
+void PhysicsWorld::ContactTest(
+	CharacterController& charaCon,
+	std::function<void(const btCollisionObject& contactCollsionObject)> cb
+)
+{
+	ContactTest(*charaCon.GetRigidBody(), cb);
 }

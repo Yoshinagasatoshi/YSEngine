@@ -6,7 +6,6 @@
 
 #pragma once
 
-
 #include "kMath.h"
 
 class CMatrix;
@@ -547,6 +546,13 @@ public:
 		x = axis.x * s;
 		y = axis.y * s;
 		z = axis.z * s;
+	}
+	void Set(const btQuaternion& rot)
+	{
+		x = rot.x();
+		y = rot.y();
+		z = rot.z();
+		w = rot.w();
 	}
 	/*!
 	*@brief	行列からクォータニオンを作成。

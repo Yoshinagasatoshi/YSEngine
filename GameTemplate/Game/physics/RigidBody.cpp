@@ -36,16 +36,3 @@ void RigidBody::Create(RigidBodyInfo& rbInfo)
 	//„‘Ì‚ğì¬B
 	m_rigidBody = make_unique<btRigidBody>(btRbInfo);
 }
-
-void RigidBody::SetPositionAndRotation(const CVector3& pos, const CQuaternion& rot)
-{
-
-}
-//
-//void RigidBody::GetPositionAndRotation(CVector3& pos,CQuaternion& rot)const
-//{
-//	//btTransform trans;
-//	//m_myMotionState->getWorldTransform(trans);
-//	//pos.Set(trans.getOrigin());
-//	//pos.Set(trans.getRotation());
-//}

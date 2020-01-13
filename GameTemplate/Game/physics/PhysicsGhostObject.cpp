@@ -12,7 +12,7 @@ using namespace std;
 void PhysicsGhostObject::Release()
 {
 	if (m_isRegistPhysicsWorld == true) {
-		PhysicsWorld().RemoveCollisionObject(m_ghostObject);
+		g_physics.RemoveCollisionObject(m_ghostObject);
 		m_isRegistPhysicsWorld = false;
 	}
 }
@@ -26,6 +26,6 @@ void PhysicsGhostObject::CreateCommon(CVector3 pos, CQuaternion rot)
 	m_ghostObject.setWorldTransform(btTrans);
 
 	//ï®óùÉGÉìÉWÉìÇ…ìoò^
-	PhysicsWorld().AddCollisionObject(m_ghostObject);
+	g_physics.AddCollisionObject(m_ghostObject);
 	m_isRegistPhysicsWorld = true;
 }

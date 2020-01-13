@@ -60,7 +60,7 @@ public:
 	/// アニメーションイベントリスナーを登録
 	/// </summary>
 	/// <param name="eventlistener"></param>
-	void AddAnimationEventListener(std::function<void(const wchar_t* clipName, const wchar_t* eventName)> eventListener)
+	void AddAnimationEventListener(AnimationEventListener eventListener)
 	{
 		m_animationEventListeners.push_back(eventListener);
 	}

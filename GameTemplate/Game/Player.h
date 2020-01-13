@@ -3,6 +3,7 @@
 #include "gameObject/ysGameObject.h"
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
+#include "physics/PhysicsGhostObject.h"
 /// <summary>
 /// 
 /// </summary>
@@ -24,6 +25,8 @@ public:
 	void Turn();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
+	//ゴーストの大きさとかを設定
+	void ghostInit();
 	//プレイヤーの位置を返す関数
 	CVector3& GetPosition()
 	{
@@ -35,9 +38,22 @@ public:
 		return m_rotation;
 	}
 	//プレイヤーにダメージが入れたいときに呼ぶ
-	void PlayerDamage()
+	void PlayerDamage() 
 	{
 		m_damagefrag = true;
+	}
+	//プレイヤーは死んでいる状態かどうかを取得する
+	bool GetPlayerDead()
+	{
+		return m_deadFrag;
+	}
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+	{
+		(void)clipName;
+		MessageBox(NULL, "attack", "attack", MB_OK);
+	}
+	PhysicsGhostObject* GetGhostObject() {
+		return &m_ghostObject;
 	}
 	//足軽アニメ
 	Animation m_busyoAnime;
@@ -50,8 +66,10 @@ public:
 		animClip_ATK4,
 		animClip_ATK5,
 		animClip_SmallDamage,
+		animClip_busyo_dead,
 		animClip_num
 	};
+	busyoBASICAnimeClip m_playerState = animClip_idle;
 	AnimationClip m_busyoAnimeClip[animClip_num];
 	struct EnemeyData
 	{
@@ -67,7 +85,7 @@ public:
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
 private:
 	//アニメーションイベントを呼び出すよ
-	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+	//void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//囲いの最大数
 	static const int kakoi_max = 5;
 	EnemeyData m_enemydata[kakoi_max];
@@ -84,11 +102,11 @@ private:
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//ダメージは受けたか？
 	int PL_HP = 5;										//今の体力
-	float SpeedAmount = 1000.0f;						//平面の移動量
-	float gravity = 600.0f;								//重力
-	float JumpPower = 1200.0f;							//飛
+	bool m_deadFrag = false;							//死亡したときのスイッチ
 	//重力が強くかかるようになる奴
 	float gravity_keisuu = 0.1f;
 	bool m_attack = false;
+	//ghost!
+	PhysicsGhostObject m_ghostObject;
 };
 

@@ -8,7 +8,7 @@
 
 void PhysicsStaticObject::Release()
 {
-	PhysicsWorld().RemoveRigidBody(m_rigidBody);
+	g_physics.RemoveRigidBody(m_rigidBody);
 }
 void PhysicsStaticObject::CreateCommon(CVector3 pos, CQuaternion rot)
 {

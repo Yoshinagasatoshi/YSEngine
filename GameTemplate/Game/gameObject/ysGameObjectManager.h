@@ -49,29 +49,6 @@
 				}
 			}
 		}
-		//配列
-		//template <class T>
-		//T* FindGOObject(IGameObject* go)
-		//{
-		//	//配列カウント
-		//	int hairetunumber = 0;
-		//	//リストから検索して、見つかったら返す
-		//	for (auto it = IGameObjectList.begin();
-		//		it != IGameObjectList.end();
-		//		it++) {
-		//		i++;
-		//		if ((*it) == go) {
-		//			T* p = dynamic_cast<T*>(go);
-		//			if (p == nullptr && enableErrorMessage == true) {
-		//				//型変換に失敗
-		//				MessageBox("型変換に失敗しました");
-		//			}
-		//			return p;
-		//		}
-		//	}
-		//}
-		//findGO
-
 		/// <summary>
 		/// ゲームオブジェクト名の検索。重い
 		/// </summary>
@@ -79,8 +56,8 @@
 		T* FindGameObject(const char* objactName, bool enableErrorMessage)
 		{
 			unsigned int nameKey = Util::MakeHash(ObjectName);
-			for (auto go : goList) {
-				if (go->m_nameKey == nameKey) {
+			for (auto goList : IGameObjectList) {
+				if (goList->m_nameKey == nameKey) {
 					//発見
 					T* p = dynamic_cast<T*>(go);
 					if (p == nullptr && enableErrorMessage == true) {
@@ -95,15 +72,13 @@
 		void FindGameObjects(const char* objectName, std::function<bool(T* go)> func)
 		{
 			unsigned int nameKey = Util::MakeHash(objectName);
-			for (auto goList : m_gameObjectListArray) {
-				for (auto go : goList) {
-					if (go->m_nameKey == nameKey) {
-						//見つけた。
-						T* p = dynamic_cast<T*>(go);
-						if (func(p) == false) {
-							//クエリ中断。
-							return;
-						}
+			for (auto goList : IGameObjectList) {
+				if (goList->m_nameKey == nameKey) {
+					//見つけた。
+					T* p = dynamic_cast<T*>(goList);
+					if (func(p) == false) {
+						//クエリ中断。
+						return;
 					}
 				}
 			}
@@ -130,7 +105,7 @@
 		//授業版格納庫
 		std::vector<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト
 		//配列の格納庫
-		typedef std::vector<IGameObject*> GameObjectList;
+		typedef std::list<IGameObject*> GameObjectList;
 		//Listはつけない
 		/// <summary>
 		/// NewGO用のリスト。tkEngineと違い優先度はない。
@@ -171,7 +146,7 @@
 	template<class T>
 	static inline void QueryGOs(const char* objectName, std::function<bool(T* go)>func)
 	{
-		return ysGameObjectManager().FindGameObjects<T>(objectName,func);
+		return g_goMgr.FindGameObjects<T>(objectName,func);
 	}
 	/// <summary>
 	/// ゲームオブジェクトを名前指定で削除

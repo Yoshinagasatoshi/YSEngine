@@ -1,6 +1,8 @@
 #pragma once
-//#include "physics/RigidBody.h"
-class RigidBody;
+#include "physics/RigidBody.h"
+//class RigidBody;
+class CharacterController;
+
 class PhysicsWorld
 {
 	//btDefaultCollisionConfiguration*		collisionConfig = nullptr;
@@ -21,6 +23,11 @@ public:
 	void Init();
 	void Update();
 	void Release();
+	
+	PhysicsWorld& GetInstance()
+	{
+		return m_PhysicsWorld;
+	}
 	/*!
 	* @brief	ダイナミックワールドを取得。
 	*/
@@ -70,10 +77,23 @@ public:
 	{
 		m_dynamicWorld->contactTest(colObj, resultCallback);
 	}
+	//第1引数がbtCollision*
 	void ContactTest(
 		btCollisionObject* colObj,
 		std::function<void(const btCollisionObject& contactCollisionObject)> cb
 	);
+	//第1引数がRigidBody&
+	void ContactTest(
+		RigidBody& rb,
+		std::function<void(const btCollisionObject& contactCollisionObject)> cb
+	);
+
+	//第1引数がcharacon&
+	void ContactTest(
+		CharacterController& charaCon,
+		std::function<void(const btCollisionObject& contactCollisionObject)> cb
+	);
 	void DebugWire();
-};
+	static PhysicsWorld m_PhysicsWorld;
+}; 
 extern PhysicsWorld g_physics;

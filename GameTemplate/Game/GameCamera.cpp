@@ -42,6 +42,8 @@ void GameCamera::Update()
 	}
 	//視点の計算
 	CVector3 Pos = m_target + m_toPos;
+	//Pos.y += 50.0f;
+	m_target.y += 100.0f;
 	//メインカメラの注視点と視点を設定する。
 	g_camera3D.SetTarget(m_target);
 	g_camera3D.SetPosition(Pos);
