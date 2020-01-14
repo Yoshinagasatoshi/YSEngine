@@ -1,7 +1,8 @@
 #pragma once
-#include "physics/RigidBody.h"
-//class RigidBody;
-class CharacterController;
+#include "character/CharacterController.h"
+#include "DebugWireframe.h"
+class RigidBody;
+//class CharacterController;
 
 class PhysicsWorld
 {
@@ -17,17 +18,25 @@ class PhysicsWorld
 	std::unique_ptr<btSequentialImpulseConstraintSolver>m_constraintSolver;//!<コンストレイントソルバー。拘束条件の解決処理。
 	std::unique_ptr<btDiscreteDynamicsWorld>			m_dynamicWorld;//!<ワールド。
 
-	
+	DebugWireframe m_dw;
 public:
 	~PhysicsWorld();
 	void Init();
 	void Update();
 	void Release();
 	
-	PhysicsWorld& GetInstance()
+	/// <summary>
+	/// 重力を設定
+	/// </summary>
+	void SetGravity(CVector3 g)
 	{
-		return m_PhysicsWorld;
+		m_dynamicWorld->setGravity(btVector3(g.x, g.y, g.z));
 	}
+
+	//PhysicsWorld& GetInstance()
+	//{
+	//	return m_PhysicsWorld;
+	//}
 	/*!
 	* @brief	ダイナミックワールドを取得。
 	*/
@@ -93,7 +102,6 @@ public:
 		CharacterController& charaCon,
 		std::function<void(const btCollisionObject& contactCollisionObject)> cb
 	);
-	void DebugWire();
-	static PhysicsWorld m_PhysicsWorld;
+	void DebugDraw();
 }; 
 extern PhysicsWorld g_physics;

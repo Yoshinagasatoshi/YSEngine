@@ -16,12 +16,11 @@ Enemy_asigaru::IdlePos Enemy_asigaru::m_idlePos[5];
 Enemy_asigaru::Enemy_asigaru()
 {
 	gamedata = &GameData::GetInstans();
-	
+	m_scale = CVector3::One();
 
 	//asigaruのモデルをロードする。
 	m_model.Init(L"Assets/modelData/asigaru.cmo");
 	m_rotation = CQuaternion::Identity();
-	m_scale = CVector3::One();
 	//アニメーションを格納だ
 	m_asigaruAnimeClip[Asigaru_totugeki].Load(L"Assets/animData/asigaru_totugeki.tka");
 	m_asigaruAnimeClip[Asigaru_tikazuki].Load(L"Assets/animData/asigaru_tikazuki.tka");
@@ -61,9 +60,9 @@ void Enemy_asigaru::CharaconInit()
 	//重てぇ！！！！！！！！！！！！
 	//キャラコンの初期化
 	m_characon.Init(
-		20.0f,
-		5.0f,
-		m_position
+		30.0f, //半径
+		100.0f,//高さ
+		m_position//位置
 	);
 }
 void Enemy_asigaru::Update()
@@ -276,14 +275,17 @@ void Enemy_asigaru::StateJudge()
 		m_asigaruAnime.Play(m_asigaruState, 0.2f);
 }
 
-//呼ばれているけど見えない
 //ちゃんとある
 void Enemy_asigaru::ghostInit()
 {
 	m_ghostObject.CreateBox(
 		m_position,
 		m_rotation,
-		m_scale * 10
+		{
+		m_scale.x * 50.0f,
+		m_scale.y * 200.0f,
+		m_scale.z * 50.0f 
+		}
 	);
 }
 

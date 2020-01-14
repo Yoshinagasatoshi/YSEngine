@@ -131,6 +131,7 @@ void Game::ForwardRender()
 	m_renderTarget.ClearRenderTarget(clearColor);
 
 	g_goMgr.Draw();
+	g_physics.DebugDraw();
 }
 
 void Game::PostRender()

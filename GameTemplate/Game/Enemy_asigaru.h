@@ -72,7 +72,7 @@ private:
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
-	//ghost!
+	//ghost!当たり判定だけがある剛体です。
 	PhysicsGhostObject m_ghostObject;
 	//足軽の初期ステートは？
 	AsigaruState m_asigaruState = Asigaru_totugeki;

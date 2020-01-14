@@ -6,8 +6,8 @@
 #include "Enemy_asigaru.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
-const float PLAYER_COLLIDER_HEIGHT = 20.0f;		//プレイヤーのカプセルコライダーの高さ。
-const float PLAYER_COLLIDER_RADIUS = 20.0f;		//プレイヤーのカプセルコライダーの半径。
+const float PLAYER_COLLIDER_HEIGHT = 100.0f;		//プレイヤーのカプセルコライダーの高さ。
+const float PLAYER_COLLIDER_RADIUS = 28.0f;		//プレイヤーのカプセルコライダーの半径。
 
 const float SpeedAmount = 1000.0f;						//平面の移動量
 const float gravity = 600.0f;								//重力
@@ -136,11 +136,14 @@ void Player::Update()
 	}
 	//ワールド行列の更新。
 	m_ghostObject.Release();
+
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+
 	m_ghostObject.SetPosition(m_position);
+	
 	//m_position.Set(CVector3::Zero());
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	
+
 	m_busyoAnime.Update(1.0f / 30.0f);
 }
 void Player::Draw()
@@ -246,7 +249,7 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 
 void Player::ghostInit()
 {
-	CVector3 BIG = { 100.0f,100.0f,100.0f };
+	CVector3 BIG = { 1000.0f,1000.0f,1000.0f };
 	m_ghostObject.CreateBox(
 		m_position,
 		m_rotation,

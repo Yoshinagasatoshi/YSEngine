@@ -33,7 +33,7 @@ protected:
 	SkinModel m_model;	//スキンモデル。
 	CVector3 m_position; //現在地
 	CQuaternion m_rotation; //回転角度
-	CVector3 m_scale; //敵の大きさ
+	CVector3 m_scale;
 	CVector3 m_playerPos; //プレイヤーのポジション
 	Player* m_player; //プレイヤーのポイント型
 };
