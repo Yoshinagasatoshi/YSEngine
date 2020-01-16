@@ -133,7 +133,7 @@
 	/// <param name="go">削除するゲームオブジェクト</param>
 	static inline void DeleteGO(IGameObject* go)
 	{
-		ysGameObjectManager().DeleteGOObject(go);
+		g_goMgr.DeleteGOObject(go);
 	}
 	/// <summary>
 	/// ゲームオブジェクト検索のヘルパー関数

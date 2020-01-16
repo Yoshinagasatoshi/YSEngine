@@ -5,10 +5,12 @@
 #include "character/CharacterController.h"
 #include "math/Matrix.h"
 #include "physics/PhysicsGhostObject.h"
+#include "graphics/Skeleton.h"
 /// <summary>
 /// Enemyの派生クラス足軽
 /// </summary>
 class GameData;
+class Wepon_ghost;
 class Enemy_asigaru : public Enemy
 {
 public:
@@ -62,7 +64,7 @@ public:
 		//初期化が行われたか？
 		bool m_Syokika = false;
 	};
-	//配列数は待機場所の数。いまは４
+	//配列数は待機場所の数。いまは5
 	static IdlePos m_idlePos[5];
 	CVector3 m_moveSpeed = CVector3::Zero();
 	CVector3 moveV = CVector3::Zero();
@@ -105,5 +107,7 @@ private:
 	bool m_isAttack = false;
 	//プレイヤーが死んでいる状態かどうかを受け取る変数
 	bool m_player_isdead;
+	Wepon_ghost* m_en_Wepon;
+	Skeleton* m_skeleton;
 };
 

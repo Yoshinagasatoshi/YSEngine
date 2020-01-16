@@ -142,7 +142,7 @@
     <ClCompile Include="physics\PhysicsStaticObject.cpp" />
     <ClCompile Include="physics\SphereCollider.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Player_Wepon.cpp" />
+    <ClCompile Include="Wepon_ghost.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -196,7 +196,7 @@
     <ClInclude Include="physics\PhysicsStaticObject.h" />
     <ClInclude Include="physics\SphereCollider.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Player_Wepon.h" />
+    <ClInclude Include="Wepon_ghost.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="UI.h" />

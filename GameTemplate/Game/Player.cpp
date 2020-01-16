@@ -4,6 +4,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Enemy.h"
 #include "Enemy_asigaru.h"
+#include "Wepon_ghost.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;		//プレイヤーのカプセルコライダーの高さ。
@@ -18,8 +19,11 @@ Player::Player()
 	CharaconInit();
 	//cmoファイルの読み込み。
 	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
+	//移動状態のロード
 	m_busyoAnimeClip[animClip_idle].Load(L"Assets/animData/busyo_idle.tka");
 	m_busyoAnimeClip[animClip_idle].SetLoopFlag(true);
+	m_busyoAnimeClip[animClip_Walk].Load(L"Assets/animData/busyo_walk.tka");
+	m_busyoAnimeClip[animClip_Walk].SetLoopFlag(true);
 	//攻撃アニメロード
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
 	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki2.tka");
@@ -39,10 +43,32 @@ Player::Player()
 		m_busyoAnimeClip,
 		animClip_num
 	);
-	
+
+	m_skelton = &m_playerModel.GetSkeleton();
+	const wchar_t* bonename[30];
+
+	for (int i = 0; i < 29; i++) {
+		bonename[i] = m_skelton->GetBone(i)->GetName();
+
+		if (i == 28)
+		{
+			bonename[i + 1] = L"end";
+		}
+	}
+
 	m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
 	{
-		OnAnimationEvent(clipName,eventName);
+			auto m_bone = m_skelton->GetBone(20);
+			CVector3 bonepos;
+			bonepos.Set(
+				m_bone->GetWorldMatrix().m[3][0],
+				m_bone->GetWorldMatrix().m[3][1],
+				m_bone->GetWorldMatrix().m[3][2]
+			);
+		//OnAnimationEvent(clipName,eventName);
+		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
+		m_pl_Wepon->SetPosition(bonepos);
+		m_pl_Wepon->GhostInit();
 		//(void)clipName;
 		//MessageBox(NULL, "Attack", "attack", MB_OK);
 	}
@@ -64,30 +90,10 @@ void Player::CharaconInit()
 		m_position
 	);
 }
+
 void Player::Update()
 {
 	if (!m_deadFrag) {
-		//プレイヤーが死んでいない時の処理。
-		//平面の移動量はアプデごとにリセットする
-		m_moveSpeed.x = 0.0f;
-		m_moveSpeed.z = 0.0f;
-		//入力量を受け取る
-		float WideMove = g_pad->GetLStickXF();
-		float heightMove = g_pad->GetLStickYF();
-
-
-		//カメラの前方向と右方向を取得
-		CVector3 CameraForward = g_camera3D.GetForword();
-		CVector3 CameraRight = g_camera3D.GetRight();
-		//Yの情報はいらないので0にし、前と右方向の単位とする。
-		CameraForward.y = 0.0f;
-		CameraForward.Normalize();
-		CameraRight.y = 0.0f;
-		CameraRight.Normalize();
-		m_moveSpeed += CameraForward * heightMove * SpeedAmount;
-		m_moveSpeed += CameraRight * WideMove * SpeedAmount;
-		m_moveSpeed.y -= gravity * gravity_keisuu;
-
 		//地面ついてる？
 		if (m_characon.IsOnGround()) {
 			//重力はいらない
@@ -121,12 +127,35 @@ void Player::Update()
 			m_playerState = animClip_SmallDamage;
 			m_busyoAnime.Play(animClip_SmallDamage, 0.5f);
 		}
+
+		//ダメージアニメーションが終わったら立ち姿に
 		if (m_playerState == animClip_SmallDamage
 			&& !m_busyoAnime.IsPlaying())
 		{
-			m_playerState == animClip_idle;
+			m_playerState = animClip_idle;
 			m_busyoAnime.Play(animClip_idle, 0.5f);
 		}
+		//プレイヤーが死んでいない時の処理。
+		//平面の移動量はアプデごとにリセットする
+		m_moveSpeed.x = 0.0f;
+		m_moveSpeed.z = 0.0f;
+		//入力量を受け取る
+		float WideMove = g_pad->GetLStickXF();
+		float heightMove = g_pad->GetLStickYF();
+
+		//カメラの前方向と右方向を取得
+		m_CameraForward = g_camera3D.GetForword();
+		m_CameraRight = g_camera3D.GetRight();
+		//Yの情報はいらないので0にし、前と右方向の単位とする。
+		m_CameraForward.y = 0.0f;
+		m_CameraForward.Normalize();
+		m_CameraRight.y = 0.0f;
+		m_CameraRight.Normalize();
+		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
+		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+		m_moveSpeed.y -= gravity * gravity_keisuu;
+
+		//回転処理
 		Turn();
 	}
 	else {
@@ -135,12 +164,17 @@ void Player::Update()
 		m_busyoAnime.Play(animClip_busyo_dead);
 	}
 	//ワールド行列の更新。
-	m_ghostObject.Release();
+	//m_ghostObject.Release();
 
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 
-	m_ghostObject.SetPosition(m_position);
-	
+	CVector3 a = m_position;
+	a.y += 80.0f;
+	m_ghostObject.SetPosition(a);
+
+	if (m_pl_Wepon != nullptr) {
+		m_pl_Wepon->SetPosition(m_position);
+	}
 	//m_position.Set(CVector3::Zero());
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
@@ -169,13 +203,17 @@ void Player::AttackMove()
 {
 	//補間時間
 	float InterpolationTime = 0.5;
-	if (g_pad->IsTrigger(enButtonB)&&m_playTimer>10.0f) {
+	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>10.0f) {
 		int i = 0;
 		//判定します。
 		//ストラテジーパターン予備軍
 		switch (m_animStep)
 		{
 		case 0:
+			if (!m_underAttack)
+			{
+				m_underAttack = true;
+			}
 			m_busyoAnime.Play(animClip_ATK1, InterpolationTime);
 			m_animStep++;
 			break;
@@ -203,8 +241,11 @@ void Player::AttackMove()
 			m_playTimer = 0;
 			m_oldAnimStep = m_animStep;
 		}
-		if (m_playTimer >= 40) {
+		if (m_playTimer >= 20) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
+			if (m_underAttack) {
+				m_underAttack = false;
+			}
 			m_animStep = 0;
 			m_oldAnimStep = 0;
 			m_playTimer = 0;
@@ -249,10 +290,10 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 
 void Player::ghostInit()
 {
-	CVector3 BIG = { 1000.0f,1000.0f,1000.0f };
+	CVector3 PlayerScale = { 50.0f,150.0f,50.0f };
 	m_ghostObject.CreateBox(
 		m_position,
 		m_rotation,
-		BIG
+		PlayerScale
 	);
 }

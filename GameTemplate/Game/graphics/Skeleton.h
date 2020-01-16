@@ -218,4 +218,6 @@ private:
 	std::vector<CMatrix>		m_boneMatrixs;				//!<ボーン行列。
 	ID3D11Buffer*				m_boneMatrixSB = nullptr;	//!<ボーン行列のストラクチャーバッファ。
 	ID3D11ShaderResourceView*	m_boneMatrixSRV = nullptr;	//!<ボーン行列のSRV。
-};
+
+	CMatrix			m_oldFrameBorn = CMatrix::Identity();	//1フレーム前の行列を記録する
+}; 

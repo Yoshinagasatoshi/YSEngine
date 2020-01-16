@@ -216,6 +216,7 @@ void Skeleton::Update(const CMatrix& mWorld)
 		mBone.Mul(bone->GetInvBindPoseMatrix(), bone->GetWorldMatrix());
 		m_boneMatrixs[boneNo] = mBone;
 	}
+
 }
 /*!
 *@brief	ボーン行列の配列をGPUに転送。

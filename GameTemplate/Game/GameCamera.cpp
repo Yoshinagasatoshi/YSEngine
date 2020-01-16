@@ -10,7 +10,7 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {
-	const float RotAmount = 2.0f;
+	const float RotAmount = 3.0f;
 	//’Ž‹“_‚ÌŒvŽZ
 	m_target = m_player->GetPosition();
 	CVector3 m_toCameraPosOld = m_toPos;

@@ -52,6 +52,19 @@ ysGameObjectManager g_goMgr;
 	{
 		for (auto go : IGameObjectList) {
 			go->Update();
+			//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
+			for (auto it = IGameObjectList.begin(); it != IGameObjectList.end();) {
+				if ((*it)->isRequestDelete()) {
+					//削除リクエストを受けているので削除
+					delete* it;
+					it = IGameObjectList.erase(it);
+				}
+				else {
+					//リクエストを受けていないため
+					it++;
+				}
+			}
+			
 		}
 	}
 
@@ -75,19 +88,6 @@ ysGameObjectManager g_goMgr;
 	//		go->Update();
 	//		go->Draw();
 	//	}
-
-		//全てのゲームオブジェクトの1フレーム分の処理が終わってから、削除する。
-		for (auto it = IGameObjectList.begin(); it != IGameObjectList.end();) {
-			if ((*it)->isRequestDelete()) {
-				//削除リクエストを受けているので削除
-				delete* it;
-				it = IGameObjectList.erase(it);
-			}
-			else {
-				//リクエストを受けていないため
-				it++;
-			}
-		}
 	}
 
 	void ysGameObjectManager::Init(int gameObjectPrioMax)

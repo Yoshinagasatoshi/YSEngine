@@ -2,7 +2,7 @@
 #include "Enemy_asigaru.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
-#include "Player.h"
+#include "Wepon_ghost.h"
 
 const float BattleRange = 180.0f * 180.0f;
 const float VililanceRange = 600.0f * 600.0f;
@@ -41,12 +41,24 @@ Enemy_asigaru::Enemy_asigaru()
 		Asigaru_anim_num
 	);
 
+	m_skeleton = &m_model.GetSkeleton();
+	const wchar_t* bonename[30];
+
+	for (int i = 0; i < 20; i++) {
+		bonename[i] = m_skeleton->GetBone(i)->GetName();
+
+		if (i == 19)
+		{
+			bonename[i + 1] = L"end";
+		}
+	}
+
 	ghostInit();
+
 	m_asigaruAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
-		if (m_isAttack) {
-			MessageBox(NULL, "attack", "attack", MB_OK);
-		}
+		m_en_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("EN_Wepon");
+		m_en_Wepon->SetPosition(m_position);
 		}
 	);
 }
@@ -75,10 +87,11 @@ void Enemy_asigaru::Update()
 	}
 	//Move();
 	Turn();
-
-	StateJudge();
-	QueryGOs<Player>("Player", [&](Player* pl) {
-		PhysicsGhostObject* ghostobject = pl->GetGhostObject();
+	if (!m_isDeadfrag) {
+		StateJudge();
+	}
+	QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
+		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 		if (ghostobject->IsSelf(contactObject) == true) {
 			//通っているのは確認完了
@@ -89,11 +102,12 @@ void Enemy_asigaru::Update()
 	});
 
 	
+
+	//ワールド座標の更新
+	m_moveSpeed.y = ySpeed + grabity;
 	if (m_isDeadfrag) {
 		DeadMove();
 	}
-	//ワールド座標の更新
-	m_moveSpeed.y = ySpeed + grabity;
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 	m_ghostObject.SetPosition(m_position);
@@ -294,5 +308,8 @@ void Enemy_asigaru::ghostInit()
 /// </summary>
 void Enemy_asigaru::DeadMove()
 {
-	m_moveSpeed.y += 45.0f;
+	m_ghostObject.Release();
+	m_characon.RemoveRigidBoby();
+	m_moveSpeed = CVector3::Zero();
+	m_asigaruAnime.Play(Asigaru_dead,0.1f);
 }

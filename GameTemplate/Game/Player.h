@@ -4,10 +4,13 @@
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
 #include "physics/PhysicsGhostObject.h"
+#include "graphics/Skeleton.h"
 /// <summary>
 /// 
 /// </summary>
 class Enemy;
+//class Skeleton;
+class Wepon_ghost;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
@@ -52,14 +55,15 @@ public:
 		(void)clipName;
 		MessageBox(NULL, "attack", "attack", MB_OK);
 	}
-	PhysicsGhostObject* GetGhostObject() {
-		return &m_ghostObject;
-	}
+	//PhysicsGhostObject* GetGhostObject() {
+	//	return &m_ghostObject;
+	//}
 	//足軽アニメ
 	Animation m_busyoAnime;
 	//色んな武将アニメを格納している配列
 	enum busyoBASICAnimeClip {
 		animClip_idle = 0,
+		animClip_Walk,
 		animClip_ATK1,
 		animClip_ATK2,
 		animClip_ATK3,
@@ -79,7 +83,7 @@ public:
 	//プレイヤーに切られたとき
 	void isDead()
 	{
-		m_attack = true;
+		m_dead = true;
 	}
 	//敵情報のリクエストを受け取る
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
@@ -98,15 +102,20 @@ private:
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転
 	CVector3 m_scale = CVector3::One();					//プレイヤーの大きさ
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
+	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向と右方向を取得
+	CVector3 m_CameraRight = g_camera3D.GetRight();		
+	Skeleton* m_skelton;									
 	CharacterController m_characon;						//キャラクターコントローラー
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
-	bool m_damagefrag = false;							//ダメージは受けたか？
+	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
 	int PL_HP = 5;										//今の体力
 	bool m_deadFrag = false;							//死亡したときのスイッチ
 	//重力が強くかかるようになる奴
 	float gravity_keisuu = 0.1f;
-	bool m_attack = false;
+	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
+	bool m_underAttack = false;							//攻撃中？
 	//ghost!
 	PhysicsGhostObject m_ghostObject;
+	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 };
 
