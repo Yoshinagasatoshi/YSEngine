@@ -16,7 +16,7 @@ void Bone::CalcWorldTRS(CVector3& trans, CQuaternion& rot, CVector3& scale)
 	m_scale = scale;
 	//行列から平行移動量を取得する。
 	trans.Set(mWorld.v[3]);
-	m_positoin = trans;
+	m_position = trans;
 	//行列から拡大率と平行移動量を除去して回転量を取得する。
 	mWorld.v[0].Normalize();
 	mWorld.v[1].Normalize();
@@ -202,8 +202,13 @@ void Skeleton::Update(const CMatrix& mWorld)
 	for (int boneNo = 0; boneNo < m_bones.size(); boneNo++) {
 		Bone* bone = m_bones[boneNo];
 		if (bone->GetParentId() != -1) {
+			//footstepという名前のボーンが見つかったら
+			if (wcscmp(bone->GetName(),L"footstep") == 0) {
+				m_stepBoneMatrix = bone->GetWorldMatrix();
+			}
 			continue;
 		}
+	
 		//ルートが見つかったので、ボーンのワールド行列を計算していく。
 		UpdateBoneWorldMatrix(*bone, mWorld);
 	}
@@ -214,9 +219,15 @@ void Skeleton::Update(const CMatrix& mWorld)
 		CMatrix mBone;
 		//ワールド行列にバインドポーズの逆行列をかけたものがボーン行列？？？
 		mBone.Mul(bone->GetInvBindPoseMatrix(), bone->GetWorldMatrix());
+		//footstepの1f分の移動量を全てのボーンから引いている。xとzのみ適応
+		m_FrameStepBone.m[3][0] = m_laststepBoneMatrix.m[3][0] - m_stepBoneMatrix.m[3][0];
+		m_FrameStepBone.m[3][2] = m_laststepBoneMatrix.m[3][2] - m_stepBoneMatrix.m[3][2];
+
+		mBone.m[3][0] = mBone.m[3][0] - m_FrameStepBone.m[3][0];
+		mBone.m[3][2] = mBone.m[3][2] - m_FrameStepBone.m[3][2];
 		m_boneMatrixs[boneNo] = mBone;
 	}
-
+	m_laststepBoneMatrix = m_stepBoneMatrix;
 }
 /*!
 *@brief	ボーン行列の配列をGPUに転送。

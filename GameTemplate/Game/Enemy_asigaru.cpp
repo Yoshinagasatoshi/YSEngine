@@ -156,7 +156,7 @@ void Enemy_asigaru::Move()
 			m_moveSpeed = panko * 10.0f;
 
 			//m_moveSpeed = CVector3::Zero();
-			if (panko.x < 2.0f|| panko.z < 2.0f) 
+			if (panko.x < 2.0f) 
 			{
 				panko.Normalize();
 				m_moveSpeed = panko * 10.0f;//10”{

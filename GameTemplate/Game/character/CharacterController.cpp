@@ -115,6 +115,7 @@ void CharacterController::Init(float radius, float height, const CVector3& posit
 	rbInfo.mass = 0.0f;
 	m_rigidBody.Create(rbInfo);
 	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
+	//ここに移動量を受け取る奴を書いてみる
 	//剛体の位置を更新。
 	trans.setOrigin(btVector3(position.x, position.y + height/2, position.z));
 	//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));

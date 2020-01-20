@@ -14,6 +14,8 @@ const float SpeedAmount = 1000.0f;						//平面の移動量
 const float gravity = 600.0f;								//重力
 const float JumpPower = 1200.0f;							//プレイヤーの飛ぶ力
 
+const int TimerRelease = 20;					//ステートが解放されるまでの猶予時間
+const int Timer_ZERO = 0;						//0になる。そのまま
 Player::Player()
 {
 	CharaconInit();
@@ -45,6 +47,7 @@ Player::Player()
 	);
 
 	m_skelton = &m_playerModel.GetSkeleton();
+	//とりあえず30個分入る配列を作成
 	const wchar_t* bonename[30];
 
 	for (int i = 0; i < 29; i++) {
@@ -165,20 +168,30 @@ void Player::Update()
 	}
 	//ワールド行列の更新。
 	//m_ghostObject.Release();
+	float frameX = m_skelton->GetFrame_StepBone().m[3][0];
+	float frameZ = m_skelton->GetFrame_StepBone().m[3][2];
 
+	m_position.x += frameX;
+	m_position.z += frameZ;
+
+
+	//m_characon.SetAddPosition(CVector3{ frameX, 0.0f,frameZ });
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 
-	CVector3 a = m_position;
-	a.y += 80.0f;
-	m_ghostObject.SetPosition(a);
+	CVector3 ghostPos = m_position;
+	ghostPos.y += 80.0f;
+	ghostPos.x -= m_skelton->GetFrame_StepBone().m[3][0];
+	ghostPos.z -= m_skelton->GetFrame_StepBone().m[3][2];
+
+	m_ghostObject.SetPosition(ghostPos);
 
 	if (m_pl_Wepon != nullptr) {
 		m_pl_Wepon->SetPosition(m_position);
 	}
 	//m_position.Set(CVector3::Zero());
-	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale); //ワールド座標の更新　こっちのskeletonUpdateをいじる
 
-	m_busyoAnime.Update(1.0f / 30.0f);
+	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 }
 void Player::Draw()
 {
@@ -204,12 +217,11 @@ void Player::AttackMove()
 	//補間時間
 	float InterpolationTime = 0.5;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>10.0f) {
-		int i = 0;
 		//判定します。
 		//ストラテジーパターン予備軍
 		switch (m_animStep)
 		{
-		case 0:
+		case animClip_idle:
 			if (!m_underAttack)
 			{
 				m_underAttack = true;
@@ -217,19 +229,19 @@ void Player::AttackMove()
 			m_busyoAnime.Play(animClip_ATK1, InterpolationTime);
 			m_animStep++;
 			break;
-		case 1:
+		case animClip_ATK1:
 			m_busyoAnime.Play(animClip_ATK2, InterpolationTime);
 			m_animStep++;
 			break;
-		case 2:
+		case animClip_ATK2:
 			m_busyoAnime.Play(animClip_ATK3, InterpolationTime);
 			m_animStep++;
 			break;
-		case 3:
+		case animClip_ATK3:
 			m_busyoAnime.Play(animClip_ATK4, InterpolationTime);
 			m_animStep++;
 			break;
-		case 4:
+		case animClip_ATK4:
 			m_busyoAnime.Play(animClip_ATK5, InterpolationTime);
 			m_animStep++;
 			break;
@@ -238,17 +250,17 @@ void Player::AttackMove()
 	m_playTimer++;
 	if (m_animStep != 0) {
 		if (m_animStep != m_oldAnimStep) {
-			m_playTimer = 0;
+			m_playTimer = Timer_ZERO;
 			m_oldAnimStep = m_animStep;
 		}
-		if (m_playTimer >= 20) {
+		if (m_playTimer >= TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
 			if (m_underAttack) {
 				m_underAttack = false;
 			}
-			m_animStep = 0;
-			m_oldAnimStep = 0;
-			m_playTimer = 0;
+			m_animStep = animClip_idle;
+			m_oldAnimStep = animClip_idle;
+			m_playTimer = Timer_ZERO;
 			m_busyoAnime.Play(animClip_idle, InterpolationTime*2.0f);
 		}
 	}

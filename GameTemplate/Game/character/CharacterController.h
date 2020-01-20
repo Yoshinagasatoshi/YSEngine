@@ -48,7 +48,6 @@ public:
 	{
 		m_position = pos;
 	}
-
 	/*!
 		* @brief	ƒWƒƒƒ“ƒv’†‚©”»’è
 		*/
