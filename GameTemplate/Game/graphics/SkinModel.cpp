@@ -106,13 +106,13 @@ void SkinModel::InitDirectionLight()
 {
 	//とりあえず４本ディレクションライトを初期化
 	m_light.directionLight.direction[0] = { 1.0f,0.0f,0.0f,0.0f };
-	m_light.directionLight.color[0] = { 1.0f,0.0f,0.0f,1.0f };
+	m_light.directionLight.color[0] = { 0.1f,0.0f,0.0f,1.0f };
 
-	m_light.directionLight.direction[1] = { 0.0f,-0.707f,-0.707f,0.0f };
-	m_light.directionLight.color[1] = { 0.0f,0.25f,0.0f,1.0f };
+	m_light.directionLight.direction[1] = { 0.0f,0.707f,0.707f,0.0f };
+	m_light.directionLight.color[1] = { 0.0f,0.1f,0.0f,1.0f };
 
-	m_light.directionLight.direction[2] = { -1.0f,0.0f,0.0f,0.0f };
-	m_light.directionLight.color[2] = { 0.0f,0.0f,1.0f,1.0f };
+	m_light.directionLight.direction[2] = { 0.0f,0.707f,0.707f,0.0f };
+	m_light.directionLight.color[2] = { 0.0f,0.0f,0.1f,1.0f };
 
 	m_light.directionLight.direction[3] = { 0.0f,0.707f,-0.707f,0.0f };
 	m_light.directionLight.color[3] = { 1.0f,1.0f,1.0f,1.0f };
@@ -146,7 +146,6 @@ void SkinModel::Update()
 	qRot.SetRotationDeg(CVector3::AxisY(), 0.2f);
 	for (int i = 0; i < Lightnumber; i++) {
 		qRot.Multiply(m_light.directionLight.direction[i]);
-		
 	}
 	/*if (g_pad[0].IsPress(enButtonLeft)) {
 		m_light.specPow = max(0.0f, m_light.specPow - 0.5f);
@@ -158,7 +157,7 @@ void SkinModel::Update()
 
 void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
 {
-	Update();
+	//Update();
 	//3dsMaxと軸を合わせるためのバイアス。
 	CMatrix mBias = CMatrix::Identity();
 	if (m_enFbxUpAxis == enFbxUpAxisZ) {

@@ -10,7 +10,7 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {
-	const float RotAmount = 3.0f;
+	const float RotAmount = 5.0f;
 	//注視点の計算
 	m_target = m_player->GetPosition();
 	CVector3 m_toCameraPosOld = m_toPos;
@@ -41,12 +41,13 @@ void GameCamera::Update()
 		m_toPos = m_toCameraPosOld;
 	}
 	//視点の計算
-	CVector3 Pos = m_target + m_toPos;
+	m_position = m_target + m_toPos;
 	//Pos.y += 50.0f;
+	//ターゲットを少し高くする
 	m_target.y += 100.0f;
 	//メインカメラの注視点と視点を設定する。
 	g_camera3D.SetTarget(m_target);
-	g_camera3D.SetPosition(Pos);
+	g_camera3D.SetPosition(m_position);
 	g_camera3D.Update();
 }
 void GameCamera::Draw()

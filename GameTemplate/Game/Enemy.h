@@ -9,6 +9,7 @@
 /// </remarks>
 /// </summary>
 class Player;
+class GameCamera;
 class Enemy : public IGameObject
 {
 public:
@@ -29,12 +30,18 @@ public:
 	{
 		m_player = pl;
 	}
+	void SetGameCameraInfo(GameCamera* camera)
+	{
+		m_gameCamera = camera;
+	}
 protected:
-	SkinModel m_model;	//スキンモデル。
-	CVector3 m_position; //現在地
-	CQuaternion m_rotation; //回転角度
+	SkinModel m_model;			//スキンモデル。
+	SkinModel m_model_Row;		//ローポリのスキンモデル。アニメはつけない予定
+	CVector3 m_position;		//現在地
+	CQuaternion m_rotation;		//回転角度
 	CVector3 m_scale;
-	CVector3 m_playerPos; //プレイヤーのポジション
-	Player* m_player; //プレイヤーのポイント型
+	CVector3 m_playerPos;		//プレイヤーのポジション
+	Player* m_player;			//プレイヤーのポイント型
+	GameCamera* m_gameCamera;	//ゲームカメラのポイント型。
 };
 

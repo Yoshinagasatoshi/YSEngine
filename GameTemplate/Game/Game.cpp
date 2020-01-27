@@ -7,7 +7,7 @@
 #include "GameCamera.h"
 #include "level/Level.h"
 #include "GameData.h"
-//#include "UI.h"
+#include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
@@ -18,7 +18,7 @@ Game::Game()
 	m_backGround = g_goMgr.NewGameObject<BackGround>("BackGround");
 	m_gameCamera = g_goMgr.NewGameObject<GameCamera>("GameCamera");
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
-//	m_ui = g_goMgr.NewGameObject<UI>();
+	//m_ui = g_goMgr.NewGameObject<UI>("UI");
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata->SetPlayerInfo(m_player);
 	Level level;
@@ -32,6 +32,7 @@ Game::Game()
 				m_enemy->SetPos(objdata.position);
 				//enemy->SetRot(objdata.rotation);
 				m_enemy->SetPlayerInfo(m_player);
+				m_enemy->SetGameCameraInfo(m_gameCamera);
 				//可変長配列に↑のインスタンスを追加
 				return true;
 			}
@@ -56,7 +57,14 @@ Game::~Game()
 
 void Game::Update()
 {
-
+	if (g_pad->IsTrigger(enButtonUp)) {
+		if (m_isWireDraw) {
+			m_isWireDraw = false;
+		}
+		else {
+			m_isWireDraw = true;
+		}
+	}
 }
 
 
@@ -131,7 +139,9 @@ void Game::ForwardRender()
 	m_renderTarget.ClearRenderTarget(clearColor);
 
 	g_goMgr.Draw();
-	g_physics.DebugDraw();
+	if (m_isWireDraw) {
+		g_physics.DebugDraw();
+	}
 }
 
 void Game::PostRender()
@@ -162,7 +172,6 @@ void Game::InitCamera()
 	g_camera2D.SetWidth(FRAME_BUFFER_W);
 	g_camera2D.SetHeight(FRAME_BUFFER_H);
 	//-600がちょうどいい感じ
-	//何故かはわからないです…
 	g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
 	g_camera2D.SetTarget(CVector3::Zero());
 	g_camera2D.Update();

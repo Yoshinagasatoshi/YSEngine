@@ -26,7 +26,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		for (auto& pad : g_pad) {
 			pad.Update();
 		}
-		
 		//物理エンジンの更新。
 		g_physics.Update();
 		g_goMgr.Update();

@@ -50,6 +50,11 @@ public:
 	{
 		return m_deadFrag;
 	}
+	//プレイヤーの吹き飛ばし力を取得
+	float GetBlowOffPower()
+	{
+		return m_blowOffPower;
+	}
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	{
 		(void)clipName;
@@ -92,30 +97,33 @@ private:
 	//void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//囲いの最大数
 	static const int kakoi_max = 5;
-	EnemeyData m_enemydata[kakoi_max];
 	void AttackMove();									//無双の攻撃の処理を書く
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
+	int m_PL_HP = 5;									//今の体力
+	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
+	float m_blowOffPower;								//敵を吹き飛ばす威力
+
+	EnemeyData m_enemydata[kakoi_max];					//エネミーが行く座標のデータが入っている。
 	SkinModel m_playerModel;							//スキンモデル。
 	CVector3 m_position = CVector3::Zero();				//プレイヤーの位置
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転
 	CVector3 m_scale = CVector3::One();					//プレイヤーの大きさ
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
-	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向と右方向を取得
-	CVector3 m_CameraRight = g_camera3D.GetRight();		
-	Skeleton* m_skelton;									
+	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向を取得
+	CVector3 m_CameraRight = g_camera3D.GetRight();		//カメラの右方向を取得
+	Skeleton* m_skelton;								//Playerのスケルトンデータ
 	CharacterController m_characon;						//キャラクターコントローラー
-	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
-	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
-	int PL_HP = 5;										//今の体力
-	bool m_deadFrag = false;							//死亡したときのスイッチ
-	//重力が強くかかるようになる奴
-	float gravity_keisuu = 0.1f;
+
 	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
 	bool m_underAttack = false;							//攻撃中？
-	//ghost!
-	PhysicsGhostObject m_ghostObject;
+	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
+	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
+	bool m_deadFrag = false;							//死亡したときのスイッチ
+	
+
+	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 };
 

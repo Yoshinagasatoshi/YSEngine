@@ -23,6 +23,10 @@ void Wepon_ghost::Update()
 
 void Wepon_ghost::GhostInit()
 {
+	if (m_hanteifin) {
+		DeleteGO(this);
+		timer = 0;
+	}
 	if (!m_hanteifin) {
 		m_ghostObject.CreateBox(
 			m_position,
@@ -31,9 +35,5 @@ void Wepon_ghost::GhostInit()
 		);
 		m_hanteifin = true;
 	}
-	timer++;
-	if (timer > 5) {
-		DeleteGO(this);
-		
-	}
+	
 }

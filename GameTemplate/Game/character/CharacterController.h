@@ -6,12 +6,12 @@
 
 #include "Physics/CapsuleCollider.h"
 #include "Physics/RigidBody.h"
-
+#include "Physics/SphereCollider.h"
 
 /*!
 * @brief	キャラクタコントローラー。
 */
-class CharacterController{
+class CharacterController {
 public:
 	CharacterController() {
 
@@ -48,6 +48,10 @@ public:
 	{
 		m_position = pos;
 	}
+	void SetAddPosition(const CVector3& vec)
+	{
+		m_addVector = vec;
+	}
 	/*!
 		* @brief	ジャンプ中か判定
 		*/
@@ -69,6 +73,14 @@ public:
 	{
 		return &m_collider;
 	}
+	/// <summary>
+	/// スフィアコライダーを取得
+	/// </summary>
+	/// <returns></returns>
+	SphereCollider* GetSphereCollider()
+	{
+		return &m_sphereCollider;
+	}
 	/*!
 	* @brief	剛体を取得。
 	*/
@@ -85,7 +97,9 @@ private:
 	bool 				m_isJump = false;				//ジャンプ中？
 	bool				m_isOnGround = true;			//地面の上にいる？
 	CapsuleCollider		m_collider;						//コライダー。
+	SphereCollider		m_sphereCollider;				//球体コライダー
 	float				m_radius = 0.0f;
 	float				m_height = 0.0f;		
 	RigidBody			m_rigidBody;					//剛体。
+	CVector3			m_addVector = CVector3::Zero();
 };

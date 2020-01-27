@@ -107,11 +107,12 @@ void CharacterController::Init(float radius, float height, const CVector3& posit
 	//コリジョン作成。
 	m_radius = radius;
 	m_height = height;
-	m_collider.Create(radius, height);
+	//m_collider.Create(radius, height);
+	m_sphereCollider.Create(radius);
 
 	//剛体を初期化。
 	RigidBodyInfo rbInfo;
-	rbInfo.collider = &m_collider;
+	rbInfo.collider = &m_sphereCollider;
 	rbInfo.mass = 0.0f;
 	m_rigidBody.Create(rbInfo);
 	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
@@ -137,7 +138,6 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 	CVector3 addPos = moveSpeed;
 	addPos *= deltaTime;
 	nextPosition += addPos;
-	
 	CVector3 originalXZDir = addPos;
 	originalXZDir.y = 0.0f;
 	originalXZDir.Normalize();
@@ -172,7 +172,8 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 			callback.me = m_rigidBody.GetBody();
 			callback.startPos = posTmp;
 			//衝突検出。
-			g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+			//g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+			g_physics.ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
 
 			if (callback.isHit) {
 				//当たった。
@@ -241,7 +242,7 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 		start.setIdentity();
 		end.setIdentity();
 		//始点はカプセルコライダーの中心。
-		start.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius, m_position.z));
+		start.setOrigin(btVector3(m_position.x, m_position.y + m_height*0.5f, m_position.z));
 		//終点は地面上にいない場合は1m下を見る。
 		//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 		//地面上にいなくて降下中の場合はそのまま落下先を調べる。
@@ -268,7 +269,8 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 		callback.startPos.Set(start.getOrigin());
 		//衝突検出。
 		if(fabsf(endPos.y - callback.startPos.y) > FLT_EPSILON){
-			g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+		//	g_physics.ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
+			g_physics.ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
 			if (callback.isHit) {
 				//当たった。
 				moveSpeed.y = 0.0f;
@@ -290,7 +292,7 @@ const CVector3& CharacterController::Execute(float deltaTime, CVector3& moveSpee
 	btBody->setActivationState(DISABLE_DEACTIVATION);
 	btTransform& trans = btBody->getWorldTransform();
 	//剛体の位置を更新。
-	trans.setOrigin(btVector3(m_position.x, m_position.y + m_height/2, m_position.z));
+	trans.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f, m_position.z));
 	//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
 	return m_position;
 }

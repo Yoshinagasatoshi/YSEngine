@@ -3,13 +3,15 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
 #include "Wepon_ghost.h"
+#include "GameCamera.h"
 
 const float BattleRange = 180.0f * 180.0f;
 const float VililanceRange = 600.0f * 600.0f;
 const float grabity = -9.8f;
-
+const float tikadukisugi = 2.0f;
+const float Timer_ZERO = 0.0f;
 /// <summary>
-/// boid 方を　試したい。
+/// boid
 /// </summary>
 Enemy_asigaru::IdlePos Enemy_asigaru::m_idlePos[5];
 //コンストラクタ
@@ -20,6 +22,7 @@ Enemy_asigaru::Enemy_asigaru()
 
 	//asigaruのモデルをロードする。
 	m_model.Init(L"Assets/modelData/asigaru.cmo");
+	m_model_Row.Init(L"Assets/modelData/asigaru_Rowpori.cmo");
 	m_rotation = CQuaternion::Identity();
 	//アニメーションを格納だ
 	m_asigaruAnimeClip[Asigaru_totugeki].Load(L"Assets/animData/asigaru_totugeki.tka");
@@ -53,7 +56,7 @@ Enemy_asigaru::Enemy_asigaru()
 		}
 	}
 
-	ghostInit();
+	//ghostInit();
 
 	m_asigaruAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
@@ -65,31 +68,59 @@ Enemy_asigaru::Enemy_asigaru()
 //デストラクタ
 Enemy_asigaru::~Enemy_asigaru()
 {
+	g_goMgr.DeleteGOObject(this);
 }
 
 void Enemy_asigaru::CharaconInit()
 {
-	//重てぇ！！！！！！！！！！！！
 	//キャラコンの初期化
 	m_characon.Init(
-		30.0f, //半径
+		60.0f, //半径
 		100.0f,//高さ
 		m_position//位置
 	);
 }
+
 void Enemy_asigaru::Update()
 {
 	//Y成分の移動速度をバックアップしておく。
 	float ySpeed = m_moveSpeed.y;
-	if (!m_characonState) {
-		m_characonState = true;
+
+	//キャラコンが作られていなかったらinitする
+	if (!m_characonContain) {
+		m_characonContain = true;
 		CharaconInit();
 	}
-	//Move();
-	Turn();
-	if (!m_isDeadfrag) {
-		StateJudge();
+
+	//打ちあがって着地したときに動いてしまうので
+	//無理やり動きを固定する
+	if (m_isDeadfrag
+		&&m_characon.IsOnGround()){
+		m_moveSpeed = CVector3::Zero();
+		m_Deathtimer_f++;
+		//死んだ後に少したってモデルが消える
+		if (m_Deathtimer_f > 10.0f) {
+			//m_characon.RemoveRigidBoby();
+			DeleteGO(this);
+		}
 	}
+
+	//死んでいるかどうかで行う処理が変わる
+	if (m_isDeadfrag
+		&&!m_deadMoveStopper) {
+		m_deadMoveStopper = true;
+		DeadMove();
+		ySpeed = m_moveSpeed.y;
+	}
+	else if(!m_isDeadfrag){
+		StateJudge();
+
+		//回転処理。プレイヤーの方に向くだけ
+		Turn();
+	}
+
+
+	//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
 	QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
 		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
@@ -101,26 +132,35 @@ void Enemy_asigaru::Update()
 		return true;
 	});
 
-	
-
 	//ワールド座標の更新
 	m_moveSpeed.y = ySpeed + grabity;
-	if (m_isDeadfrag) {
-		DeadMove();
-	}
+
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
-	m_ghostObject.SetPosition(m_position);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	m_model_Row.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
+	//m_ghostObject.SetPosition(m_position);
 	m_asigaruAnime.Update(1.0f / 30.0f);
 }
 void Enemy_asigaru::Draw()
 {
-	//モデルの描画
-	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
-	);
+	CVector3 cameraPos = m_gameCamera->GetCameraPos();
+	CVector3 Lenght = cameraPos - m_position;
+	Lenght.y = 0.0f;
+	if (Lenght.LengthSq() < 3000.0f * 3000.0f) {
+		//モデルの描画
+		m_model.Draw(
+			g_camera3D.GetViewMatrix(),
+			g_camera3D.GetProjectionMatrix()
+		);
+	}
+	else {
+		m_model_Row.Draw(
+			g_camera3D.GetViewMatrix(),
+			g_camera3D.GetProjectionMatrix()
+		);
+	}
 }
 
 //ここが　取り巻く処理を書いている場所
@@ -153,15 +193,8 @@ void Enemy_asigaru::Move()
 			i = rand() % 5;
 			CVector3 panko = CVector3::Zero();
 			panko = m_idlePos[i].idlePos - m_position;
+			panko.Normalize();
 			m_moveSpeed = panko * 10.0f;
-
-			//m_moveSpeed = CVector3::Zero();
-			if (panko.x < 2.0f) 
-			{
-				panko.Normalize();
-				m_moveSpeed = panko * 10.0f;//10倍
-			}
-
 		}
 
 	}
@@ -213,14 +246,6 @@ void Enemy_asigaru::StateJudge()
 	switch (m_asigaruState)
 	{
 	case Asigaru_attack:
-		if (!m_player_isdead)
-		{
-			//プレイヤーが死んでいなかったらこの処理を行う
-
-			if (!m_isAttack) {
-				m_isAttack = true;
-			}
-		}
 		Move();
 		m_moveSpeed = CVector3::Zero();
 		if (!m_asigaruAnime.IsPlaying()) {
@@ -233,7 +258,7 @@ void Enemy_asigaru::StateJudge()
 		}
 		if (kyori.LengthSq() > BattleRange) {
 			m_asigaruState = Asigaru_tikazuki;
-			m_frameTimer = 0.0f;
+			m_frameTimer = Timer_ZERO;
 			m_kougekiframenum = AttackframeNum();
 		}
 		//sentouの処理
@@ -242,7 +267,7 @@ void Enemy_asigaru::StateJudge()
 
 		if (m_frameTimer >= m_kougekiframenum)
 		{
-			m_frameTimer = 0.0f;
+			m_frameTimer = Timer_ZERO;
 			m_kougekiframenum = AttackframeNum();
 			m_player->PlayerDamage();
 			m_asigaruState = Asigaru_attack;
@@ -289,27 +314,35 @@ void Enemy_asigaru::StateJudge()
 		m_asigaruAnime.Play(m_asigaruState, 0.2f);
 }
 
-//ちゃんとある
-void Enemy_asigaru::ghostInit()
-{
-	m_ghostObject.CreateBox(
-		m_position,
-		m_rotation,
-		{
-		m_scale.x * 50.0f,
-		m_scale.y * 200.0f,
-		m_scale.z * 50.0f 
-		}
-	);
-}
+//エネミーのゴースト。今は使っていないのでコメントアウトしている
+//void Enemy_asigaru::ghostInit()
+//{
+//	m_ghostObject.CreateBox(
+//		m_position,
+//		m_rotation,
+//		{
+//		m_scale.x * 50.0f,
+//		m_scale.y * 200.0f,
+//		m_scale.z * 50.0f 
+//		}
+//	);
+//}
 
 /// <summary>
 /// 死んだときに呼ばれる名前の通りの関数
 /// </summary>
 void Enemy_asigaru::DeadMove()
 {
-	m_ghostObject.Release();
-	m_characon.RemoveRigidBoby();
-	m_moveSpeed = CVector3::Zero();
+	//当たり判定などの開放
+	//m_ghostObject.Release();
+	//プレイヤーから食らった技の威力に応じて
+	//吹き飛ばし量を決める
+	float power;
+	power = m_player->GetBlowOffPower();
+	m_moveSpeed.y += power;
+	CVector3 a;
+	a = m_forward * power / 4;
+	m_moveSpeed -= a;
 	m_asigaruAnime.Play(Asigaru_dead,0.1f);
+	m_asigaruAnime.Update(1/10);
 }

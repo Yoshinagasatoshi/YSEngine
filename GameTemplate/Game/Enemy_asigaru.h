@@ -30,17 +30,23 @@ public:
 	//距離による判定処理関数
 	void StateJudge();
 	//ゴーストのInit
-	void ghostInit();
+	//void ghostInit();
+
+	//ふっとばし量を受け取る。
+	void SetDamage(float recive)
+	{
+		m_recivePower = recive;
+	}
 
 	static Enemy_asigaru& GetInstans()
 	{
 		static Enemy_asigaru enemy;
 		return enemy;
 	}
-
-	PhysicsGhostObject* GetGhostObject(){
-		return &m_ghostObject;
-	}
+	
+	//PhysicsGhostObject* GetGhostObject(){
+	//	return &m_ghostObject;
+	//}
 	//キャラの状態の種類
 	enum AsigaruState {
 		Asigaru_totugeki = 0,
@@ -70,30 +76,6 @@ public:
 	CVector3 moveV = CVector3::Zero();
 	int i = 0;
 private:
-	//アニメーションイベントを呼び出すよ
-	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
-	//キャラクターのコリジョン初期化
-	void CharaconInit();
-	//ghost!当たり判定だけがある剛体です。
-	PhysicsGhostObject m_ghostObject;
-	//足軽の初期ステートは？
-	AsigaruState m_asigaruState = Asigaru_totugeki;
-	//足軽の前にやっていたステート,アニメを流すかの判定に使用
-	AsigaruState m_oldState = Asigaru_sentou;
-	CharacterController m_characon;
-	bool m_characonState = false;
-	CVector3 m_forward = CVector3::AxisZ();
-	double PI = 3.14159265358979323846f;
-	//回るぞ
-	//CMatrix a;
-	float kaiten = 0.0f;
-	GameData* gamedata = nullptr;
-
-	//時間系
-	//計測時間
-	float m_frameTimer = 0.0f;
-	//攻撃時間。この時間を超えると攻撃フラグがたつ
-	float m_kougekiframenum = 99.9f;
 	//攻撃時間が何秒か抽選する関数
 	//計測時間も初期化する
 	float AttackframeNum()
@@ -101,13 +83,53 @@ private:
 		m_kougekiframenum = 100.0f + rand() % 500;
 		return m_kougekiframenum;
 	}
+	//アニメーションイベントを呼び出すよ
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+	//キャラクターのコリジョン初期化
+	void CharaconInit();
+	//当たり判定を出す変数
+	//PhysicsGhostObject m_ghostObject;
+	//足軽の状態管理。
+	AsigaruState m_asigaruState = Asigaru_totugeki;
+	//足軽の前にやっていたステート,アニメを流すかの判定に使用
+	AsigaruState m_oldState = Asigaru_sentou;
+
+	//キャラクターコントローラ。コリジョンを簡単につけるもの
+	CharacterController m_characon;
+
+	//キャラコンを入れる。
+	bool m_characonContain = false;
 	//試しに書いているコード
 	bool m_isDeadfrag = false;
 	//攻撃中のフラグ
 	bool m_isAttack = false;
-	//プレイヤーが死んでいる状態かどうかを受け取る変数
+	//ストッパー。一回しか呼ばれたくないので
+	bool m_deadMoveStopper = false;
+	//プレイヤーが死んでいる状態かどうかを受け取る変数。
+	//関数で受け取るので初期化してません
 	bool m_player_isdead;
+
+	//自分の回転
+	//float m_modelRotate = 0.0f;
+	//計測時間
+	float m_frameTimer = 0.0f;
+	//攻撃時間。この時間を超えると攻撃フラグがたつ
+	float m_kougekiframenum = 99.9f;
+	//消えるまでの時間
+	float m_Deathtimer_f = 0.0f;
+	//吹き飛ばし量を入れる箱
+	float m_recivePower;
+	//円周率。必要なためここに書いた
+	double PI = 3.14159265358979323846f;
+
+	//前方向
+	CVector3 m_forward = CVector3::AxisZ();
+
+	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
+	//スケルトン。骨の位置にghostをだすため。
 	Skeleton* m_skeleton;
+	//ゲームデータのポインタ。数値をここから抜粋していく。
+	GameData* gamedata = nullptr;
 };
 

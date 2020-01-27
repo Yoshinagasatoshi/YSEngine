@@ -7,15 +7,17 @@
 #include "Wepon_ghost.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
-const float PLAYER_COLLIDER_HEIGHT = 100.0f;		//プレイヤーのカプセルコライダーの高さ。
-const float PLAYER_COLLIDER_RADIUS = 28.0f;		//プレイヤーのカプセルコライダーの半径。
+const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
+const float PLAYER_COLLIDER_RADIUS = 60.0f;		//プレイヤーのカプセルコライダーの半径。
 
-const float SpeedAmount = 1000.0f;						//平面の移動量
-const float gravity = 600.0f;								//重力
-const float JumpPower = 1200.0f;							//プレイヤーの飛ぶ力
+const float SpeedAmount = 1500.0f;				//平面の移動量
+const float gravity = 600.0f;					//重力
+const float JumpPower = 1200.0f;				//プレイヤーの飛ぶ力
+const float standardPower = 200.0f;				//プレイヤーの敵吹き飛ばし力
 
 const int TimerRelease = 20;					//ステートが解放されるまでの猶予時間
 const int Timer_ZERO = 0;						//0になる。そのまま
+
 Player::Player()
 {
 	CharaconInit();
@@ -69,6 +71,9 @@ Player::Player()
 				m_bone->GetWorldMatrix().m[3][2]
 			);
 		//OnAnimationEvent(clipName,eventName);
+
+		//g_goMgrのリストに足しているが、出したらすぐにDeleteされるようになっている。
+		//これの消去のタイミングと足軽が消去されるタイミングが一緒だとエラーが起きる。
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(bonepos);
 		m_pl_Wepon->GhostInit();
@@ -101,7 +106,7 @@ void Player::Update()
 		if (m_characon.IsOnGround()) {
 			//重力はいらない
 			AttackMove();
-			gravity_keisuu = 0.1f;
+			m_gravity_keisuu = 0.1f;
 			//ジャンプしてた？
 			if (m_Jumpfrag) {
 				m_Jumpfrag = false;
@@ -114,15 +119,18 @@ void Player::Update()
 				m_Jumpfrag = true;
 				m_animStep = 0;
 			}
-			gravity_keisuu += 0.1f;
+			m_gravity_keisuu += 0.1f;
+			if (m_gravity_keisuu > 1.0f) {
+				m_gravity_keisuu = 1.0f;
+			}
 			m_busyoAnime.Play(animClip_idle, 0.5f);
 		}
 		//ここら辺の処理ではほかに関数を使った方がいいかも
 		if (m_damagefrag)
 		{
 			m_damagefrag = false;
-			if (PL_HP != 0) {
-				PL_HP--;
+			if (m_PL_HP != 0) {
+				m_PL_HP--;
 			}
 			else {
 				m_deadFrag = true;
@@ -156,7 +164,7 @@ void Player::Update()
 		m_CameraRight.Normalize();
 		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
 		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
-		m_moveSpeed.y -= gravity * gravity_keisuu;
+		m_moveSpeed.y -= gravity * m_gravity_keisuu;
 
 		//回転処理
 		Turn();
@@ -216,7 +224,7 @@ void Player::AttackMove()
 {
 	//補間時間
 	float InterpolationTime = 0.5;
-	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>10.0f) {
+	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
 		//判定します。
 		//ストラテジーパターン予備軍
 		switch (m_animStep)
@@ -227,7 +235,10 @@ void Player::AttackMove()
 				m_underAttack = true;
 			}
 			m_busyoAnime.Play(animClip_ATK1, InterpolationTime);
-			m_animStep++;
+			m_busyoAnimeClip->GetKeyFramePtrListArray();
+			//enmuの離れた位置にアタックがあるため、最初だけ+= animClip_ATK1を足す
+			m_animStep += animClip_ATK1;
+			m_blowOffPower = standardPower * 1.7f;
 			break;
 		case animClip_ATK1:
 			m_busyoAnime.Play(animClip_ATK2, InterpolationTime);
@@ -240,10 +251,12 @@ void Player::AttackMove()
 		case animClip_ATK3:
 			m_busyoAnime.Play(animClip_ATK4, InterpolationTime);
 			m_animStep++;
+			m_blowOffPower = standardPower * 2.0f;
 			break;
 		case animClip_ATK4:
 			m_busyoAnime.Play(animClip_ATK5, InterpolationTime);
 			m_animStep++;
+			m_blowOffPower = standardPower * 2.5f;
 			break;
 		}
 	}
@@ -274,7 +287,7 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	{
 		
 		//一番最初にエネミーの空いている所に情報を入れる
-		if (m_enemydata[i].position.y == NULL) {
+		if (m_enemydata[i].position.y == 0.0f) {
 			m_enemydata[i].position = pos;
 			m_enemydata[i].enemy = enemy;
 			return i;
@@ -283,11 +296,11 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 			return i;
 		}
 
-		if (m_enemydata[i].position.y != NULL) {
+		if (m_enemydata[i].position.y != 0.0f) {
 			CVector3 kyori = m_enemydata[i].position - pos;
 			if (kyori.LengthSq() > posClearRange) {
 				m_enemydata[i].enemy = NULL;
-				m_enemydata[i].position = CVector3{NULL,NULL,NULL};
+				m_enemydata[i].position = CVector3{0.0f,0.0f,0.0f};
 				return -1;
 			}
 		}

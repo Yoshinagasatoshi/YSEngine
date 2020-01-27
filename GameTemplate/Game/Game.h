@@ -3,7 +3,7 @@
 #include "GameData.h"
 #include "graphics/RenderTarget.h"
 #include "graphics/Sprite.h"
-//class UI;
+class UI;
 class Player;
 class Enemy;
 class BackGround;
@@ -37,11 +37,12 @@ private:
 	BackGround* m_backGround = nullptr;
 	GameCamera* m_gameCamera = nullptr;
 	GameData* m_gamedata = nullptr;
-	//	UI* m_ui;
+	UI* m_ui;
 	RenderTarget m_renderTarget;				//メインレンダリングターゲット
 	Sprite m_copyMainRtToFrameBufferSprite;		//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
 	D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
 	bool m_attack = false;
+	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 };
