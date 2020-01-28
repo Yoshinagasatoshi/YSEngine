@@ -15,7 +15,6 @@ const float gravity = 600.0f;					//重力
 const float JumpPower = 1200.0f;				//プレイヤーの飛ぶ力
 const float standardPower = 200.0f;				//プレイヤーの敵吹き飛ばし力
 
-const int TimerRelease = 20;					//ステートが解放されるまでの猶予時間
 const int Timer_ZERO = 0;						//0になる。そのまま
 
 Player::Player()
@@ -77,6 +76,10 @@ Player::Player()
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(bonepos);
 		m_pl_Wepon->GhostInit();
+		m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
+		m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
+		m_isDontMove = true;
+
 		//(void)clipName;
 		//MessageBox(NULL, "Attack", "attack", MB_OK);
 	}
@@ -148,8 +151,11 @@ void Player::Update()
 		}
 		//プレイヤーが死んでいない時の処理。
 		//平面の移動量はアプデごとにリセットする
-		m_moveSpeed.x = 0.0f;
-		m_moveSpeed.z = 0.0f;
+		if (!m_isDontMove) {
+			m_moveSpeed.x = 0.0f;
+			m_moveSpeed.z = 0.0f;
+		}
+		m_isDontMove = false;
 		//入力量を受け取る
 		float WideMove = g_pad->GetLStickXF();
 		float heightMove = g_pad->GetLStickYF();
@@ -266,11 +272,17 @@ void Player::AttackMove()
 			m_playTimer = Timer_ZERO;
 			m_oldAnimStep = m_animStep;
 		}
-		if (m_playTimer >= TimerRelease) {
+		//最後まで行くと隙をさらす時間を増やす
+		if (m_animStep == animClip_ATK5) {
+			//増やす処理
+			m_TimerRelease = 45;
+		}
+		if (m_playTimer >= m_TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
 			if (m_underAttack) {
 				m_underAttack = false;
 			}
+			m_TimerRelease = 20;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = Timer_ZERO;
@@ -283,7 +295,7 @@ void Player::AttackMove()
 
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
-	for (int i = 0; i < kakoi_max; i++)
+	for (int i = 0; i < DestinationNum; i++)
 	{
 		
 		//一番最初にエネミーの空いている所に情報を入れる

@@ -96,21 +96,23 @@ private:
 	//アニメーションイベントを呼び出すよ
 	//void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//囲いの最大数
-	static const int kakoi_max = 5;
+	static const int DestinationNum = 5;
 	void AttackMove();									//無双の攻撃の処理を書く
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
+	int m_TimerRelease = 20;							//ステートが解放されるまでの猶予時間。20は単位
 	int m_PL_HP = 5;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 
-	EnemeyData m_enemydata[kakoi_max];					//エネミーが行く座標のデータが入っている。
+	EnemeyData m_enemydata[DestinationNum];				//エネミーが行く座標のデータが入っている。
 	SkinModel m_playerModel;							//スキンモデル。
 	CVector3 m_position = CVector3::Zero();				//プレイヤーの位置
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転
 	CVector3 m_scale = CVector3::One();					//プレイヤーの大きさ
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
+	bool m_isDontMove = false;
 	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向を取得
 	CVector3 m_CameraRight = g_camera3D.GetRight();		//カメラの右方向を取得
 	Skeleton* m_skelton;								//Playerのスケルトンデータ

@@ -7,7 +7,6 @@
 #include "Physics/CollisionAttr.h"
 
 
-
 namespace {
 	//衝突したときに呼ばれる関数オブジェクト(地面用)
 	struct SweepResultGround : public btCollisionWorld::ConvexResultCallback

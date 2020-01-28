@@ -8,7 +8,7 @@ public:
 	~Wepon_ghost();
 	void Update();
 	bool Start();
-	void SetPosition(CVector3& pos)
+	void SetPosition(const CVector3& pos)
 	{
 		m_position = pos;
 	}
