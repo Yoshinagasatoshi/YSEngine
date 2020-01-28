@@ -29,10 +29,10 @@ Player::Player()
 	m_busyoAnimeClip[animClip_Walk].SetLoopFlag(true);
 	//攻撃アニメロード
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
-	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki2.tka");
-	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki3.tka");
-	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki4.tka");
-	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki5.tka");
+	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki.tka");
+	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki.tka");
+	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki.tka");
+	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki.tka");
 	//ダメージロード
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
 	m_busyoAnimeClip[animClip_busyo_dead].Load(L"Assets/animData/busyo_dead.tka");
@@ -48,6 +48,7 @@ Player::Player()
 	);
 
 	m_skelton = &m_playerModel.GetSkeleton();
+	//このコードはボーンの配列を確認するために書いているコード。直接ゲームには関わってない。
 	//とりあえず30個分入る配列を作成
 	const wchar_t* bonename[30];
 
@@ -60,31 +61,32 @@ Player::Player()
 		}
 	}
 
-	m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
-	{
-			auto m_bone = m_skelton->GetBone(20);
-			CVector3 bonepos;
-			bonepos.Set(
-				m_bone->GetWorldMatrix().m[3][0],
-				m_bone->GetWorldMatrix().m[3][1],
-				m_bone->GetWorldMatrix().m[3][2]
-			);
-		//OnAnimationEvent(clipName,eventName);
+	//m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
+	//{
+	//		auto m_bone = m_skelton->GetBone(20);
+	//		CVector3 bonepos;
+	//		bonepos.Set(
+	//			m_bone->GetWorldMatrix().m[3][0],
+	//			m_bone->GetWorldMatrix().m[3][1],
+	//			m_bone->GetWorldMatrix().m[3][2]
+	//		);
+	//	//OnAnimationEvent(clipName,eventName);
 
-		//g_goMgrのリストに足しているが、出したらすぐにDeleteされるようになっている。
-		//これの消去のタイミングと足軽が消去されるタイミングが一緒だとエラーが起きる。
-		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
-		m_pl_Wepon->SetPosition(bonepos);
-		m_pl_Wepon->GhostInit();
-		m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
-		m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
-		m_isDontMove = true;
+	//	m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
+	//	m_pl_Wepon->SetPosition(bonepos);
+	//	m_pl_Wepon->GhostInit();
+	//	//m_bone->GetWorldMatrix().m[3][0];
+	//	//m_bone->GetWorldMatrix().m[3][2];
+	//	//m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
+	//	//m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
+	//	//m_isDontMove = true;
 
-		//(void)clipName;
-		//MessageBox(NULL, "Attack", "attack", MB_OK);
-	}
-	);
-	ghostInit();
+	//	//通っているか確認
+	//	//(void)clipName;
+	//	//MessageBox(NULL, "Attack", "attack", MB_OK);
+	//}
+	//);
+	//ghostInit();
 }
 
 
@@ -118,9 +120,11 @@ void Player::Update()
 		//ステートごとにの処理に後でする。
 		if (g_pad->IsTrigger(enButtonA)) {
 			if (!m_Jumpfrag) {
-				m_moveSpeed.y += JumpPower;
-				m_Jumpfrag = true;
-				m_animStep = 0;
+				if (!m_underAttack) {
+					m_moveSpeed.y += JumpPower;
+					m_Jumpfrag = true;
+					m_animStep = 0;
+				}
 			}
 			m_gravity_keisuu += 0.1f;
 			if (m_gravity_keisuu > 1.0f) {
@@ -143,11 +147,13 @@ void Player::Update()
 		}
 
 		//ダメージアニメーションが終わったら立ち姿に
-		if (m_playerState == animClip_SmallDamage
-			&& !m_busyoAnime.IsPlaying())
+		if (!m_busyoAnime.IsPlaying())
 		{
 			m_playerState = animClip_idle;
-			m_busyoAnime.Play(animClip_idle, 0.5f);
+			if (m_underAttack) {
+				m_underAttack = false;
+			}
+			m_busyoAnime.Play(animClip_idle, 0.2f);
 		}
 		//プレイヤーが死んでいない時の処理。
 		//平面の移動量はアプデごとにリセットする
@@ -168,10 +174,12 @@ void Player::Update()
 		m_CameraForward.Normalize();
 		m_CameraRight.y = 0.0f;
 		m_CameraRight.Normalize();
-		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
-		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+		//攻撃中は自由に動かない時にする。
+		if (!m_underAttack) {
+			m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
+			m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+		}
 		m_moveSpeed.y -= gravity * m_gravity_keisuu;
-
 		//回転処理
 		Turn();
 	}
@@ -182,29 +190,18 @@ void Player::Update()
 	}
 	//ワールド行列の更新。
 	//m_ghostObject.Release();
-	float frameX = m_skelton->GetFrame_StepBone().m[3][0];
-	float frameZ = m_skelton->GetFrame_StepBone().m[3][2];
 
-	m_position.x += frameX;
-	m_position.z += frameZ;
-
-
-	//m_characon.SetAddPosition(CVector3{ frameX, 0.0f,frameZ });
-	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
-
-	CVector3 ghostPos = m_position;
-	ghostPos.y += 80.0f;
-	ghostPos.x -= m_skelton->GetFrame_StepBone().m[3][0];
-	ghostPos.z -= m_skelton->GetFrame_StepBone().m[3][2];
-
-	m_ghostObject.SetPosition(ghostPos);
-
+	if (!m_underAttack) {
+		m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+	}
 	if (m_pl_Wepon != nullptr) {
 		m_pl_Wepon->SetPosition(m_position);
 	}
-	//m_position.Set(CVector3::Zero());
-	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale); //ワールド座標の更新　こっちのskeletonUpdateをいじる
 
+	auto move = m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale); //ワールド座標の更新　こっちのskeletonUpdateをいじる
+	if(m_underAttack){
+		m_position = m_characon.Execute(1.0f, move);
+	}
 	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 }
 void Player::Draw()
@@ -229,17 +226,17 @@ void Player::Turn()
 void Player::AttackMove()
 {
 	//補間時間
-	float InterpolationTime = 0.5;
+	float InterpolationTime = 0.1f;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
+		if (!m_underAttack)
+		{
+			m_underAttack = true;
+		}
 		//判定します。
 		//ストラテジーパターン予備軍
 		switch (m_animStep)
 		{
 		case animClip_idle:
-			if (!m_underAttack)
-			{
-				m_underAttack = true;
-			}
 			m_busyoAnime.Play(animClip_ATK1, InterpolationTime);
 			m_busyoAnimeClip->GetKeyFramePtrListArray();
 			//enmuの離れた位置にアタックがあるため、最初だけ+= animClip_ATK1を足す

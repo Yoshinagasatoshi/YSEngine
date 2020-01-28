@@ -82,7 +82,7 @@ public:
 	AnimationClip m_busyoAnimeClip[animClip_num];
 	struct EnemeyData
 	{
-		CVector3 position = CVector3(NULL, NULL, NULL);
+		CVector3 position = CVector3(0.0f,0.0f,0.0f);
 		Enemy* enemy;
 	};
 	//プレイヤーに切られたとき
@@ -102,7 +102,7 @@ private:
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 20;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 5;									//今の体力
+	int m_PL_HP = 1;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 

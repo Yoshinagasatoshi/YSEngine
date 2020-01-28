@@ -194,7 +194,7 @@ void Enemy_asigaru::Move()
 			CVector3 panko = CVector3::Zero();
 			panko = m_idlePos[i].idlePos - m_position;
 			panko.Normalize();
-			m_moveSpeed = panko * 10.0f;
+			m_moveSpeed = CVector3::Zero();
 		}
 
 	}

@@ -88,7 +88,6 @@ public:
 	{
 		return m_boneId;
 	}
-
 	/*!
 	*@brief	子供を追加。
 	*/
@@ -194,6 +193,13 @@ public:
 	{
 		return m_FrameStepBone;
 	}
+/// <summary>
+/// m_isfirstをfalseにする
+/// </summary>
+	void m_firstisFalse()
+	{
+		m_isFirst = true;
+	}
 	/*!
 	*@brief	ボーン行列の配列をGPUに転送。
 	*/
@@ -210,7 +216,7 @@ public:
 	/*!
 	 *@brief	更新。
 	 */
-	void Update(const CMatrix& mWorld);
+	CVector3 Update(CMatrix mWorld);
 	/*!
 	*@brief	ボーンのワールド行列の更新関数。
 	*@details
@@ -220,7 +226,7 @@ public:
 	*/
 	static 	void UpdateBoneWorldMatrix(Bone& bone, const CMatrix& parentMatrix);
 private:
-	
+	bool m_isFirst = true;
 	std::vector<Bone*>			m_bones;					//!<ボーンの配列。
 	std::vector<CMatrix>		m_boneMatrixs;				//!<ボーン行列。
 	ID3D11Buffer*				m_boneMatrixSB = nullptr;	//!<ボーン行列のストラクチャーバッファ。

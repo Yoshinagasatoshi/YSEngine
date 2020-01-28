@@ -42,7 +42,7 @@ public:
 	*@param[in]	rotation	モデルの回転。
 	*@param[in]	scale		モデルの拡大率。
 	*/
-	void UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale);
+	CVector3 UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale);
 	/*!
 	*@brief	ボーンを検索。
 	*@param[in]		boneName	ボーンの名前。

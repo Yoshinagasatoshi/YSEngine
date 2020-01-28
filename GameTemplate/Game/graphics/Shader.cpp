@@ -9,7 +9,7 @@
 namespace {
 	void ReadFile(const char* filePath, char* readBuff, int& fileSize)
 	{
-		FILE* fp = fopen(filePath, "rb");
+		FILE* fp = fopen(filePath, "rb");																																																																																																																																																																																																																																											
 		fseek(fp, 0, SEEK_END);
 		fpos_t fPos;
 		fgetpos(fp, &fPos);
