@@ -10,6 +10,7 @@ const float VililanceRange = 600.0f * 600.0f;
 const float grabity = -9.8f;
 const float tikadukisugi = 2.0f;
 const float Timer_ZERO = 0.0f;
+
 /// <summary>
 /// boid
 /// </summary>
@@ -176,9 +177,14 @@ void Enemy_asigaru::Move()
 		//ここだけ動きと回転の処理を変える
 		idlePosInit();
 		m_moveSpeed = m_idlePos[kakoi_num].idlePos - m_position;
-		m_moveSpeed.Normalize();
-		m_moveSpeed *= 30.0f;//30倍
-
+		//目的地と距離があまりにも近いときは動かない
+		if (m_moveSpeed.Length() < 5.0f) {
+			m_moveSpeed = CVector3::Zero();
+		}
+		else {
+			m_moveSpeed.Normalize();
+			m_moveSpeed *= 30.0f;//30倍
+		}
 	float angle = atan2(kaiten.x,kaiten.z);
 	m_rotation.SetRotation(CVector3::AxisY(), angle);
 	return;
@@ -336,7 +342,7 @@ void Enemy_asigaru::DeadMove()
 	//当たり判定などの開放
 	//m_ghostObject.Release();
 	//プレイヤーから食らった技の威力に応じて
-	//吹き飛ばし量を決める
+	//吹き飛ぶ量を決める
 	float power;
 	power = m_player->GetBlowOffPower();
 	m_moveSpeed.y += power;

@@ -63,10 +63,20 @@ public:
 	//PhysicsGhostObject* GetGhostObject() {
 	//	return &m_ghostObject;
 	//}
+
+	//武将の状態を格納
+	enum busyoState {
+		BusyoNormal = 0,//通常の武将
+		BusyoAttack,	//攻撃状態の武将
+		BusyoDamage,	//攻撃を食らっている時の武将
+		BusyoDead		//死亡した武将
+	};
+	busyoState m_busyoState = BusyoNormal;
+
 	//足軽アニメ
 	Animation m_busyoAnime;
-	//色んな武将アニメを格納している配列
-	enum busyoBASICAnimeClip {
+	//色んな武将アニメを格納している配列。busyoStateに反映される。
+	enum busyoAnimeClip {
 		animClip_idle = 0,
 		animClip_Walk,
 		animClip_ATK1,
@@ -78,8 +88,10 @@ public:
 		animClip_busyo_dead,
 		animClip_num
 	};
-	busyoBASICAnimeClip m_playerState = animClip_idle;
+	busyoAnimeClip m_animState = animClip_idle;
 	AnimationClip m_busyoAnimeClip[animClip_num];
+
+	
 	struct EnemeyData
 	{
 		CVector3 position = CVector3(0.0f,0.0f,0.0f);
@@ -93,9 +105,7 @@ public:
 	//敵情報のリクエストを受け取る
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
 private:
-	//アニメーションイベントを呼び出すよ
-	//void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
-	//囲いの最大数
+	//囲いの数
 	static const int DestinationNum = 5;
 	void AttackMove();									//無双の攻撃の処理を書く
 	int m_animStep = 0;									//アニメーションがどの段階か
@@ -119,10 +129,11 @@ private:
 	CharacterController m_characon;						//キャラクターコントローラー
 
 	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
+	bool m_deadFrag = false;							//死亡したときのスイッチ
 	bool m_underAttack = false;							//攻撃中？
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
-	bool m_deadFrag = false;							//死亡したときのスイッチ
+	
 	
 
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト

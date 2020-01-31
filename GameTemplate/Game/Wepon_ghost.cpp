@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Wepon_ghost.h"
 #include "gameObject/ysGameObjectManager.h"
+
+const float m_ghostscale = 100.0f;
+
 Wepon_ghost::Wepon_ghost()
 {
 	
@@ -25,13 +28,12 @@ void Wepon_ghost::GhostInit()
 {
 	if (m_hanteifin) {
 		DeleteGO(this);
-		timer = 0;
 	}
 	if (!m_hanteifin) {
 		m_ghostObject.CreateBox(
 			m_position,
 			m_rotation,
-			m_scale * 100.0f
+			m_scale * m_ghostscale
 		);
 		m_hanteifin = true;
 	}

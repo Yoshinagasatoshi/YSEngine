@@ -11,10 +11,10 @@ const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì
 const float PLAYER_COLLIDER_RADIUS = 60.0f;		//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì”¼ŒaB
 
 const float SpeedAmount = 1500.0f;				//•½–Ê‚ÌˆÚ“®—Ê
-const float gravity = 600.0f;					//d—Í
+const float gravity = 200.0f;					//d—Í
 const float JumpPower = 1200.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
 const float standardPower = 200.0f;				//ƒvƒŒƒCƒ„[‚Ì“G‚«”ò‚Î‚µ—Í
-
+const float limit = 2.0f;						//d—ÍŒW”‚ÌãŒÀ
 const int Timer_ZERO = 0;						//0‚É‚È‚éB‚»‚Ì‚Ü‚Ü
 
 Player::Player()
@@ -61,31 +61,35 @@ Player::Player()
 		}
 	}
 
-	//m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
-	//{
-	//		auto m_bone = m_skelton->GetBone(20);
-	//		CVector3 bonepos;
-	//		bonepos.Set(
-	//			m_bone->GetWorldMatrix().m[3][0],
-	//			m_bone->GetWorldMatrix().m[3][1],
-	//			m_bone->GetWorldMatrix().m[3][2]
-	//		);
-	//	//OnAnimationEvent(clipName,eventName);
+	m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
+	{
+		auto m_bone = m_skelton->GetBone(20);
+		CVector3 bonepos;
+		//y¬•ª‚ğœ‚¢‚½ƒ{[ƒ“‚ğƒZƒbƒg
+		bonepos.Set(
+			m_bone->GetWorldMatrix().m[3][0],
+			0,
+			m_bone->GetWorldMatrix().m[3][2]
+		);
+		//OnAnimationEvent(clipName,eventName);
 
-	//	m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
-	//	m_pl_Wepon->SetPosition(bonepos);
-	//	m_pl_Wepon->GhostInit();
-	//	//m_bone->GetWorldMatrix().m[3][0];
-	//	//m_bone->GetWorldMatrix().m[3][2];
-	//	//m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
-	//	//m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
-	//	//m_isDontMove = true;
+		//ƒ{[ƒ“‚Ìpos‚ÆƒvƒŒƒCƒ„[‚Ìpos‚ğ‘«‚µ‚½êŠ
+		CVector3 calcPos = bonepos + m_position;
+		//ghost‚ª”¼•ª–„‚Ü‚Á‚Ä‚¢‚½‚Ì‚Å­‚µã‚É‡‚í‚¹‚éB
+		calcPos.y += 50.0f;
 
-	//	//’Ê‚Á‚Ä‚¢‚é‚©Šm”F
-	//	//(void)clipName;
-	//	//MessageBox(NULL, "Attack", "attack", MB_OK);
-	//}
-	//);
+		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
+		m_pl_Wepon->SetPosition(calcPos);
+		m_pl_Wepon->GhostInit();
+		//m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
+		//m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
+		//m_isDontMove = true;
+
+		//’Ê‚Á‚Ä‚¢‚é‚©Šm”F
+		//(void)clipName;
+		//MessageBox(NULL, "Attack", "attack", MB_OK);
+	}
+	);
 	//ghostInit();
 }
 
@@ -106,7 +110,7 @@ void Player::CharaconInit()
 
 void Player::Update()
 {
-	if (!m_deadFrag) {
+	if (m_busyoState != BusyoDead) {
 		//’n–Ê‚Â‚¢‚Ä‚éH
 		if (m_characon.IsOnGround()) {
 			//d—Í‚Í‚¢‚ç‚È‚¢
@@ -118,17 +122,17 @@ void Player::Update()
 			}
 		}
 		//ƒXƒe[ƒg‚²‚Æ‚É‚Ìˆ—‚ÉŒã‚Å‚·‚éB
-		if (g_pad->IsTrigger(enButtonA)) {
-			if (!m_Jumpfrag) {
-				if (!m_underAttack) {
+		if (m_busyoState != BusyoAttack) {
+			if (g_pad->IsTrigger(enButtonA)) {
+				if (!m_Jumpfrag) {
 					m_moveSpeed.y += JumpPower;
 					m_Jumpfrag = true;
 					m_animStep = 0;
 				}
 			}
 			m_gravity_keisuu += 0.1f;
-			if (m_gravity_keisuu > 1.0f) {
-				m_gravity_keisuu = 1.0f;
+			if (m_gravity_keisuu > limit) {
+				m_gravity_keisuu = limit;
 			}
 			m_busyoAnime.Play(animClip_idle, 0.5f);
 		}
@@ -140,28 +144,26 @@ void Player::Update()
 				m_PL_HP--;
 			}
 			else {
-				m_deadFrag = true;
+				//m_deadFrag = true;
+				m_busyoState = BusyoDead;
 			}
-			m_playerState = animClip_SmallDamage;
+			m_animState = animClip_SmallDamage;
 			m_busyoAnime.Play(animClip_SmallDamage, 0.5f);
 		}
 
 		//ƒ_ƒ[ƒWƒAƒjƒ[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚ç—§‚¿p‚É
 		if (!m_busyoAnime.IsPlaying())
 		{
-			m_playerState = animClip_idle;
+			m_animState = animClip_idle;
 			if (m_underAttack) {
 				m_underAttack = false;
 			}
 			m_busyoAnime.Play(animClip_idle, 0.2f);
 		}
 		//ƒvƒŒƒCƒ„[‚ª€‚ñ‚Å‚¢‚È‚¢‚Ìˆ—B
-		//•½–Ê‚ÌˆÚ“®—Ê‚ÍƒAƒvƒf‚²‚Æ‚ÉƒŠƒZƒbƒg‚·‚é
-		if (!m_isDontMove) {
-			m_moveSpeed.x = 0.0f;
-			m_moveSpeed.z = 0.0f;
-		}
-		m_isDontMove = false;
+		//•½–Ê‚ÌˆÚ“®—Ê‚ÍƒAƒvƒf‚²‚Æ‚ÉƒŠƒZƒbƒg‚·‚éB
+		m_moveSpeed.x = 0.0f;
+		m_moveSpeed.z = 0.0f;
 		//“ü—Í—Ê‚ğó‚¯æ‚é
 		float WideMove = g_pad->GetLStickXF();
 		float heightMove = g_pad->GetLStickYF();
@@ -228,10 +230,12 @@ void Player::AttackMove()
 	//•âŠÔŠÔ
 	float InterpolationTime = 0.1f;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
+
 		if (!m_underAttack)
 		{
 			m_underAttack = true;
 		}
+		m_busyoState = BusyoAttack;
 		//”»’è‚µ‚Ü‚·B
 		//ƒXƒgƒ‰ƒeƒW[ƒpƒ^[ƒ“—\”õŒR
 		switch (m_animStep)
@@ -279,6 +283,7 @@ void Player::AttackMove()
 			if (m_underAttack) {
 				m_underAttack = false;
 			}
+			m_busyoState = BusyoNormal;
 			m_TimerRelease = 20;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
