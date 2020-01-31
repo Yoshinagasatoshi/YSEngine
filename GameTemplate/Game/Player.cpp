@@ -293,12 +293,8 @@ void Player::Execute()
 		m_pl_Wepon->SetPosition(m_position);
 	}
 	//ワールド行列の更新。
-	auto move = m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
-	//m_busyoState = BusyoAttack;
-	if (m_busyoState == BusyoAttack) {
-		m_position = m_characon.Execute(1.0f, move);
-	}
 	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 }
 

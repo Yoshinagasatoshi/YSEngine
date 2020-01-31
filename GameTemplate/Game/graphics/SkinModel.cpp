@@ -155,7 +155,7 @@ void SkinModel::Update()
 	}*/
 }
 
-CVector3 SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
+void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
 {
 	//Update();
 	//3dsMaxと軸を合わせるためのバイアス。
@@ -179,7 +179,7 @@ CVector3 SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, C
 	m_worldMatrix.Mul(m_worldMatrix, transMatrix);
 	
 	//スケルトンの更新。
-	return m_skeleton.Update(m_worldMatrix);
+	m_skeleton.Update(m_worldMatrix);
 }
 void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 {
