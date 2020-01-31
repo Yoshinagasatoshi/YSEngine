@@ -8,7 +8,7 @@ public:
 	~Wepon_ghost();
 	void Update();
 	bool Start();
-	void SetPosition(const CVector3& pos)
+	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
 	}
@@ -28,10 +28,9 @@ public:
 private:
 	PhysicsGhostObject m_ghostObject;
 	CVector3 m_position;
-	//受け取ったCVector3のやーつを別の奴に置き換えてみる
 	CQuaternion m_rotation = CQuaternion::Identity();
+	//ghostのサイズを設定。* 100.0f
 	CVector3 m_scale = CVector3::One();
-	int timer = 0;
 	//char eventName;
 	bool m_hanteifin = false;
 };
