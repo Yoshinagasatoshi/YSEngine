@@ -76,21 +76,13 @@ Player::Player()
 		//ボーンのposとプレイヤーのposを足した場所
 		CVector3 calcPos = bonepos + m_position;
 		//ghostが半分埋まっていたので少し上に合わせる。
-		calcPos.y += 50.0f;
+		calcPos.y += 70.0f;
 
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(calcPos);
 		m_pl_Wepon->GhostInit();
-		//m_moveSpeed.x += m_bone->GetWorldMatrix().m[3][0];
-		//m_moveSpeed.z += m_bone->GetWorldMatrix().m[3][2];
-		//m_isDontMove = true;
-
-		//通っているか確認
-		//(void)clipName;
-		//MessageBox(NULL, "Attack", "attack", MB_OK);
 	}
 	);
-	//ghostInit();
 }
 
 
@@ -155,33 +147,14 @@ void Player::Update()
 		if (!m_busyoAnime.IsPlaying())
 		{
 			m_animState = animClip_idle;
-			if (m_underAttack) {
-				m_underAttack = false;
-			}
+			m_busyoState = BusyoAttack;
+			//if (m_underAttack) {
+			//	m_underAttack = false;
+			//}
 			m_busyoAnime.Play(animClip_idle, 0.2f);
 		}
-		//プレイヤーが死んでいない時の処理。
-		//平面の移動量はアプデごとにリセットする。
-		m_moveSpeed.x = 0.0f;
-		m_moveSpeed.z = 0.0f;
-		//入力量を受け取る
-		float WideMove = g_pad->GetLStickXF();
-		float heightMove = g_pad->GetLStickYF();
-
-		//カメラの前方向と右方向を取得
-		m_CameraForward = g_camera3D.GetForword();
-		m_CameraRight = g_camera3D.GetRight();
-		//Yの情報はいらないので0にし、前と右方向の単位とする。
-		m_CameraForward.y = 0.0f;
-		m_CameraForward.Normalize();
-		m_CameraRight.y = 0.0f;
-		m_CameraRight.Normalize();
-		//攻撃中は自由に動かない時にする。
-		if (!m_underAttack) {
-			m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
-			m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
-		}
-		m_moveSpeed.y -= gravity * m_gravity_keisuu;
+		//移動処理
+		Move();
 		//回転処理
 		Turn();
 	}
@@ -190,22 +163,36 @@ void Player::Update()
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
 	}
-	//ワールド行列の更新。
-	//m_ghostObject.Release();
-
-	if (!m_underAttack) {
-		m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
-	}
-	if (m_pl_Wepon != nullptr) {
-		m_pl_Wepon->SetPosition(m_position);
-	}
-
-	auto move = m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale); //ワールド座標の更新　こっちのskeletonUpdateをいじる
-	if(m_underAttack){
-		m_position = m_characon.Execute(1.0f, move);
-	}
-	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
+	Execute();
 }
+
+void Player::Move()
+{
+	//プレイヤーが死んでいない時の処理。
+	//平面の移動量はアプデごとにリセットする。
+	m_moveSpeed.x = 0.0f;
+	m_moveSpeed.z = 0.0f;
+	//入力量を受け取る
+	float WideMove = g_pad->GetLStickXF();
+	float heightMove = g_pad->GetLStickYF();
+
+	//カメラの前方向と右方向を取得
+	m_CameraForward = g_camera3D.GetForword();
+	m_CameraRight = g_camera3D.GetRight();
+	//Yの情報はいらないので0にし、前と右方向の単位とする。
+	m_CameraForward.y = 0.0f;
+	m_CameraForward.Normalize();
+	m_CameraRight.y = 0.0f;
+	m_CameraRight.Normalize();
+	//攻撃中は自由に動かない時にする。
+	//m_busyoState = BusyoAttack;
+	if (!m_underAttack) {
+		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
+		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+	}
+	m_moveSpeed.y -= gravity * m_gravity_keisuu;
+}
+
 void Player::Draw()
 {
 	//プレイヤーを描写
@@ -214,6 +201,8 @@ void Player::Draw()
 		g_camera3D.GetProjectionMatrix()
 	);
 }
+
+
 void Player::Turn()
 {
 	if (fabsf(m_moveSpeed.x) <= 0.001f    //fabsfは絶対値。m_movespeed.x&m_movespeedzが
@@ -225,12 +214,13 @@ void Player::Turn()
 		m_rotation.SetRotation(CVector3::AxisY(), angle);
 	}
 }
+
 void Player::AttackMove()
 {
 	//補間時間
 	float InterpolationTime = 0.1f;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
-
+	//m_busyoState = BusyoAttack;
 		if (!m_underAttack)
 		{
 			m_underAttack = true;
@@ -280,6 +270,7 @@ void Player::AttackMove()
 		}
 		if (m_playTimer >= m_TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
+			//m_busyoState = BusyoAttack;
 			if (m_underAttack) {
 				m_underAttack = false;
 			}
@@ -293,7 +284,23 @@ void Player::AttackMove()
 	}
 }
 
-
+void Player::Execute()
+{
+	if (m_busyoState != BusyoAttack) {
+		m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+	}
+	if (m_pl_Wepon != nullptr) {
+		m_pl_Wepon->SetPosition(m_position);
+	}
+	//ワールド行列の更新。
+	auto move = m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	//ワールド座標の更新　こっちのskeletonUpdateをいじる
+	//m_busyoState = BusyoAttack;
+	if (m_busyoState == BusyoAttack) {
+		m_position = m_characon.Execute(1.0f, move);
+	}
+	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
+}
 
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
