@@ -163,6 +163,7 @@ void Player::Update()
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
 	}
+
 	Execute();
 }
 
@@ -172,23 +173,25 @@ void Player::Move()
 	//平面の移動量はアプデごとにリセットする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
-	//入力量を受け取る
-	float WideMove = g_pad->GetLStickXF();
-	float heightMove = g_pad->GetLStickYF();
+	if (m_busyoState != BusyoAttack) {
+		//入力量を受け取る
+		float WideMove = g_pad->GetLStickXF();
+		float heightMove = g_pad->GetLStickYF();
 
-	//カメラの前方向と右方向を取得
-	m_CameraForward = g_camera3D.GetForword();
-	m_CameraRight = g_camera3D.GetRight();
-	//Yの情報はいらないので0にし、前と右方向の単位とする。
-	m_CameraForward.y = 0.0f;
-	m_CameraForward.Normalize();
-	m_CameraRight.y = 0.0f;
-	m_CameraRight.Normalize();
-	//攻撃中は自由に動かない時にする。
-	//m_busyoState = BusyoAttack;
-	if (!m_underAttack) {
-		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
-		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+		//カメラの前方向と右方向を取得
+		m_CameraForward = g_camera3D.GetForword();
+		m_CameraRight = g_camera3D.GetRight();
+		//Yの情報はいらないので0にし、前と右方向の単位とする。
+		m_CameraForward.y = 0.0f;
+		m_CameraForward.Normalize();
+		m_CameraRight.y = 0.0f;
+		m_CameraRight.Normalize();
+		//攻撃中は自由に動かない時にする。
+		//m_busyoState = BusyoAttack;
+		if (!m_underAttack) {
+			m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
+			m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+		}
 	}
 	m_moveSpeed.y -= gravity * m_gravity_keisuu;
 }
@@ -205,20 +208,23 @@ void Player::Draw()
 
 void Player::Turn()
 {
-	if (fabsf(m_moveSpeed.x) <= 0.001f    //fabsfは絶対値。m_movespeed.x&m_movespeedzが
-		&& fabsf(m_moveSpeed.z) <= 0.001f) {//0.001以下の時には何もしない。
-		return;
-	}
-	else {
-		float angle = atan2(m_moveSpeed.x, m_moveSpeed.z);
-		m_rotation.SetRotation(CVector3::AxisY(), angle);
+	if (m_busyoState != BusyoAttack) {
+
+		if (fabsf(m_moveSpeed.x) <= 0.001f    //fabsfは絶対値。m_movespeed.x&m_movespeedzが
+			&& fabsf(m_moveSpeed.z) <= 0.001f) {//0.001以下の時には何もしない。
+			return;
+		}
+		else {
+			float angle = atan2(m_moveSpeed.x, m_moveSpeed.z);
+			m_rotation.SetRotation(CVector3::AxisY(), angle);
+		}
 	}
 }
 
 void Player::AttackMove()
 {
 	//補間時間
-	float InterpolationTime = 0.1f;
+	float InterpolationTime = 0.2f;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
 	//m_busyoState = BusyoAttack;
 		if (!m_underAttack)
@@ -286,16 +292,29 @@ void Player::AttackMove()
 
 void Player::Execute()
 {
-	if (m_busyoState != BusyoAttack) {
-		m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
-	}
+	
 	if (m_pl_Wepon != nullptr) {
 		m_pl_Wepon->SetPosition(m_position);
 	}
+	
+
+	//ワールド座標の更新　こっちのskeletonUpdateをいじる
+	auto footStep = m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
+	if (m_busyoState == BusyoAttack) {
+		//攻撃中はフットステップの移動量を加算する。
+		CMatrix mBias = CMatrix::Identity();
+		mBias.MakeRotationX(CMath::PI * -0.5f);
+		CMatrix rotMatrix;
+		//回転行列を作成する。
+		rotMatrix.MakeRotationFromQuaternion(m_rotation);
+		rotMatrix.Mul(mBias, rotMatrix);
+		rotMatrix.Mul(footStep);
+		footStep *= 60.0f;
+		m_moveSpeed += footStep;
+	}
+	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//ワールド座標の更新　こっちのskeletonUpdateをいじる
-	m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 }
 
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)

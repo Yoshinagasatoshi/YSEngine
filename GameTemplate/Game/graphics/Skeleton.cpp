@@ -201,16 +201,11 @@ void Skeleton::Update(CMatrix mWorld)
 	//ここがワールド行列を計算しているところ！！！
 	for (int boneNo = 0; boneNo < m_bones.size(); boneNo++) {
 		Bone* bone = m_bones[boneNo];
-		if (bone->GetParentId() != -1) {
-			//footstepという名前のボーンが見つかったら
-			if (wcscmp(bone->GetName(),L"footstep") == 0) {
-				m_stepBoneMatrix = bone->GetWorldMatrix();
-			}
-			continue;
-		}
-	
-		//ルートが見つかったので、ボーンのワールド行列を計算していく。
-		UpdateBoneWorldMatrix(*bone, mWorld);
+		CMatrix mBoneWorld;
+		CMatrix localMatrix = bone->GetLocalMatrix();
+		//親の行列とローカル行列を乗算して、ワールド行列を計算する。
+		mBoneWorld.Mul(localMatrix, mWorld);
+		bone->SetWorldMatrix(mBoneWorld);
 	}
 
 
@@ -225,10 +220,6 @@ void Skeleton::Update(CMatrix mWorld)
 		CMatrix mBone;
 		//ワールド行列にバインドポーズの逆行列をかけたものがボーン行列？？？
 		mBone.Mul(bone->GetInvBindPoseMatrix(), bone->GetWorldMatrix());
-		
-		
-		mBone.m[3][0] = mBone.m[3][0] - m_stepBoneMatrix.m[3][0];
-		mBone.m[3][2] = mBone.m[3][2] - m_stepBoneMatrix.m[3][2];
 		m_boneMatrixs[boneNo] = mBone;
 	}
 }

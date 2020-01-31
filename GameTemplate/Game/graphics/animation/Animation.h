@@ -54,7 +54,7 @@ public:
 	* ユーザーは使用しないでください。
 	*@param[in]	deltaTime		アニメーションを進める時間(単位：秒)。
 	*/
-	void Update(float deltaTime);
+	CVector3 Update(float deltaTime);
 	
 	/// <summary>
 	/// アニメーションイベントリスナーを登録
@@ -102,7 +102,7 @@ private:
 	/*!
 		* @brief	グローバルポーズの更新。
 		*/
-	void UpdateGlobalPose();
+	CVector3 UpdateGlobalPose();
 		
 private:
 		
@@ -132,5 +132,6 @@ private:
 	float m_interpolateTime = 0.0f;
 	float m_interpolateTimeEnd = 0.0f;
 	bool m_isInterpolate = false;				//!<補間中？
+	int m_footStepBoneNo = -1;				//footstepの骨番号。
 	std::vector<AnimationEventListener> m_animationEventListeners; //アニメーションイベントリスナーのリスト
 };

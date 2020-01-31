@@ -11,8 +11,9 @@
 
 	
 	
-void AnimationPlayController::Init(Skeleton* skeleton)
+void AnimationPlayController::Init(Skeleton* skeleton, int footStepBoneNo)
 {
+	m_footstepBoneNo = footStepBoneNo;
 	int numBones = skeleton->GetNumBones();
 	//ボーン行列をバシッと確保。
 	m_boneMatrix.resize(numBones);
@@ -42,6 +43,21 @@ void AnimationPlayController::StartLoop()
 	auto& animEventArray = m_animationClip->GetAnimationEvent();
 	for (auto i = 0; i < m_animationClip->GetNumAnimationEvent(); i++) {
 		animEventArray[i].SetInvokedFlag(false);
+	}
+}
+void AnimationPlayController::UpdateBoneWorldMatrix(Bone& bone, const CMatrix& parentMatrix)
+{
+	//ワールド行列を計算する。
+	auto& mBoneWorld = m_boneMatrix[bone.GetNo()];
+	CMatrix localMatrix = m_boneMatrix[bone.GetNo()];
+	//親の行列とローカル行列を乗算して、ワールド行列を計算する。
+	mBoneWorld.Mul(localMatrix, parentMatrix);
+	
+	//子供のワールド行列も計算する。
+	std::vector<Bone*>& children = bone.GetChildren();
+	for (int childNo = 0; childNo < children.size(); childNo++) {
+		//この骨のワールド行列をUpdateBoneWorldMatrixに渡して、さらに子供のワールド行列を計算する。
+		UpdateBoneWorldMatrix(*children[childNo], mBoneWorld);
 	}
 }
 void AnimationPlayController::Update(float deltaTime, Animation* animation)
@@ -98,6 +114,44 @@ void AnimationPlayController::Update(float deltaTime, Animation* animation)
 			std::abort();
 #endif
 		}
+	}
+	//スケルトン空間の行列を計算する。
+	int numBone = m_skelton->GetNumBones();
+	for (int boneNo = 0; boneNo < numBone; boneNo++) {
+		//親の骨を検索する。
+		auto bone = m_skelton->GetBone(boneNo);
+		if (bone->GetParentId() != -1) {
+			continue;
+		}
+		UpdateBoneWorldMatrix(*bone, CMatrix::Identity());
+	}
+
+	for (int boneNo = 0; boneNo < numBone; boneNo++) {
+		auto bone = m_skelton->GetBone(boneNo);
+		if (m_footstepBoneNo == bone->GetNo()) {
+			
+			auto deltaValueFootStepBoneLastFrame = m_deltaValueFootstepBone;
+			auto mat = m_boneMatrix[bone->GetNo()];
+
+			m_deltaValueFootstepBone.x = mat.m[3][0];
+			m_deltaValueFootstepBone.y = mat.m[3][1];
+			m_deltaValueFootstepBone.z = mat.m[3][2];
+
+			if (m_isFirst == true) {
+				m_deltaValueFootstepBoneOneFrame = CVector3::Zero();
+				m_isFirst = false;
+			}
+			else {
+				m_deltaValueFootstepBoneOneFrame = m_deltaValueFootstepBone - deltaValueFootStepBoneLastFrame;
+			}
+		}
+	}
+	//footstepボーンのxz平面での移動量を減算。
+	for (int boneNo = 0; boneNo < numBone; boneNo++) {
+		auto bone = m_skelton->GetBone(boneNo);
+		m_boneMatrix[bone->GetNo()].m[3][0] -= m_deltaValueFootstepBone.x;
+		m_boneMatrix[bone->GetNo()].m[3][1] -= m_deltaValueFootstepBone.y;
+		m_boneMatrix[bone->GetNo()].m[3][2] -= m_deltaValueFootstepBone.z;
 	}
 }
 

@@ -29,12 +29,21 @@ void Animation::Init(SkinModel& skinModel, AnimationClip animClipList[], int num
 		
 	}
 	m_skeleton = &skinModel.GetSkeleton();
-
+	//footstepボーンの番号を調べる。
+	int numBone = m_skeleton->GetNumBones();
+	for (int boneNo = 0; boneNo < numBone; boneNo++) {
+		auto bone = m_skeleton->GetBone(boneNo);
+		if (wcscmp(bone->GetName(), L"footstep") == 0) {
+			//footstepボーンが見つかった。
+			m_footStepBoneNo = boneNo;
+			break;
+		}
+	}
 	for (int i = 0; i < numAnimClip; i++) {
 		m_animationClips.push_back(&animClipList[i]);
 	}
 	for (auto& ctr : m_animationPlayController) {
-		ctr.Init(m_skeleton);
+		ctr.Init(m_skeleton, m_footStepBoneNo);
 	}
 		
 	Play(0);
@@ -59,13 +68,15 @@ void Animation::UpdateLocalPose(float deltaTime)
 	}
 }
 
-void Animation::UpdateGlobalPose()
+CVector3 Animation::UpdateGlobalPose()
 {
 	//グローバルポーズ計算用のメモリをスタックから確保。
 	int numBone = m_skeleton->GetNumBones();
 	CQuaternion* qGlobalPose = (CQuaternion*)alloca(sizeof(CQuaternion) * numBone);
 	CVector3* vGlobalPose = (CVector3*)alloca(sizeof(CVector3) * numBone);
 	CVector3* vGlobalScale = (CVector3*)alloca(sizeof(CVector3) * numBone);
+	CVector3 vGlobalDeltaFootStep = CVector3::Zero();
+
 	for (int i = 0; i < numBone; i++) {
 		qGlobalPose[i] = CQuaternion::Identity();
 		vGlobalPose[i] = CVector3::Zero();
@@ -77,6 +88,8 @@ void Animation::UpdateGlobalPose()
 		int index = GetAnimationControllerIndex(startIndex, i);
 		float intepolateRate = m_animationPlayController[index].GetInterpolateRate();
 		const auto& localBoneMatrix = m_animationPlayController[index].GetBoneLocalMatrix();
+		auto deltaValueFootStep = m_animationPlayController[index].GetDeltaValueFootstepBone();
+		vGlobalDeltaFootStep.Lerp(intepolateRate, vGlobalDeltaFootStep, deltaValueFootStep);
 		for (int boneNo = 0; boneNo < numBone; boneNo++) {
 			//平行移動の補完
 			CMatrix m = localBoneMatrix[boneNo];
@@ -155,18 +168,19 @@ void Animation::UpdateGlobalPose()
 		}
 	}
 	m_numAnimationPlayController = numAnimationPlayController;
+	return vGlobalDeltaFootStep;
 }
 	
 
 	
-void Animation::Update(float deltaTime)
+CVector3 Animation::Update(float deltaTime)
 {
 	if (m_numAnimationPlayController == 0) {
-		return;
+		return CVector3::Zero();
 	}
 	//ローカルポーズの更新をやっていく。
 	UpdateLocalPose(deltaTime);
 		
 	//グローバルポーズを計算していく。
-	UpdateGlobalPose();
+	return UpdateGlobalPose();
 }

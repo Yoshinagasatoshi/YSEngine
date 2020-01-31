@@ -90,6 +90,10 @@ public:
 			}
 		}
 	}
+	CMatrix GetWorldMatrix() const
+	{
+		return m_worldMatrix;
+	}
 	/*!
 	*@brief	SRVのレジスタ番号。
 	*/
