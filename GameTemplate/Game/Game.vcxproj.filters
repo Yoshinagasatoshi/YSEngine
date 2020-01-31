@@ -288,11 +288,6 @@
     <ClInclude Include="Wepon_ghost.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\modelData\unityChan.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
@@ -303,6 +298,9 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\asigaru_Rowpori.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>

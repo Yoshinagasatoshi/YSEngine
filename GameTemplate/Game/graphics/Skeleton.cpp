@@ -196,13 +196,8 @@ void Skeleton::InitBoneMatrixArrayShaderResourceView()
 
 	g_graphicsEngine->GetD3DDevice()->CreateShaderResourceView(m_boneMatrixSB, &desc, &m_boneMatrixSRV);
 }
-CVector3 Skeleton::Update(CMatrix mWorld)
+void Skeleton::Update(CMatrix mWorld)
 {
-	CVector3 trans;
-	trans.x = mWorld.m[3][0];
-	trans.z = mWorld.m[3][2];
-	mWorld.m[3][0] = 0.0f;
-	mWorld.m[3][2] = 0.0f;
 	//ここがワールド行列を計算しているところ！！！
 	for (int boneNo = 0; boneNo < m_bones.size(); boneNo++) {
 		Bone* bone = m_bones[boneNo];
@@ -232,24 +227,10 @@ CVector3 Skeleton::Update(CMatrix mWorld)
 		mBone.Mul(bone->GetInvBindPoseMatrix(), bone->GetWorldMatrix());
 		
 		
-		mBone.m[3][0] = mBone.m[3][0] - m_stepBoneMatrix.m[3][0] + trans.x;
-		mBone.m[3][2] = mBone.m[3][2] - m_stepBoneMatrix.m[3][2] + trans.z;
+		mBone.m[3][0] = mBone.m[3][0] - m_stepBoneMatrix.m[3][0];
+		mBone.m[3][2] = mBone.m[3][2] - m_stepBoneMatrix.m[3][2];
 		m_boneMatrixs[boneNo] = mBone;
 	}
-	
-	CVector3 retv;
-	if (m_isFirst == false) {
-		retv.x = m_FrameStepBone.m[3][0];
-		retv.y = 0.0f;
-		retv.z = m_FrameStepBone.m[3][2];
-	}
-	else {
-		retv.x = 0.0f;
-		retv.y = 0.0f;
-		retv.z = 0.0f;
-		m_isFirst = false;
-	}
-	return retv;
 }
 /*!
 *@brief	ボーン行列の配列をGPUに転送。

@@ -216,7 +216,7 @@ public:
 	/*!
 	 *@brief	更新。
 	 */
-	CVector3 Update(CMatrix mWorld);
+	void Update(CMatrix mWorld);
 	/*!
 	*@brief	ボーンのワールド行列の更新関数。
 	*@details
