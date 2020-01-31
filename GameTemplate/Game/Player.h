@@ -26,6 +26,8 @@ public:
 	void Move();
 	//常設の回転処理
 	void Turn();
+	//最後の出力処理
+	void Execute();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
 	//ゴーストの大きさとかを設定
@@ -122,7 +124,6 @@ private:
 	CQuaternion m_rotation = CQuaternion::Identity();   //プレイヤーの回転
 	CVector3 m_scale = CVector3::One();					//プレイヤーの大きさ
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
-	bool m_isDontMove = false;
 	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向を取得
 	CVector3 m_CameraRight = g_camera3D.GetRight();		//カメラの右方向を取得
 	Skeleton* m_skelton;								//Playerのスケルトンデータ

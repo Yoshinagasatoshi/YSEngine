@@ -2,7 +2,7 @@
 #include "Wepon_ghost.h"
 #include "gameObject/ysGameObjectManager.h"
 
-const float m_ghostscale = 100.0f;
+const float m_ghostscale = 150.0f;
 
 Wepon_ghost::Wepon_ghost()
 {
