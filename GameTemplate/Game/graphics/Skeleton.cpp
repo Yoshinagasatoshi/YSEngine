@@ -220,6 +220,7 @@ CVector3 Skeleton::Update(CMatrix mWorld)
 
 
 	////footstepの1f分の移動量を全てのボーンから引いている。xとzのみ適応
+	//最後の足軽を倒したときにエラーが出る。ここかもしれない。
 	m_FrameStepBone.m[3][0] = m_stepBoneMatrix.m[3][0] - m_laststepBoneMatrix.m[3][0];
 	m_FrameStepBone.m[3][2] = m_stepBoneMatrix.m[3][2] - m_laststepBoneMatrix.m[3][2];
 	m_laststepBoneMatrix = m_stepBoneMatrix;

@@ -29,8 +29,8 @@ Player::Player()
 	m_busyoAnimeClip[animClip_Walk].SetLoopFlag(true);
 	//攻撃アニメロード
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
-	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki.tka");
-	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki.tka");
+	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki2.tka");
+	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki3.tka");
 	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki.tka");
 	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki.tka");
 	//ダメージロード
@@ -105,8 +105,9 @@ void Player::Update()
 	if (m_busyoState != BusyoDead) {
 		//地面ついてる？
 		if (m_characon.IsOnGround()) {
-			//重力はいらない
+			//攻撃するときのモーション
 			AttackMove();
+			//重力の重みを軽くする
 			m_gravity_keisuu = 0.1f;
 			//ジャンプしてた？
 			if (m_Jumpfrag) {
@@ -147,7 +148,7 @@ void Player::Update()
 		if (!m_busyoAnime.IsPlaying())
 		{
 			m_animState = animClip_idle;
-			m_busyoState = BusyoAttack;
+			m_busyoState = BusyoNormal;
 			//if (m_underAttack) {
 			//	m_underAttack = false;
 			//}
@@ -186,7 +187,7 @@ void Player::Move()
 	m_CameraRight.Normalize();
 	//攻撃中は自由に動かない時にする。
 	//m_busyoState = BusyoAttack;
-	if (!m_underAttack) {
+	if (m_busyoState != BusyoAttack) {
 		m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
 		m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
 	}
@@ -266,16 +267,12 @@ void Player::AttackMove()
 		//最後まで行くと隙をさらす時間を増やす
 		if (m_animStep == animClip_ATK5) {
 			//増やす処理
-			m_TimerRelease = 45;
+			m_TimerRelease = 60;
 		}
 		if (m_playTimer >= m_TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
-			//m_busyoState = BusyoAttack;
-			if (m_underAttack) {
-				m_underAttack = false;
-			}
 			m_busyoState = BusyoNormal;
-			m_TimerRelease = 20;
+			m_TimerRelease = 100;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = Timer_ZERO;
@@ -334,12 +331,13 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	return -1;
 }
 
-void Player::ghostInit()
-{
-	CVector3 PlayerScale = { 50.0f,150.0f,50.0f };
-	m_ghostObject.CreateBox(
-		m_position,
-		m_rotation,
-		PlayerScale
-	);
-}
+//このghostは現在使われてないです。
+//void Player::ghostInit()
+//{
+//	CVector3 PlayerScale = { 50.0f,150.0f,50.0f };
+//	m_ghostObject.CreateBox(
+//		m_position,
+//		m_rotation,
+//		PlayerScale
+//	);
+//}

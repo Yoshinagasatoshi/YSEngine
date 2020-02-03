@@ -24,6 +24,5 @@ private:
 	CVector3 m_toPos = CVector3{0,250,400};
 	//CMatrix m_matrix;
 	Player* m_player;
-
 };
 

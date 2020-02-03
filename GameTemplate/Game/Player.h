@@ -30,8 +30,6 @@ public:
 	void Execute();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
-	//ゴーストの大きさとかを設定
-	void ghostInit();
 	//プレイヤーの位置を返す関数
 	CVector3& GetPosition()
 	{
@@ -113,7 +111,7 @@ private:
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
-	int m_TimerRelease = 20;							//ステートが解放されるまでの猶予時間。20は単位
+	int m_TimerRelease = 100;							//ステートが解放されるまでの猶予時間。20は単位
 	int m_PL_HP = 1;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
