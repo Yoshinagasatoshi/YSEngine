@@ -300,7 +300,7 @@ void Player::Execute()
 
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
 	auto footStep = m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
-	if (m_busyoState == BusyoAttack) {
+	//if (m_busyoState == BusyoAttack) {
 		//攻撃中はフットステップの移動量を加算する。
 		CMatrix mBias = CMatrix::Identity();
 		mBias.MakeRotationX(CMath::PI * -0.5f);
@@ -311,7 +311,7 @@ void Player::Execute()
 		rotMatrix.Mul(footStep);
 		footStep *= 60.0f;
 		m_moveSpeed += footStep;
-	}
+	//}
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
