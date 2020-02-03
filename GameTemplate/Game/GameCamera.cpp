@@ -30,7 +30,6 @@ void GameCamera::Update()
 	qRot.Multiply(m_toPos);*/
 	//カメラのベクトルを保存
 
-	//マジックナンバーがあるため後で0.1fとかを変数名に変えたい。
 	//カメラ回転の上限を決める。
 	CVector3 toPosDir = m_toPos;
 	toPosDir.Normalize();
