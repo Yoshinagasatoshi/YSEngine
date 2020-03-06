@@ -31,8 +31,8 @@ Player::Player()
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
 	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki2.tka");
 	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki3.tka");
-	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki.tka");
-	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki.tka");
+	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki4.tka");
+	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki5.tka");
 	//ダメージロード
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
 	m_busyoAnimeClip[animClip_busyo_dead].Load(L"Assets/animData/busyo_dead.tka");
@@ -74,12 +74,12 @@ Player::Player()
 		//OnAnimationEvent(clipName,eventName);
 
 		//ボーンのposとプレイヤーのposを足した場所
-		CVector3 calcPos = bonepos + m_position;
+		m_calcPos = m_position;
 		//ghostが半分埋まっていたので少し上に合わせる。
-		calcPos.y += 70.0f;
+		m_calcPos.y += 70.0f;
 
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
-		m_pl_Wepon->SetPosition(calcPos);
+		m_pl_Wepon->SetPosition(m_calcPos);
 		m_pl_Wepon->GhostInit();
 	}
 	);
@@ -158,13 +158,25 @@ void Player::Update()
 		Move();
 		//回転処理
 		Turn();
+		//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
+		QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
+			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
+			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
+				if (ghostobject->IsSelf(contactObject) == true) {
+					//通っているのは確認完了
+					PlayerDamage();
+
+					g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
+				}
+				});
+			return true;
+			});
 	}
 	else {
 		//プレイヤーが死んでいる時の処理
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
 	}
-
 	Execute();
 }
 
@@ -176,8 +188,8 @@ void Player::Move()
 	m_moveSpeed.z = 0.0f;
 	if (m_busyoState != BusyoAttack) {
 		//入力量を受け取る
-		float WideMove = g_pad->GetLStickXF();
-		float heightMove = g_pad->GetLStickYF();
+		WideMoveL = g_pad->GetLStickXF();
+		heightMoveL = g_pad->GetLStickYF();
 
 		//カメラの前方向と右方向を取得
 		m_CameraForward = g_camera3D.GetForword();
@@ -190,8 +202,8 @@ void Player::Move()
 		//攻撃中は自由に動かない時にする。
 		//m_busyoState = BusyoAttack;
 		if (!m_underAttack) {
-			m_moveSpeed += m_CameraForward * heightMove * SpeedAmount;
-			m_moveSpeed += m_CameraRight * WideMove * SpeedAmount;
+			m_moveSpeed += m_CameraForward * heightMoveL * SpeedAmount;
+			m_moveSpeed += m_CameraRight * WideMoveL * SpeedAmount;
 		}
 	}
 	m_moveSpeed.y -= gravity * m_gravity_keisuu;
@@ -273,16 +285,17 @@ void Player::AttackMove()
 		//最後まで行くと隙をさらす時間を増やす
 		if (m_animStep == animClip_ATK5) {
 			//増やす処理
-			m_TimerRelease = 60;
+			m_TimerRelease = 30;
 		}
 		if (m_playTimer >= m_TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
 			m_busyoState = BusyoNormal;
-			m_TimerRelease = 100;
+			m_TimerRelease = 20;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = Timer_ZERO;
 			m_busyoAnime.Play(animClip_idle, InterpolationTime*2.0f);
+			m_underAttack = false;
 		}
 	}
 }
@@ -294,31 +307,30 @@ void Player::Execute()
 		m_pl_Wepon->SetPosition(m_position);
 	}
 	
-
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
 	auto footStep = m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 	//if (m_busyoState == BusyoAttack) {
-		//攻撃中はフットステップの移動量を加算する。
-		CMatrix mBias = CMatrix::Identity();
-		mBias.MakeRotationX(CMath::PI * -0.5f);
-		CMatrix rotMatrix;
-		//回転行列を作成する。
-		rotMatrix.MakeRotationFromQuaternion(m_rotation);
-		rotMatrix.Mul(mBias, rotMatrix);
-		rotMatrix.Mul(footStep);
-		footStep *= 60.0f;
-		m_moveSpeed += footStep;
+	//攻撃中はフットステップの移動量を加算する。
+	CMatrix mBias = CMatrix::Identity();
+	mBias.MakeRotationX(CMath::PI * -0.5f);
+	CMatrix rotMatrix;
+	//回転行列を作成する。
+	rotMatrix.MakeRotationFromQuaternion(m_rotation);
+	rotMatrix.Mul(mBias, rotMatrix);
+	rotMatrix.Mul(footStep);
+	footStep *= 60.0f;
+	m_moveSpeed += footStep;
 	//}
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 }
 
+
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
 	for (int i = 0; i < DestinationNum; i++)
 	{
-		
 		//一番最初にエネミーの空いている所に情報を入れる
 		if (m_enemydata[i].position.y == 0.0f) {
 			m_enemydata[i].position = pos;
@@ -340,19 +352,6 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	}
 	//nullでないかつ
 	//距離が離れていたら
-	//posをヌルにして
-	//-1へ
-	//こっちに行くと通常通り
+	//-1を戻り値にする
 	return -1;
 }
-
-//このghostは現在使われてないです。
-//void Player::ghostInit()
-//{
-//	CVector3 PlayerScale = { 50.0f,150.0f,50.0f };
-//	m_ghostObject.CreateBox(
-//		m_position,
-//		m_rotation,
-//		PlayerScale
-//	);
-//}

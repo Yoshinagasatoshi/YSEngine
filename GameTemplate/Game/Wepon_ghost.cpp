@@ -6,7 +6,7 @@ const float m_ghostscale = 150.0f;
 
 Wepon_ghost::Wepon_ghost()
 {
-	
+//	GhostInit();
 }
 
 Wepon_ghost::~Wepon_ghost()
@@ -14,10 +14,10 @@ Wepon_ghost::~Wepon_ghost()
 	m_ghostObject.Release();
 }
 
-bool Wepon_ghost::Start()
-{
-	return true;
-}
+//bool Wepon_ghost::Start()
+//{
+//	return true;
+//}
 
 void Wepon_ghost::Update()
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
-#include "Game.h"
 #include "level/Level.h"
+#include "Title.h"
 #include "gameObject/ysGameObjectManager.h"
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -16,7 +16,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D.SetTarget({ 0.0f, 200.0f, 0.0f });
 	g_camera3D.SetNear(10.0f);
 	g_camera3D.SetFar(10000.0f);
-	Game* game = g_goMgr.NewGameObject<Game>("Game");
+
+	Title* title = g_goMgr.NewGameObject<Title>("Title");
+
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
@@ -29,8 +31,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//物理エンジンの更新。
 		g_physics.Update();
 		g_goMgr.Update();
-		game->Render();
-		
+		g_goMgr.Render();
+
+
 		//カメラの更新。
 		g_camera3D.Update();
 		

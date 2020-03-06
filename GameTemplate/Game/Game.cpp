@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Enemy_asigaru.h"
+#include "Enemy_Busyo.h"
 #include "BackGround.h"
 #include "GameCamera.h"
 #include "level/Level.h"
@@ -21,11 +22,11 @@ Game::Game()
 	//m_ui = g_goMgr.NewGameObject<UI>("UI");
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata->SetPlayerInfo(m_player);
+	//レベルでモデルを出す。
 	Level level;
-	level.Init(L"Assets/level/musou_stage.tkl",
+	level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
-		//配置されているオブジェクトがasigaruならtrue
-		//wcscmpは文字列の比較を行う関数。
+			//足軽
 			if (wcscmp(objdata.name, L"asigaru") == 0) {
 				//インスタンスの作成
 				m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
@@ -34,6 +35,13 @@ Game::Game()
 				m_enemy->SetPlayerInfo(m_player);
 				m_enemy->SetGameCameraInfo(m_gameCamera);
 				//可変長配列に↑のインスタンスを追加
+				return true;
+			}
+			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
+				//インスタンスの作成
+				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
+				m_enemy->SetPos(objdata.position);
+				m_enemy->SetPlayerInfo(m_player);
 				return true;
 			}
 		});
@@ -139,6 +147,10 @@ void Game::ForwardRender()
 	m_renderTarget.ClearRenderTarget(clearColor);
 
 	g_goMgr.Draw();
+	//エフェクトは不透明オブジェクトを描画した後で描画する。
+	g_Effect.m_effekseerRenderer->BeginRendering();
+	g_Effect.m_effekseerManager->Draw();
+	g_Effect.m_effekseerRenderer->EndRendering();
 	if (m_isWireDraw) {
 		g_physics.DebugDraw();
 	}

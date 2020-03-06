@@ -7,12 +7,12 @@ FBXHeaderExtension:  {
 	CreationTimeStamp:  {
 		Version: 1000
 		Year: 2020
-		Month: 1
-		Day: 23
-		Hour: 12
-		Minute: 27
-		Second: 29
-		Millisecond: 223
+		Month: 2
+		Day: 3
+		Hour: 17
+		Minute: 18
+		Second: 25
+		Millisecond: 242
 	}
 	Creator: "FBX SDK/FBX Plugins version 2018.1"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -34,15 +34,15 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2018"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "23/01/2020 03:27:29.214"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "03/02/2020 08:18:25.240"
 			P: "Original|FileName", "KString", "", "", "C:\Users\GC1831\Desktop\YSEngine\YSEngine\GameTemplate\Game\Assets\modelData\asigaru_Rowpori.fbx"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2018"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "23/01/2020 03:27:29.214"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "03/02/2020 08:18:25.240"
 			P: "Original|ApplicationActiveProject", "KString", "", "", "C:\Users\GC1831\Documents\3dsMax"
-			P: "Original|ApplicationNativeFile", "KString", "", "", "C:\Users\GC1831\Documents\3dsMax\scenes\asigaru_AttackAnimeevent.max"
+			P: "Original|ApplicationNativeFile", "KString", "", "", "C:\Users\GC1831\Documents\3dsMax\scenes\asigaru_Row.max"
 		}
 	}
 }
@@ -77,7 +77,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 1839399234848, "", "Scene" {
+	Document: 2640369687888, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -305,7 +305,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 1839137301568, "Geometry::", "Mesh" {
+	Geometry: 2640366589280, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.603921568627451,0.725490196078431,0.898039215686275
 		}
@@ -401,7 +401,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1839137303200, "Geometry::", "Mesh" {
+	Geometry: 2640366596896, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.529411764705882,0.431372549019608,0.0313725490196078
 		}
@@ -497,7 +497,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1839137303744, "Geometry::", "Mesh" {
+	Geometry: 2640366575136, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.549019607843137,0.345098039215686,0.882352941176471
 		}
@@ -597,7 +597,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1839137297216, "Geometry::", "Mesh" {
+	Geometry: 2640366571328, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.56078431372549,0.882352941176471,0.341176470588235
 		}
@@ -693,7 +693,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1839137304288, "Geometry::", "Mesh" {
+	Geometry: 2640366599072, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.56078431372549,0.882352941176471,0.341176470588235
 		}
@@ -789,7 +789,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1839138030240, "Geometry::", "Mesh" {
+	Geometry: 2640366580576, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0.341176470588235,0.882352941176471,0.341176470588235
 		}
@@ -885,7 +885,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 1839396087872, "Model::Box002", "Mesh" {
+	Model: 2640471054128, "Model::Box002", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -898,7 +898,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1839396109792, "Model::Box003", "Mesh" {
+	Model: 2640471062896, "Model::Box003", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -911,7 +911,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1839396090064, "Model::Sphere001", "Mesh" {
+	Model: 2640471040976, "Model::Sphere001", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -924,7 +924,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1839396107600, "Model::Box004", "Mesh" {
+	Model: 2640475642768, "Model::Box004", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -937,7 +937,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1839396098832, "Model::Box005", "Mesh" {
+	Model: 2640475638384, "Model::Box005", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -950,7 +950,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 1839396094448, "Model::Box006", "Mesh" {
+	Model: 2640476545472, "Model::Box006", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -964,7 +964,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 1839225965184, "Material::Material #0", "" {
+	Material: 2640108723968, "Material::Material #1", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -987,17 +987,17 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 1839225967104, "Video::マップ #0", "Clip" {
+	Video: 2640108730688, "Video::マップ #0", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "C:\Users\GC1831\Desktop\photos\sozai\dotfile\ta-ru.png"
-			P: "RelPath", "KString", "XRefUrl", "", "..\..\..\..\..\..\photos\sozai\dotfile\ta-ru.png"
+			P: "Path", "KString", "XRefUrl", "", "C:\Users\GC1831\Desktop\YSEngine\YSEngine\GameTemplate\Game\Assets\modelData\ta-ru.png"
+			P: "RelPath", "KString", "XRefUrl", "", "ta-ru.png"
 		}
 		UseMipMap: 0
-		Filename: "C:\Users\GC1831\Desktop\photos\sozai\dotfile\ta-ru.png"
-		RelativeFilename: "..\..\..\..\..\..\photos\sozai\dotfile\ta-ru.png"
+		Filename: "C:\Users\GC1831\Desktop\YSEngine\YSEngine\GameTemplate\Game\Assets\modelData\ta-ru.png"
+		RelativeFilename: "ta-ru.png"
 	}
-	Texture: 1839225959424, "Texture::マップ #0", "" {
+	Texture: 2640108730208, "Texture::マップ #0", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::マップ #0"
@@ -1006,20 +1006,20 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::マップ #0"
-		FileName: "C:\Users\GC1831\Desktop\photos\sozai\dotfile\ta-ru.png"
-		RelativeFilename: "..\..\..\..\..\..\photos\sozai\dotfile\ta-ru.png"
+		FileName: "C:\Users\GC1831\Desktop\YSEngine\YSEngine\GameTemplate\Game\Assets\modelData\ta-ru.png"
+		RelativeFilename: "ta-ru.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "Alpha_Black"
 		Cropping: 0,0,0,0
 	}
-	AnimationStack: 1839235012256, "AnimStack::Take 001", "" {
+	AnimationStack: 2640371714016, "AnimStack::Take 001", "" {
 		Properties70:  {
 			P: "LocalStop", "KTime", "Time", "",23093079000
 			P: "ReferenceStop", "KTime", "Time", "",23093079000
 		}
 	}
-	AnimationLayer: 1839233650304, "AnimLayer::BaseLayer", "" {
+	AnimationLayer: 2640380282496, "AnimLayer::BaseLayer", "" {
 	}
 }
 
@@ -1029,67 +1029,67 @@ Objects:  {
 Connections:  {
 	
 	;Model::Box002, Model::RootNode
-	C: "OO",1839396087872,0
+	C: "OO",2640471054128,0
 	
 	;Model::Box003, Model::RootNode
-	C: "OO",1839396109792,0
+	C: "OO",2640471062896,0
 	
 	;Model::Sphere001, Model::RootNode
-	C: "OO",1839396090064,0
+	C: "OO",2640471040976,0
 	
 	;Model::Box004, Model::RootNode
-	C: "OO",1839396107600,0
+	C: "OO",2640475642768,0
 	
 	;Model::Box005, Model::RootNode
-	C: "OO",1839396098832,0
+	C: "OO",2640475638384,0
 	
 	;Model::Box006, Model::RootNode
-	C: "OO",1839396094448,0
+	C: "OO",2640476545472,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
-	C: "OO",1839233650304,1839235012256
+	C: "OO",2640380282496,2640371714016
 	
-	;Material::Material #0, Model::Box002
-	C: "OO",1839225965184,1839396087872
+	;Material::Material #1, Model::Box002
+	C: "OO",2640108723968,2640471054128
 	
 	;Geometry::, Model::Box002
-	C: "OO",1839137301568,1839396087872
+	C: "OO",2640366589280,2640471054128
 	
-	;Material::Material #0, Model::Box003
-	C: "OO",1839225965184,1839396109792
+	;Material::Material #1, Model::Box003
+	C: "OO",2640108723968,2640471062896
 	
 	;Geometry::, Model::Box003
-	C: "OO",1839137303200,1839396109792
+	C: "OO",2640366596896,2640471062896
 	
-	;Material::Material #0, Model::Sphere001
-	C: "OO",1839225965184,1839396090064
+	;Material::Material #1, Model::Sphere001
+	C: "OO",2640108723968,2640471040976
 	
 	;Geometry::, Model::Sphere001
-	C: "OO",1839137303744,1839396090064
+	C: "OO",2640366575136,2640471040976
 	
-	;Material::Material #0, Model::Box004
-	C: "OO",1839225965184,1839396107600
+	;Material::Material #1, Model::Box004
+	C: "OO",2640108723968,2640475642768
 	
 	;Geometry::, Model::Box004
-	C: "OO",1839137297216,1839396107600
+	C: "OO",2640366571328,2640475642768
 	
-	;Material::Material #0, Model::Box005
-	C: "OO",1839225965184,1839396098832
+	;Material::Material #1, Model::Box005
+	C: "OO",2640108723968,2640475638384
 	
 	;Geometry::, Model::Box005
-	C: "OO",1839137304288,1839396098832
+	C: "OO",2640366599072,2640475638384
 	
-	;Material::Material #0, Model::Box006
-	C: "OO",1839225965184,1839396094448
+	;Material::Material #1, Model::Box006
+	C: "OO",2640108723968,2640476545472
 	
 	;Geometry::, Model::Box006
-	C: "OO",1839138030240,1839396094448
+	C: "OO",2640366580576,2640476545472
 	
-	;Texture::マップ #0, Material::Material #0
-	C: "OP",1839225959424,1839225965184, "DiffuseColor"
+	;Texture::マップ #0, Material::Material #1
+	C: "OP",2640108730208,2640108723968, "DiffuseColor"
 	
 	;Video::マップ #0, Texture::マップ #0
-	C: "OO",1839225967104,1839225959424
+	C: "OO",2640108730688,2640108730208
 }
 ;Takes section
 ;----------------------------------------------------

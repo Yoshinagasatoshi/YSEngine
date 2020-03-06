@@ -40,6 +40,12 @@
     <Filter Include="culling">
       <UniqueIdentifier>{328c16a9-146d-4449-967f-b51ce527fa3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sound">
+      <UniqueIdentifier>{4812258f-2ff1-4ad6-9b98-d90fd70fb80b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\sprite">
+      <UniqueIdentifier>{f5d87536-3cca-4dbc-9d5e-9fafb7e8a3e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -159,6 +165,20 @@
     </ClCompile>
     <ClCompile Include="DebugWireframe.cpp" />
     <ClCompile Include="Wepon_ghost.cpp" />
+    <ClCompile Include="sound\SoundEngine.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\SoundSource.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\WaveFile.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\WaveFileBank.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Enemy_Busyo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -286,6 +306,20 @@
     </ClInclude>
     <ClInclude Include="DebugWireframe.h" />
     <ClInclude Include="Wepon_ghost.h" />
+    <ClInclude Include="sound\SoundEngine.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\SoundSource.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\WaveFile.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\WaveFileBank.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="Enemy_Busyo.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
@@ -303,5 +337,24 @@
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\musou_stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\enemy_busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\protoenemy_busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\modelData\Title.png">
+      <Filter>Assets\modelData</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Title.png">
+      <Filter>Assets\sprite</Filter>
+    </ImageContentTask>
   </ItemGroup>
 </Project>

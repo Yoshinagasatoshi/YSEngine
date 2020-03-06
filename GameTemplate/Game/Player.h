@@ -60,6 +60,10 @@ public:
 		(void)clipName;
 		MessageBox(NULL, "attack", "attack", MB_OK);
 	}
+	CVector3 GetCalcPos()
+	{
+		return m_calcPos;
+	}
 	//PhysicsGhostObject* GetGhostObject() {
 	//	return &m_ghostObject;
 	//}
@@ -111,10 +115,12 @@ private:
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
-	int m_TimerRelease = 100;							//ステートが解放されるまでの猶予時間。20は単位
+	int m_TimerRelease = 15;							//ステートが解放されるまでの猶予時間。20は単位
 	int m_PL_HP = 1;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
+	float WideMoveL;									//LスティックのX入力量を受け取る
+	float heightMoveL;									//LスティックのY入力量を受け取る。
 
 	EnemeyData m_enemydata[DestinationNum];				//エネミーが行く座標のデータが入っている。
 	SkinModel m_playerModel;							//スキンモデル。
@@ -124,6 +130,7 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();			//プレイヤーの移動速度
 	CVector3 m_CameraForward = g_camera3D.GetForword();	//カメラの前方向を取得
 	CVector3 m_CameraRight = g_camera3D.GetRight();		//カメラの右方向を取得
+	CVector3 m_calcPos;									//ボーンと自分の位置の合計
 	Skeleton* m_skelton;								//Playerのスケルトンデータ
 	CharacterController m_characon;						//キャラクターコントローラー
 

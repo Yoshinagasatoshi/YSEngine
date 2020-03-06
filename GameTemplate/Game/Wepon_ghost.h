@@ -1,13 +1,14 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
 #include "gameObject/ysGameObject.h"
+class Player;
 class Wepon_ghost : public IGameObject
 {
 public:
 	Wepon_ghost();
 	~Wepon_ghost();
 	void Update();
-	bool Start();
+	//bool Start();
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -33,5 +34,6 @@ private:
 	CVector3 m_scale = CVector3::One();
 	//char eventName;
 	bool m_hanteifin = false;
+	Player* m_player;
 };
 

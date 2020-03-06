@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory>
@@ -11,6 +12,14 @@
 #include <map>
 #include <functional>
 #include <algorithm>
+//XAudioのヘッダファイルをインクルード
+#include <Xaudio2.h>
+#include <x3daudio.h>
+#include <xaudio2fx.h>
+
+//effekseerのヘッダーファイルをインクルード
+#include "Effekseer.h"
+#include "EffekseerRendererDX11.h"
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"

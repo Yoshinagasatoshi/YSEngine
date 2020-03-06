@@ -43,7 +43,6 @@ void DebugWireframe::Prepare()
 	//定数も終わり
 
 	//シェーダーの設定
-	//w_char_tでなければLは要らない(知らなかった)
 	m_Vshader.Load("Assets/shader/DebugMode.fx", "VSMain", Shader::EnType::VS);
 	m_Pshader.Load("Assets/shader/DebugMode.fx", "PSMain", Shader::EnType::PS);
 
@@ -133,7 +132,6 @@ void DebugWireframe::drawLine(const btVector3& from, const btVector3& to, const 
 	vers[1].color.x = color.x();
 	vers[1].color.y = color.y();
 	vers[1].color.z = color.z();
-
 
 	/// <summary>
 	/// 引数verはver[0]のアドレス

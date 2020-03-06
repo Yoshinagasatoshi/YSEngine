@@ -4,10 +4,9 @@
 #include "GameData.h"
 #include "Wepon_ghost.h"
 #include "GameCamera.h"
+#include "math/Matrix.h"
 
-const float BattleRange = 180.0f * 180.0f;			//この距離の範囲内に近づくとバトル
-const float VigilanceRange = 600.0f * 600.0f;
-const float grabity = -9.8f * 2.0f;
+
 const float tikadukisugi = 2.0f;
 const float Timer_ZERO = 0.0f;
 const float DeleteTime = 10.0f;
@@ -69,11 +68,20 @@ Enemy_asigaru::Enemy_asigaru()
 		m_en_Wepon->SetPosition(m_position);
 		}
 	);
+	g_goMgr.InitEffekseer();
+	g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/sword.efk");
+	//エフェクトを再生する。
+	g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, 0.0f, 0.0f, 0.0f);
 }
 //デストラクタ
 Enemy_asigaru::~Enemy_asigaru()
 {
 	g_goMgr.DeleteGOObject(this);
+	g_goMgr.Counting();
+	//if (g_Effect.m_sampleEffect != nullptr)
+	//{
+	//	g_Effect.m_sampleEffect->Release();
+	//}
 }
 
 void Enemy_asigaru::CharaconInit()
@@ -92,8 +100,8 @@ void Enemy_asigaru::Update()
 	float ySpeed = m_moveSpeed.y;
 
 	//キャラコンが作られていなかったらinitする
-	if (!m_characonContain) {
-		m_characonContain = true;
+	if (!m_characonConUse) {
+		m_characonConUse = true;
 		CharaconInit();
 	}
 
@@ -132,6 +140,8 @@ void Enemy_asigaru::Update()
 		if (ghostobject->IsSelf(contactObject) == true) {
 			//通っているのは確認完了
 			m_isDeadfrag = true;
+
+			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
 		}
 		});
 		return true;
@@ -144,9 +154,18 @@ void Enemy_asigaru::Update()
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_model_Row.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-
+	//Effekseerカメラ行列を設定。
+	//まずはEffeseerの行列型の変数に、カメラ行列とプロジェクション行列をコピー。
+	Effekseer::Matrix44 efCameraMat;
+	g_camera3D.GetViewMatrix().CopyTo(efCameraMat);
+	Effekseer::Matrix44 efProjMat;
+	g_camera3D.GetProjectionMatrix().CopyTo(efProjMat);
+	//カメラ行列とプロジェクション行列を設定。
+	g_Effect.m_effekseerRenderer->SetCameraMatrix(efCameraMat);
+	g_Effect.m_effekseerRenderer->SetProjectionMatrix(efProjMat);
 	//m_ghostObject.SetPosition(m_position);
 	m_asigaruAnime.Update(1.0f / 30.0f);
+	g_Effect.m_effekseerManager->Update();
 }
 void Enemy_asigaru::Draw()
 {
@@ -271,7 +290,7 @@ void Enemy_asigaru::StateJudge()
 		if (kyori.LengthSq() > BattleRange) {
 			m_asigaruState = Asigaru_tikazuki;
 			m_frameTimer = Timer_ZERO;
-			m_kougekiframenum = AttackframeNum();
+			AttackframeNum();
 		}
 		//sentouの処理
 		m_moveSpeed = CVector3::Zero();
@@ -280,8 +299,13 @@ void Enemy_asigaru::StateJudge()
 		if (m_frameTimer >= m_kougekiframenum)
 		{
 			m_frameTimer = Timer_ZERO;
-			m_kougekiframenum = AttackframeNum();
-			m_player->PlayerDamage();
+			AttackframeNum();
+
+			////距離判定が近かったら殴られたときにダメージ
+			//CVector3 distans = m_position - m_player->GetPosition();
+			//if (distans.LengthSq() < 100.0f * 100.0f) {
+			//	m_player->PlayerDamage();
+			//}
 			m_asigaruState = Asigaru_attack;
 		}
 		Move();

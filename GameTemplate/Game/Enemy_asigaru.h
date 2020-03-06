@@ -98,7 +98,7 @@ private:
 	CharacterController m_characon;
 
 	//キャラコンを入れる。
-	bool m_characonContain = false;
+	bool m_characonConUse = false;
 	//試しに書いているコード
 	bool m_isDeadfrag = false;
 	//攻撃中のフラグ

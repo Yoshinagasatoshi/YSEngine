@@ -9,6 +9,20 @@
 	public:
 		ysGameObjectManager() {}
 		~ysGameObjectManager() {}
+		
+		struct EffectTool
+		{
+			//Effekseerマネージャ管理。
+			//インスタンスは1つ
+			Effekseer::Manager* m_effekseerManager = nullptr;
+			EffekseerRenderer::Renderer* m_effekseerRenderer = nullptr;
+
+			//エフェクト
+			Effekseer::Effect* m_sampleEffect = nullptr;
+			Effekseer::Handle m_playEffectHandle = -1;
+		};
+
+		void InitEffekseer();
 		//アップデート
 		void Update();
 		/// <summary>
@@ -26,6 +40,7 @@
 			}
 			return hash;
 		}
+
 		//newGO
 		template <class T>
 		T* NewGameObject(const char* objectName)
@@ -36,6 +51,7 @@
 			newObj->m_nameKey = hash;
 			return newObj;
 		}
+
 		//デリート
 		void DeleteGOObject(IGameObject* go)
 		{
@@ -49,6 +65,7 @@
 				}
 			}
 		}
+
 		/// <summary>
 		/// ゲームオブジェクト名の検索。重い
 		/// </summary>
@@ -68,6 +85,7 @@
 				}
 			}
 		}
+
 		template<class T>
 		void FindGameObjects(const char* objectName, std::function<bool(T* go)> func)
 		{
@@ -83,11 +101,21 @@
 				}
 			}
 		}
+		//呼ばれたら1追加
+		void Counting()
+		{
+			Count++;
+		}
+		int GetCount()
+		{
+			return Count;
+		}
 		//実行。ExecuteからDrawとUpdateに分離
 		void Execute();
 		//void Update();
 		void Draw();
 		//2dも追加
+		void Render();
 	private:
 		//初期化。
 		void Init(int gameObjectPropMax);
@@ -96,10 +124,11 @@
 		//void Draw();
 		void PostUpdate();
 		void PostRender();
+
 		void PreUpdate();
 	private:
-		
-		
+		//配列の数が変動したらカウントする変数を作りたかったので追加
+		int Count = 0;
 		
 	private:
 		//授業版格納庫
@@ -158,3 +187,4 @@
 			return true;
 		});
 	}
+	extern ysGameObjectManager::EffectTool g_Effect;

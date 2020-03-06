@@ -2,7 +2,7 @@
 #include "ysGameObjectManager.h"
 //ysGameObjectManagerクラスのインスタンス。
 ysGameObjectManager g_goMgr;
-
+ysGameObjectManager::EffectTool g_Effect;
 	void ysGameObjectManager::Start()
 	{
 		for (GameObjectList objList : m_gameObjectListArray) {
@@ -80,6 +80,13 @@ ysGameObjectManager g_goMgr;
 			go->PostRender();
 		}
 	}
+	void ysGameObjectManager::Render()
+	{
+		for (auto go : IGameObjectList) {
+			go->Render();
+		}
+	}
+
 	void ysGameObjectManager::Execute()
 	{
 	//	//登録されているゲームオブジェクトの更新処理を呼ぶ。
@@ -95,4 +102,28 @@ ysGameObjectManager g_goMgr;
 		m_gameObjectListArray.resize(gameObjectPrioMax);
 		m_deleteObjectArray[0].resize(gameObjectPrioMax);
 		m_deleteObjectArray[1].resize(gameObjectPrioMax);
+	}
+
+	void ysGameObjectManager::InitEffekseer()
+	{
+		//レンダラーを初期化
+		g_Effect.m_effekseerRenderer = EffekseerRendererDX11::Renderer::Create(
+			g_graphicsEngine->GetD3DDevice(),
+			g_graphicsEngine->GetD3DDeviceContext(),
+			20000									//板ポリの最大数・
+		);
+		//エフェクトマネージャを初期化
+		g_Effect.m_effekseerManager = Effekseer::Manager::Create(10000);
+
+		//描画用インスタンスから描画機能を設定
+		g_Effect.m_effekseerManager->SetSpriteRenderer(g_Effect.m_effekseerRenderer->CreateSpriteRenderer());
+		g_Effect.m_effekseerManager->SetRibbonRenderer(g_Effect.m_effekseerRenderer->CreateRibbonRenderer());
+		g_Effect.m_effekseerManager->SetRingRenderer(g_Effect.m_effekseerRenderer->CreateRingRenderer());
+		g_Effect.m_effekseerManager->SetTrackRenderer(g_Effect.m_effekseerRenderer->CreateTrackRenderer());
+		g_Effect.m_effekseerManager->SetModelRenderer(g_Effect.m_effekseerRenderer->CreateModelRenderer());
+
+		//インスタンスからテクスチャの読み込み機能を設定
+		// 独自拡張可能、現在はファイルから読み込んでいる。
+		g_Effect.m_effekseerManager->SetTextureLoader(g_Effect.m_effekseerRenderer->CreateTextureLoader());
+		g_Effect.m_effekseerManager->SetModelLoader(g_Effect.m_effekseerRenderer->CreateModelLoader());
 	}
