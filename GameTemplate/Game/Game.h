@@ -3,6 +3,7 @@
 #include "GameData.h"
 #include "graphics/RenderTarget.h"
 #include "graphics/Sprite.h"
+#include "level/Level.h"
 class UI;
 class Player;
 class Enemy;
@@ -43,6 +44,9 @@ private:
 	D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
 	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
+	Level m_level;
+	Level m_level_EnemyBusyo;
 	bool m_attack = false;
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
+	bool m_busyofrag = false;
 };

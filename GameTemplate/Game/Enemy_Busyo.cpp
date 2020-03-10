@@ -45,6 +45,9 @@ Enemy_Busyo::~Enemy_Busyo()
 
 void Enemy_Busyo::Update()
 {
+	if (g_goMgr.GetCount() > 10) {
+
+	}
 	//ƒLƒƒƒ‰ƒRƒ“‚ª“ü‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“ü‚ê‚éB
 	if (!m_charaConUse) {
 		CharaconInit();
