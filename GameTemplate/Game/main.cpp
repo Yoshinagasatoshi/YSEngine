@@ -11,29 +11,35 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
 	
+	g_goMgr.InitEffekseer();
 	//カメラを初期化。
 	g_camera3D.SetPosition({ 0.0f, 100.0f, 300.0f });
 	g_camera3D.SetTarget({ 0.0f, 200.0f, 0.0f });
 	g_camera3D.SetNear(10.0f);
 	g_camera3D.SetFar(10000.0f);
-
+	
+	//タイトル
 	Title* title = g_goMgr.NewGameObject<Title>("Title");
 
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
 		//描画開始。
-		//g_graphicsEngine->BegineRender();
+		g_graphicsEngine->BegineRender();
 		//ゲームパッドの更新。	
 		for (auto& pad : g_pad) {
 			pad.Update();
 		}
+		
 		//物理エンジンの更新。
 		g_physics.Update();
+		g_graphicsEngine->Render();
 		g_goMgr.Update();
 		g_goMgr.Render();
-
-
+	
+		
+		g_goMgr.Draw();
+		
 		//カメラの更新。
 		g_camera3D.Update();
 		

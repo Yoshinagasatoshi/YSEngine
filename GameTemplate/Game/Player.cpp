@@ -80,6 +80,7 @@ Player::Player()
 
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(m_calcPos);
+		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 	}
 	);

@@ -24,11 +24,11 @@ public:
 	void Update();
 	//ここから下の処理はクラスを作って委託する。
 	void Draw();
-	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
-	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
-	void Render();
-	void ForwardRender();
-	void PostRender();
+	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
+	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
+	//void Render();
+	//void ForwardRender();
+	//void PostRender();
 	//カメラの初期カー
 	void InitCamera();
 private:
@@ -39,11 +39,11 @@ private:
 	GameCamera* m_gameCamera = nullptr;
 	GameData* m_gamedata = nullptr;
 	UI* m_ui;
-	RenderTarget m_renderTarget;				//メインレンダリングターゲット
-	Sprite m_copyMainRtToFrameBufferSprite;		//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
-	D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
-	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
-	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
+	//RenderTarget m_renderTarget;				//メインレンダリングターゲット
+	//Sprite m_copyMainRtToFrameBufferSprite;		//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
+	//D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
+	//ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
+	//ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
 	Level m_level;
 	Level m_level_EnemyBusyo;
 	bool m_attack = false;

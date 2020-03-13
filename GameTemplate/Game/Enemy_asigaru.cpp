@@ -68,7 +68,7 @@ Enemy_asigaru::Enemy_asigaru()
 		m_en_Wepon->SetPosition(m_position);
 		}
 	);
-	g_goMgr.InitEffekseer();
+	//g_goMgr.InitEffekseer();
 	g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/sword.efk");
 	//エフェクトを再生する。
 	g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, 0.0f, 0.0f, 0.0f);

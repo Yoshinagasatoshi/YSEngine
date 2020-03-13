@@ -1,4 +1,6 @@
 #pragma once
+#include "graphics/RenderTarget.h"
+#include "graphics/Sprite.h"
 /*!
  *@brief	グラフィックスエンジン。
  */
@@ -38,6 +40,11 @@ public:
 	 *@brief	描画終了。
 	 */
 	void EndRender();
+	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
+	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
+	void Render();
+	void ForwardRender();
+	void PostRender();
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -48,6 +55,13 @@ private:
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
 
+	RenderTarget m_renderTarget;				//メインレンダリングターゲット
+	Sprite m_copyMainRtToFrameBufferSprite;		//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
+	D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
+	ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
+	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
+
+	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

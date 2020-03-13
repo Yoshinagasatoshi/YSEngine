@@ -21,6 +21,10 @@ public:
 	//{
 	//	eventName = eventname;
 	//}
+	void SetPlayerInfo(Player* pl)
+	{
+		m_player = pl;
+	}
 	PhysicsGhostObject* GetGhostObject() {
 		return &m_ghostObject;
 	}

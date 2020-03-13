@@ -1,6 +1,7 @@
 #include "stdafx.h"
+#include "RenderTarget.h"
 #include "GraphicsEngine.h"
-
+#include "gameObject/ysGameObjectManager.h"
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -151,4 +152,97 @@ void GraphicsEngine::Init(HWND hWnd)
 	viewport.MaxDepth = 1.0f;
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+
+	//メインとなるレンダリングターゲット
+	m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
+
+	//↑に描かれた絵を
+	//フレームバッファにコピーするためのスプライトの初期化する
+	m_copyMainRtToFrameBufferSprite.Init(
+		m_renderTarget.GetRenderTargetSRV(),
+		FRAME_BUFFER_W,
+		FRAME_BUFFER_H
+	);
+}
+
+void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
+{
+	ChangeRenderTarget(
+		d3dDeviceContext,
+		renderTarget->GetRenderTargetView(),
+		renderTarget->GetDepthStensilView(),
+		viewport
+	);
+}
+
+void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport)
+{
+	ID3D11RenderTargetView* rtTbl[] = {
+		renderTarget
+	};
+	//レンダリングターゲットの切り替え
+	d3dDeviceContext->OMSetRenderTargets(1, rtTbl, depthStensil);
+	if (viewport != nullptr) {
+		//ビューポートが指定されていたら、ビューポートも変更する。
+		d3dDeviceContext->RSSetViewports(1, viewport);
+	}
+}
+
+void GraphicsEngine::Render()
+{
+	//フレームバッファのレンダリングターゲットをバックアップする。
+	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	d3dDeviceContext->OMGetRenderTargets(
+		1,
+		&m_frameBufferRenderTargetView,
+		&m_frameBufferDepthStencilView
+	);
+	//ビューポートもバックアップを取っておく
+	unsigned int numViewport = 1;
+	d3dDeviceContext->RSGetViewports(&numViewport, &m_frameBufferViewports);
+
+	ForwardRender();
+
+	PostRender();
+
+	g_graphicsEngine->EndRender();
+}
+
+void GraphicsEngine::ForwardRender()
+{
+	//レンダリングターゲットをメインに変更する。
+	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	ChangeRenderTarget(d3dDeviceContext, &m_renderTarget, &m_frameBufferViewports);
+
+	//レンダリングターゲットをクリア。
+	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f }; //red,green,blue,alpha
+	m_renderTarget.ClearRenderTarget(clearColor);
+
+	g_goMgr.Draw();
+	//エフェクトは不透明オブジェクトを描画した後で描画する。
+	g_Effect.m_effekseerRenderer->BeginRendering();
+	g_Effect.m_effekseerManager->Draw();
+	g_Effect.m_effekseerRenderer->EndRendering();
+	if (m_isWireDraw) {
+		g_physics.DebugDraw();
+	}
+}
+
+void GraphicsEngine::PostRender()
+{
+	//レンダリングターゲットをフレームバッファに戻す。
+	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+
+	ChangeRenderTarget(
+		d3dDeviceContext,
+		m_frameBufferRenderTargetView,
+		m_frameBufferDepthStencilView,
+		&m_frameBufferViewports
+	);
+	//ドロー
+	m_copyMainRtToFrameBufferSprite.Draw();
+
+	m_frameBufferRenderTargetView->Release();
+	m_frameBufferDepthStencilView->Release();
+
 }
