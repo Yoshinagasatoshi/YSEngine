@@ -348,11 +348,6 @@
     </MeshContentTask>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\modelData\Title.png">
-      <Filter>Assets\modelData</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Title.png">
       <Filter>Assets\sprite</Filter>
     </ImageContentTask>
