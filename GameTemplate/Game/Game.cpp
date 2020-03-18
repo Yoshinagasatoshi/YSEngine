@@ -15,7 +15,7 @@ const int knockDownNum = 5;
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
 {
-	InitCamera();
+	//InitCamera();
 	//プレイヤー
 	m_player = g_goMgr.NewGameObject<Player>("Player");
 	m_backGround = g_goMgr.NewGameObject<BackGround>("BackGround");
@@ -193,16 +193,16 @@ void Game::Draw()
 //
 //}
 
-void Game::InitCamera()
-{	
-	const float camera2Dpos_z = -600.0f;
-
-	g_camera3D.Update();
-	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	g_camera2D.SetWidth(FRAME_BUFFER_W);
-	g_camera2D.SetHeight(FRAME_BUFFER_H);
-	//-600がちょうどいい感じ
-	g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
-	g_camera2D.SetTarget(CVector3::Zero());
-	g_camera2D.Update();
-}
+//void Game::InitCamera()
+//{	
+//	const float camera2Dpos_z = -600.0f;
+//
+//	g_camera3D.Update();
+//	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+//	g_camera2D.SetWidth(FRAME_BUFFER_W);
+//	g_camera2D.SetHeight(FRAME_BUFFER_H);
+//	//-600がちょうどいい感じ
+//	g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
+//	g_camera2D.SetTarget(CVector3::Zero());
+//	g_camera2D.Update();
+//}

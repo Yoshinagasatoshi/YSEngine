@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sound/WaveFile.h"
-
+#include "SoundEngine.h"
 	
 
 /// <summary>

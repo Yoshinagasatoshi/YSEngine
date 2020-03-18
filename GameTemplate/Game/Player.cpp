@@ -5,6 +5,9 @@
 #include "Enemy.h"
 #include "Enemy_asigaru.h"
 #include "Wepon_ghost.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
@@ -19,6 +22,11 @@ const int Timer_ZERO = 0;						//0になる。そのまま
 
 Player::Player()
 {
+	//サウンドエンジンを初期化
+	m_soundEngine.Init();
+	//音SE素材
+	m_bgm.Init(L"Assets/sound/n82.wav");
+	m_bgm.Play(true);
 	CharaconInit();
 	//cmoファイルの読み込み。
 	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
@@ -82,6 +90,9 @@ Player::Player()
 		m_pl_Wepon->SetPosition(m_calcPos);
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
+
+		m_se.Init(L"Assets/sound/katana.wav");
+		m_se.Play(false);
 	}
 	);
 }
@@ -103,6 +114,7 @@ void Player::CharaconInit()
 
 void Player::Update()
 {
+	m_soundEngine.Update();
 	if (m_busyoState != BusyoDead) {
 		//地面ついてる？
 		if (m_characon.IsOnGround()) {
@@ -240,6 +252,7 @@ void Player::AttackMove()
 	//補間時間
 	float InterpolationTime = 0.2f;
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
+		
 	//m_busyoState = BusyoAttack;
 		if (!m_underAttack)
 		{

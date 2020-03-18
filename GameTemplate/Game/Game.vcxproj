@@ -246,7 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\modelData\Title.png" />
-    <ImageContentTask Include="Assets\sprite\Title.png" />
+    <ImageContentTask Include="Assets\sprite\Title.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ImageContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

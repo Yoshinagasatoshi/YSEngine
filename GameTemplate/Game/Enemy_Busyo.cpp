@@ -40,7 +40,7 @@ Enemy_Busyo::Enemy_Busyo()
 
 Enemy_Busyo::~Enemy_Busyo()
 {
-
+	g_goMgr.DeleteGOObject(this);
 }
 
 void Enemy_Busyo::Update()
@@ -168,7 +168,8 @@ void Enemy_Busyo::NormalMove()
 	if (m_characon.IsOnGround()) {
 		m_moveSpeed.y = 0.0f;
 	}
-
+	float angle = atan2(distance.x, distance.z);
+	m_rotation.SetRotation(CVector3::AxisY(), angle);
 	m_enemy_BusyoAnime.Play(MOVE,0.2f);
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 }

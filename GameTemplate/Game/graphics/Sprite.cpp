@@ -46,7 +46,9 @@ void Sprite::Init(ID3D11ShaderResourceView* srv, float w, float h)
 	InitCommon(w,h);
 
 	m_texture = srv;
-	m_texture->AddRef();
+	if (m_texture != nullptr) {
+		m_texture->AddRef();
+	}
 }
 
 void Sprite::InitCommon(float w, float h)
@@ -60,16 +62,17 @@ void Sprite::InitCommon(float w, float h)
 	//サンプラステートの初期化。
 	InitSamplerState();
 	//シェーダーのロード
-	LoadShader();
+	//LoadShader();
+	//シェーダーをロードする。
+	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
+	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
 	//定数バッファを初期化
 	InitConstantBuffer();
 }
 
 void Sprite::LoadShader()
 {
-	//シェーダーをロードする。
-	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
-	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
+
 }
 void Sprite::InitConstantBuffer()
 {
@@ -211,28 +214,6 @@ void Sprite::Update(const CVector3& trans, CQuaternion rot, CVector3 scale, CVec
 }
 void Sprite::Draw()
 {
-	//昔書いていたコード、コメントアウトして閉じた
-	/*
-	////定数バッファを更新。
-	//SSpriteCB cb;
-	////ワールド×ビュー×プロジェクション行列を計算。
-	//cb.mWVP.Mul(m_world, mView);
-	//cb.mWVP.Mul(cb.mWVP, mProj);
-	////定数バッファの内容をメインメモリからVRAMにコピー。
-	//d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &cb, 0, 0);
-	////定数バッファをレジスタb0にバインドする。
-	//d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb);
-	////テクスチャをレジスタt0にバインドする。
-	//d3dDeviceContext->PSSetShaderResources(0, 1, &m_texture);
-	////サンプラステートをレジスタs0にバインドする。
-	//d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
-
-	////頂点バッファを設定。
-	//UINT stride = sizeof(Vertex);
-	//UINT offset = 0;
-
-	*/
-
 	//デバイスコンテキストを引っ張ってくる。
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 

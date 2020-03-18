@@ -48,6 +48,8 @@ void GameCamera::Update()
 	g_camera3D.SetTarget(m_target);
 	g_camera3D.SetPosition(m_position);
 	g_camera3D.Update();
+
+	
 }
 void GameCamera::Draw()
 {

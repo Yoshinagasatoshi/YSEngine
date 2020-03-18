@@ -7,6 +7,7 @@ public:
 	Title();
 	~Title();
 	void Update();
+	void Draw();
 private:
 	Sprite m_sprite;
 };

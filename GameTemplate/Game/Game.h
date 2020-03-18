@@ -30,7 +30,7 @@ public:
 	//void ForwardRender();
 	//void PostRender();
 	//カメラの初期カー
-	void InitCamera();
+	//void InitCamera();
 private:
 	//プレイヤー
 	Player* m_player = nullptr;

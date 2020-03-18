@@ -5,6 +5,9 @@
 #include "graphics/animation/AnimationClip.h"
 #include "physics/PhysicsGhostObject.h"
 #include "graphics/Skeleton.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+
 /// <summary>
 /// 
 /// </summary>
@@ -134,14 +137,16 @@ private:
 	Skeleton* m_skelton;								//Playerのスケルトンデータ
 	CharacterController m_characon;						//キャラクターコントローラー
 
+
 	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
 	bool m_deadFrag = false;							//死亡したときのスイッチ
 	bool m_underAttack = false;							//攻撃中？
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
 	
-	
-
+	CSoundEngine m_soundEngine;
+	CSoundSource m_se;									//効果音
+	CSoundSource m_bgm;
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 };

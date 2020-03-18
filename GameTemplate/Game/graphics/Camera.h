@@ -154,6 +154,9 @@ public:
 	{
 		m_updateProjeMatrixFunc = func;
 	}
+
+	//カメラ初期化
+	void InitCamera();
 private:
 	CMatrix	m_viewMatrix = CMatrix::Identity();		//ビュー行列。
 	CMatrix m_projMatrix = CMatrix::Identity();		//プロジェクション行列。
@@ -170,6 +173,8 @@ private:
 	float m_height = 720.0f;						//平行投影の高さ
 	//射影行列の作成方法。
 	EnUpdateProjMatrixFunc m_updateProjeMatrixFunc = enUpdateProjMatrixFunc_Perspective;
+
+
 };
 
 extern Camera g_camera3D;		//!<3Dカメラ。

@@ -154,7 +154,11 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
 
 	//メインとなるレンダリングターゲット
-	m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
+	m_renderTarget.Create(
+		FRAME_BUFFER_W,
+		FRAME_BUFFER_H, 
+		DXGI_FORMAT_R16G16B16A16_FLOAT
+	);
 
 	//↑に描かれた絵を
 	//フレームバッファにコピーするためのスプライトの初期化する
@@ -190,6 +194,9 @@ void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, I
 
 void GraphicsEngine::Render()
 {
+	//描画開始。
+	g_graphicsEngine->BegineRender();
+
 	//フレームバッファのレンダリングターゲットをバックアップする。
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 	d3dDeviceContext->OMGetRenderTargets(
@@ -246,3 +253,4 @@ void GraphicsEngine::PostRender()
 	m_frameBufferDepthStencilView->Release();
 
 }
+
