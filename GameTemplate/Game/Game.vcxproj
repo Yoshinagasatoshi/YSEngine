@@ -107,9 +107,11 @@
     <ClCompile Include="Enemy_Busyo.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp" />
     <ClCompile Include="gameObject\ysGameObjectManager.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="graphics\animation\Animation.cpp" />
     <ClCompile Include="graphics\animation\AnimationClip.cpp" />
     <ClCompile Include="graphics\animation\AnimationPlayController.cpp" />
@@ -165,9 +167,11 @@
     <ClInclude Include="Enemy_Busyo.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="gameObject\ysGameObject.h" />
     <ClInclude Include="gameObject\ysGameObjectManager.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="graphics\animation\Animation.h" />
     <ClInclude Include="graphics\animation\AnimationClip.h" />
     <ClInclude Include="graphics\animation\AnimationPlayController.h" />
@@ -248,6 +252,17 @@
     <ImageContentTask Include="Assets\sprite\Title.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Green.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Lose1.png" />
+    <ImageContentTask Include="Assets\sprite\Lose2.png" />
+    <ImageContentTask Include="Assets\sprite\Win1.png" />
+    <ImageContentTask Include="Assets\sprite\Win2.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

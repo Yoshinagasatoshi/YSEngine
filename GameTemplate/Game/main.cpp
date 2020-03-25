@@ -23,7 +23,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
 	g_camera2D.SetTarget(CVector3::Zero());
 	g_camera3D.SetNear(10.0f);
-	g_camera3D.SetFar(10000.0f);
+	g_camera3D.SetFar(100000.0f);
 
 	//g_camera2D.InitCamera();
 	//タイトル
@@ -49,6 +49,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_camera3D.Update();
 		g_camera2D.Update();
 		//描画終了。
-		//g_graphicsEngine->EndRender();
+		g_graphicsEngine->EndRender();
 	}
 }

@@ -6,12 +6,15 @@ const float m_ghostscale = 150.0f;
 
 Wepon_ghost::Wepon_ghost()
 {
-
+	
 }
 
 Wepon_ghost::~Wepon_ghost()
 {
-	m_ghostObject.Release();
+	if (m_player != nullptr) {
+		m_player = nullptr;
+	}
+	g_goMgr.DeleteGOObject(this);
 }
 
 //bool Wepon_ghost::Start()
@@ -21,6 +24,8 @@ Wepon_ghost::~Wepon_ghost()
 
 void Wepon_ghost::Update()
 {
+	//バグあり。後で直す
+	//多分デリートしたghostにアクセスした疑い
 	GhostInit();
 }
 

@@ -116,6 +116,11 @@
 		void Draw();
 		//2dも追加
 		void Render();
+		//配列数を取りたいがためにしたけど不便、
+		std::vector<IGameObject*> GetIGameObjectList()
+		{
+			return IGameObjectList;
+		}
 	private:
 		//初期化。
 		void Init(int gameObjectPropMax);
@@ -126,6 +131,7 @@
 		void PostRender();
 
 		void PreUpdate();
+
 	private:
 		//配列の数が変動したらカウントする変数を作りたかったので追加
 		int Count = 0;

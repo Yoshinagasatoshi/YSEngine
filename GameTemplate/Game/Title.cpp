@@ -4,6 +4,7 @@
 #include "gameObject/ysGameObjectManager.h"
 Title::Title()
 {
+	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);
 	//
 	CVector3 CameraPos = { 0.0f,0.0f,-600.0f };
@@ -21,10 +22,9 @@ Title::~Title()
 
 void Title::Update()
 {
-
 	if (g_pad->IsTrigger(enButtonA)) {
-		g_goMgr.DeleteGOObject(this);
 		Game* game = g_goMgr.NewGameObject<Game>("Game");
+		g_goMgr.DeleteGOObject(this);
 	}
 }
 

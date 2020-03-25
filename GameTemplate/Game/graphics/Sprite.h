@@ -58,6 +58,19 @@ public:
 	/// <param name="mView">カメラ行列</param>
 	/// /// <param name="mView">プロジェクション行列</param>
 	void Draw();
+	void SetPosition(CVector3 pos)
+	{
+		m_position = pos;
+	}
+	void SetRotation(CQuaternion rot)
+	{
+		m_rotation = rot;
+	}
+	void SetScale(CVector3 scale)
+	{
+		m_scale = scale;
+	}
+
 private:
 	/// <summary>
 	/// シェーダーをロード。
@@ -84,6 +97,8 @@ private:
 	/// </summary>
 	/// <param name="textureFIlePath">ロードするテクスチャのファイルパス。</param>
 	void LoadTexture(const wchar_t* textureFIlePath);
+	void InitTranslucentBlendState();
+	void CreateDepthStencilState();
 private:
 	struct ConstantBuffer {
 		CMatrix WVP;  //WorldViewProjection(行列)の略
@@ -94,6 +109,8 @@ private:
 	ID3D11Buffer* m_cb = nullptr;			//GPU側の定数バッファにアクセスするためのインターフェース。
 	ID3D11ShaderResourceView* m_texture = nullptr;	//テクスチャにアクセスするためのインターフェース。
 	ID3D11SamplerState* m_samplerState = nullptr;	//サンプラステート。
+	ID3D11BlendState* m_translucentBlendState = nullptr;
+	ID3D11DepthStencilState* m_depthStencilState = nullptr;
 	Shader	m_vs;											//頂点シェーダー。
 	Shader	m_ps;											//ピクセルシェーダー。
 	CMatrix m_world = CMatrix::Identity();					//ワールド行列。
@@ -102,5 +119,5 @@ private:
 	CVector3 m_scale = CVector3::One();
 	CVector2 m_size = CVector2::Zero();
 	float m_alpha = 1.0f;
-
+	
 };

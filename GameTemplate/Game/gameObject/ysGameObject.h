@@ -43,6 +43,10 @@
 		/// </summary>
 		virtual void Draw() {}
 		/// <summary>
+		/// 2D描画
+		/// </summary>
+		virtual void PostDraw() {}
+		/// <summary>
 		/// ポストレンダ
 		/// </summary>
 		virtual void PostRender(){}

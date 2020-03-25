@@ -7,7 +7,8 @@
 #include "Wepon_ghost.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-
+#include "GameOver.h"
+#include "Game.h"
 
 const float posClearRange = 600.0f * 600.0f;	//ƒNƒŠƒA”»’è‚ğs‚¤”ÍˆÍB
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì‚‚³B
@@ -15,7 +16,8 @@ const float PLAYER_COLLIDER_RADIUS = 60.0f;		//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì”
 
 const float SpeedAmount = 1500.0f;				//•½–Ê‚ÌˆÚ“®—Ê
 const float gravity = 200.0f;					//d—Í
-const float JumpPower = 1200.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
+const float JumpPower = 2000.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
+const float JumpATKPower = 350.0f;				//ƒWƒƒƒ“ƒv‹`—‚Ì‹­‚³
 const float standardPower = 200.0f;				//ƒvƒŒƒCƒ„[‚Ì“G‚«”ò‚Î‚µ—Í
 const float limit = 2.0f;						//d—ÍŒW”‚ÌãŒÀ
 const int Timer_ZERO = 0;						//0‚É‚È‚éB‚»‚Ì‚Ü‚Ü
@@ -35,12 +37,15 @@ Player::Player()
 	m_busyoAnimeClip[animClip_idle].SetLoopFlag(true);
 	m_busyoAnimeClip[animClip_Walk].Load(L"Assets/animData/busyo_walk.tka");
 	m_busyoAnimeClip[animClip_Walk].SetLoopFlag(true);
+	m_busyoAnimeClip[animClip_jump].Load(L"Assets/animData/busyo_jump.tka");
+	m_busyoAnimeClip[animClip_jump].SetLoopFlag(false);
 	//UŒ‚ƒAƒjƒƒ[ƒh
 	m_busyoAnimeClip[animClip_ATK1].Load(L"Assets/animData/busyo_kougeki.tka");
 	m_busyoAnimeClip[animClip_ATK2].Load(L"Assets/animData/busyo_kougeki2.tka");
 	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki3.tka");
 	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki4.tka");
 	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki5.tka");
+	m_busyoAnimeClip[animClip_JUMP_ATK].Load(L"Assets/animData/busyo_jump_kougeki.tka");
 	//ƒ_ƒ[ƒWƒ[ƒh
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
 	m_busyoAnimeClip[animClip_busyo_dead].Load(L"Assets/animData/busyo_dead.tka");
@@ -125,6 +130,7 @@ void Player::Update()
 			//ƒWƒƒƒ“ƒv‚µ‚Ä‚½H
 			if (m_Jumpfrag) {
 				m_Jumpfrag = false;
+				m_jumpAttackfrag = false;
 			}
 		}
 		//ƒXƒe[ƒg‚²‚Æ‚É‚Ìˆ—‚ÉŒã‚Å‚·‚éB
@@ -140,14 +146,25 @@ void Player::Update()
 			if (m_gravity_keisuu > limit) {
 				m_gravity_keisuu = limit;
 			}
-			m_busyoAnime.Play(animClip_idle, 0.5f);
+			//ƒWƒƒƒ“ƒvó‘Ô‚¶‚á‚È‚¯‚ê‚ÎˆÚ“®‘¬“x‚É‚æ‚Á‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•Ï‚¦‚éB
+			if (!m_Jumpfrag) {
+				if (m_moveSpeed.Length() > 1.0f) {
+					m_busyoAnime.Play(animClip_Walk, 0.1f);
+				}
+				else {
+					m_busyoAnime.Play(animClip_idle, 0.1f);
+				}
+			}
+			else {
+				JumpAttackMove();
+			}
 		}
 		//‚±‚±‚ç•Ó‚Ìˆ—‚Å‚Í‚Ù‚©‚ÉŠÖ”‚ğg‚Á‚½•û‚ª‚¢‚¢‚©‚à
 		if (m_damagefrag)
 		{
 			m_damagefrag = false;
 			if (m_PL_HP != 0) {
-				m_PL_HP--;
+				m_PL_HP -= 480;
 			}
 			else {
 				//m_deadFrag = true;
@@ -165,7 +182,9 @@ void Player::Update()
 			//if (m_underAttack) {
 			//	m_underAttack = false;
 			//}
-			m_busyoAnime.Play(animClip_idle, 0.2f);
+			if (!m_Jumpfrag) {
+				m_busyoAnime.Play(animClip_idle, 0.2f);
+			}
 		}
 		//ˆÚ“®ˆ—
 		Move();
@@ -189,8 +208,24 @@ void Player::Update()
 		//ƒvƒŒƒCƒ„[‚ª€‚ñ‚Å‚¢‚é‚Ìˆ—
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
+		if (!m_busyoAnime.IsPlaying()) {
+			g_goMgr.NewGameObject<GameOver>("GameOver");
+			m_game->GameDelete();
+			//DeleteGO(this);
+		}
 	}
-	Execute();
+	if (m_pl_Wepon != nullptr) {
+		m_pl_Wepon->SetPosition(m_position);
+	}
+	if (this!=nullptr) {
+		Execute();
+	}
+	/// <summary>
+	/// ƒfƒoƒbƒN—pƒRƒ}ƒ“ƒhBŒã‚ÅÁ‚·B
+	/// </summary>
+	if (g_pad->IsTrigger(enButtonLeft)) {
+		m_busyoState = BusyoDead;
+	}
 }
 
 void Player::Move()
@@ -316,11 +351,6 @@ void Player::AttackMove()
 
 void Player::Execute()
 {
-	
-	if (m_pl_Wepon != nullptr) {
-		m_pl_Wepon->SetPosition(m_position);
-	}
-	
 	//ƒ[ƒ‹ƒhÀ•W‚ÌXV@‚±‚Á‚¿‚ÌskeletonUpdate‚ğ‚¢‚¶‚é
 	auto footStep = m_busyoAnime.Update(1.0f / 30.0f);//ƒ[ƒJƒ‹À•W‚ÌXV@‚±‚Á‚¿‚Í‚¢‚¶‚ç‚È‚¢
 	//if (m_busyoState == BusyoAttack) {
@@ -368,4 +398,17 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	//‹——£‚ª—£‚ê‚Ä‚¢‚½‚ç
 	//-1‚ğ–ß‚è’l‚É‚·‚é
 	return -1;
+}
+
+void Player::JumpAttackMove() {
+	if (m_Jumpfrag && !m_jumpAttackfrag) {
+		if (g_pad->IsTrigger(enButtonX)) {
+			m_jumpAttackfrag = true;
+			m_busyoAnime.Play(animClip_JUMP_ATK, 0.1f);
+			m_blowOffPower = JumpATKPower;
+		}
+	}
+	if (!m_jumpAttackfrag) {
+		m_busyoAnime.Play(animClip_jump, 0.2f);
+	}
 }

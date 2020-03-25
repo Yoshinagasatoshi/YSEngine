@@ -212,7 +212,7 @@ void GraphicsEngine::Render()
 
 	PostRender();
 
-	g_graphicsEngine->EndRender();
+	//g_graphicsEngine->EndRender();
 }
 
 void GraphicsEngine::ForwardRender()
@@ -230,6 +230,14 @@ void GraphicsEngine::ForwardRender()
 	g_Effect.m_effekseerRenderer->BeginRendering();
 	g_Effect.m_effekseerManager->Draw();
 	g_Effect.m_effekseerRenderer->EndRendering();
+	if(g_pad->IsTrigger(enButtonUp)){
+		if (m_isWireDraw) {
+			m_isWireDraw = false;
+		}
+		else {
+			m_isWireDraw = true;
+		}
+	}
 	if (m_isWireDraw) {
 		g_physics.DebugDraw();
 	}

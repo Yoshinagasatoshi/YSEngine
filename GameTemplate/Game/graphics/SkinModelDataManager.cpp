@@ -2,6 +2,7 @@
 #include "graphics/SkinModelDataManager.h"
 #include "graphics/SkinModelEffect.h"
 #include "graphics/Skeleton.h"
+#include <iostream>
 
 //g_skinModelDataManagerの実体。
 SkinModelDataManager g_skinModelDataManager;
@@ -32,17 +33,23 @@ DirectX::Model* SkinModelDataManager::Load(const wchar_t* filePath, const Skelet
 		//テクスチャがあるフォルダを設定する。
 		effectFactory.SetDirectory(L"Assets/modelData");
 		//CMOファイルのロード。
-		auto model = DirectX::Model::CreateFromCMO(	//CMOファイルからモデルを作成する関数の、CreateFromCMOを実行する。
+		try {
+			auto model = DirectX::Model::CreateFromCMO(	//CMOファイルからモデルを作成する関数の、CreateFromCMOを実行する。
 			g_graphicsEngine->GetD3DDevice(),			//第一引数はD3Dデバイス。
 			filePath,									//第二引数は読み込むCMOファイルのファイルパス。
 			effectFactory,								//第三引数はエフェクトファクトリ。
 			false,										//第四引数はCullモード。今は気にしなくてよい。
 			false,
 			onFindBone
-		);
-		retModel = model.get();
-		//新規なのでマップに登録する。
-		m_directXModelMap.insert({ filePath, std::move(model) });
+			);
+			retModel = model.get();
+			//新規なのでマップに登録する。
+			m_directXModelMap.insert({ filePath, std::move(model) });
+		}
+		catch (std::exception& e) {
+			std::cout << e.what() << std::endl;
+			std::abort();
+		}		
 	}
 	else {
 		//登録されているので、読み込み済みのデータを取得。

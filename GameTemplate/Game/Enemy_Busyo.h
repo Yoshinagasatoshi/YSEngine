@@ -42,6 +42,7 @@ private:
 		MOVE,
 		DAMAGE,
 		DEATH,
+		FIGHTING,
 		AnimationClip_Num
 	};
 	Animation m_enemy_BusyoAnime;
@@ -53,7 +54,7 @@ private:
 	CVector3 m_moveSpeed = CVector3::Zero();//移動量を入れる変数。
 	bool m_charaConUse = false;//キャラコンが入っているか確認する変数。
 	bool m_isDeadfrag = false;
-
+	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
 	int m_HP = 25;					//仮
 	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
 	float m_frameTimer = 0.0f;		//時間を図るため

@@ -2,6 +2,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Wepon_ghost.h"
 #include "Enemy_Busyo.h"
+#include "GameClear.h"
 
 const float power = 500.0f;
 
@@ -17,6 +18,7 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[MOVE].Load(L"Assets/animData/enemy_Busyo_Inflate.tka");
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
+	m_animClip[FIGHTING].Load(L"Assets/animData/enemy_Busyo_Fighting_Pose.tka");
 
 	m_enemy_BusyoAnime.Init(
 		m_model,
@@ -25,15 +27,18 @@ Enemy_Busyo::Enemy_Busyo()
 	);
 
 	m_animClip[ATK].SetLoopFlag(false);
-	m_animClip[MOVE].SetLoopFlag(false);
+	m_animClip[MOVE].SetLoopFlag(true);
 	m_animClip[IDL].SetLoopFlag(true);
 	m_animClip[DAMAGE].SetLoopFlag(false);
 	m_animClip[DEATH].SetLoopFlag(false);
+	m_animClip[FIGHTING].SetLoopFlag(true);
 
 	m_enemy_BusyoAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
 		m_en_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("EN_Wepon");
 		m_en_Wepon->SetPosition(m_position);
+		m_en_Wepon->SetPlayerInfo(m_player);
+		m_en_Wepon->GhostInit();
 		}
 	);
 }
@@ -45,9 +50,6 @@ Enemy_Busyo::~Enemy_Busyo()
 
 void Enemy_Busyo::Update()
 {
-	if (g_goMgr.GetCount() > 10) {
-
-	}
 	//キャラコンが入っていなかったら入れる。
 	if (!m_charaConUse) {
 		CharaconInit();
@@ -147,12 +149,17 @@ void Enemy_Busyo::AttackMove()
 	AttackframeNum();
 	if (m_frameTimer > m_attackFrameNum)
 	{
+		m_isFight = true;
 		m_enemy_BusyoAnime.Play(ATK, 0.2f);
 		if (!m_enemy_BusyoAnime.IsPlaying())
 		{
 			m_frameTimer = 0;
 			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+			m_isFight = false;
 		}
+	}
+	if (!m_isFight) {
+		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);
 	}
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 }
@@ -170,7 +177,7 @@ void Enemy_Busyo::NormalMove()
 	}
 	float angle = atan2(distance.x, distance.z);
 	m_rotation.SetRotation(CVector3::AxisY(), angle);
-	m_enemy_BusyoAnime.Play(MOVE,0.2f);
+	m_enemy_BusyoAnime.Play(MOVE, 0.2f);
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 }
 
@@ -224,6 +231,8 @@ void Enemy_Busyo::ThisDelete()
 	else {
 		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
 		if (!m_enemy_BusyoAnime.IsPlaying()) {
+			//三人倒せばokという状態にしたい。今はゲームループのため仮実装
+			g_goMgr.NewGameObject<GameClear>("GameClear");
 			DeleteGO(this);
 		}
 	}

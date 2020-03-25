@@ -11,6 +11,7 @@
 /// <summary>
 /// 
 /// </summary>
+class Game;
 class Enemy;
 //class Skeleton;
 class Wepon_ghost;
@@ -67,6 +68,11 @@ public:
 	{
 		return m_calcPos;
 	}
+	//プレイヤーのHPを受け取る
+	int GetPlayerHP()
+	{
+		return m_PL_HP;
+	}
 	//PhysicsGhostObject* GetGhostObject() {
 	//	return &m_ghostObject;
 	//}
@@ -86,18 +92,23 @@ public:
 	enum busyoAnimeClip {
 		animClip_idle = 0,
 		animClip_Walk,
+		animClip_jump,
 		animClip_ATK1,
 		animClip_ATK2,
 		animClip_ATK3,
 		animClip_ATK4,
 		animClip_ATK5,
+		animClip_JUMP_ATK,
 		animClip_SmallDamage,
 		animClip_busyo_dead,
 		animClip_num
 	};
 	busyoAnimeClip m_animState = animClip_idle;
 	AnimationClip m_busyoAnimeClip[animClip_num];
-
+	void SetGameInfo(Game* game)
+	{
+		m_game = game;
+	}
 	
 	struct EnemeyData
 	{
@@ -111,15 +122,17 @@ public:
 	}
 	//敵情報のリクエストを受け取る
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
+
 private:
 	//囲いの数
 	static const int DestinationNum = 5;
 	void AttackMove();									//無双の攻撃の処理を書く
+	void JumpAttackMove();								//ジャンプアタックの処理。
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 15;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 1;									//今の体力
+	int m_PL_HP = 480;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る
@@ -136,6 +149,7 @@ private:
 	CVector3 m_calcPos;									//ボーンと自分の位置の合計
 	Skeleton* m_skelton;								//Playerのスケルトンデータ
 	CharacterController m_characon;						//キャラクターコントローラー
+	Game* m_game;										//ゲームのインスタンスを格納する
 
 
 	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
@@ -143,6 +157,8 @@ private:
 	bool m_underAttack = false;							//攻撃中？
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
+	bool m_jumpAttackfrag = false;						//ジャンプアタック中？
+	bool m_gamefinal = false;							//終わりだ…
 	
 	CSoundEngine m_soundEngine;
 	CSoundSource m_se;									//効果音

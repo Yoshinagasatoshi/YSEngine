@@ -66,6 +66,8 @@ Enemy_asigaru::Enemy_asigaru()
 		(void)clipName;
 		m_en_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("EN_Wepon");
 		m_en_Wepon->SetPosition(m_position);
+		m_en_Wepon->SetPlayerInfo(m_player);
+		m_en_Wepon->GhostInit();
 		}
 	);
 	//g_goMgr.InitEffekseer();

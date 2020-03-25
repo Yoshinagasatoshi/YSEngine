@@ -24,6 +24,7 @@ public:
 	void Update();
 	//ここから下の処理はクラスを作って委託する。
 	void Draw();
+	void GameDelete();
 	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
 	//void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
 	//void Render();
@@ -49,4 +50,5 @@ private:
 	bool m_attack = false;
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 	bool m_busyofrag = false;
+	bool m_gameDelete = false;					//ゲームから出る時にtrueになるようにする
 };

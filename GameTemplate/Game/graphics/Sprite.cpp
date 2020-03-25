@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Sprite.h"
 
+
+
+
 //頂点構造体。
 struct Vertex {
 	CVector4	pos;		//座標。
@@ -16,18 +19,27 @@ Sprite::~Sprite()
 {
 	if (m_vertexBuffer != nullptr) {
 		m_vertexBuffer->Release();
+		m_vertexBuffer = nullptr;
 	}
 	if (m_indexBuffer != nullptr) {
 		m_indexBuffer->Release();
+		m_indexBuffer = nullptr;
 	}
 	if (m_cb != nullptr) {
 		m_cb->Release();
+		m_cb = nullptr;
 	}
 	if (m_texture != nullptr) {
 		m_texture->Release();
+		m_texture = nullptr;
 	}
 	if (m_samplerState != nullptr) {
 		m_samplerState->Release();
+		m_samplerState = nullptr;
+	}
+	if (m_depthStencilState != nullptr) {
+		m_depthStencilState->Release();
+		m_depthStencilState = nullptr;
 	}
 }
 
@@ -61,6 +73,11 @@ void Sprite::InitCommon(float w, float h)
 	InitIndexBuffer();
 	//サンプラステートの初期化。
 	InitSamplerState();
+	//デプスステンシルステートの作成
+	CreateDepthStencilState();
+	//ブレンドステートの作成
+	InitTranslucentBlendState();
+
 	//シェーダーのロード
 	//LoadShader();
 	//シェーダーをロードする。
@@ -158,7 +175,7 @@ void Sprite::InitIndexBuffer()
 	D3D11_BUFFER_DESC desc;							//構造体のメンバを0で初期化する。
 	ZeroMemory(&desc, sizeof(desc));
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	//desc.StructureByteStride = 4;					//インデックス一個分のサイズ。shortなので2バイト。
+	desc.StructureByteStride = 4;					//インデックス一個分のサイズ。shortなので2バイト。
 	desc.ByteWidth = sizeof(index);				//インデックスバッファのサイズ。
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;		//作成するバッファがインデックスバッファであることを指定する。
 	desc.CPUAccessFlags = 0;						//CPUから頂点バッファにアクセスするかのフラグ。
@@ -204,12 +221,29 @@ void Sprite::LoadTexture(const wchar_t* textureFIlePath)
 
 void Sprite::Update(const CVector3& trans, CQuaternion rot, CVector3 scale, CVector2 pivot)
 {
+	//ピボットを考慮に入れた平行移動行列を作成。
+	//ピボットは真ん中が0.0, 0.0、左上が-1.0f, -1.0、右下が1.0、1.0になるようにする。
+	CVector2 localPivot = pivot;
+	localPivot.x -= 0.5f;
+	localPivot.y -= 0.5f;
+	localPivot.x *= -2.0f;
+	localPivot.y *= -2.0f;
+	//画像のハーフサイズを求める。
+	CVector2 halfSize = m_size;
+	halfSize.x *= 0.5f;
+	halfSize.y *= 0.5f;
+	CMatrix mPivotTrans;
+
+	mPivotTrans.MakeTranslation(
+		{ halfSize.x * localPivot.x, halfSize.y * localPivot.y, 0.0f }
+	);
 	//ワールド行列を計算する
 	CMatrix mTrans, mRot, mScale;
 	mTrans.MakeTranslation(trans);
 	mRot.MakeRotationFromQuaternion(rot);
 	mScale.MakeScaling(scale);
-	m_world.Mul(mScale, mRot);
+	m_world.Mul(mPivotTrans, mScale);
+	m_world.Mul(m_world, mRot);
 	m_world.Mul(m_world, mTrans);
 }
 void Sprite::Draw()
@@ -219,6 +253,8 @@ void Sprite::Draw()
 
 	unsigned int vertexSize = sizeof(Vertex);	//頂点サイズ
 	unsigned int offset = 0;
+	//デプスステンシルステートを切り替える
+	d3dDeviceContext->OMSetDepthStencilState(m_depthStencilState, 0);
 
 	d3dDeviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &vertexSize, &offset);
 	//インデックスバッファを設定。
@@ -233,7 +269,13 @@ void Sprite::Draw()
 	d3dDeviceContext->PSSetShaderResources(0, 1, &m_texture);
 	//サンプラステートを設定
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
-
+	//ブレンドステートを設定
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	d3dDeviceContext->OMSetBlendState(
+		m_translucentBlendState,//設定するブレンディングステート
+		blendFactor,
+		0xffffffff
+		);
 	//ワールドビュープロジェクション行列を作成
 	ConstantBuffer cb;
 	cb.WVP = m_world;
@@ -250,4 +292,58 @@ void Sprite::Draw()
 	//ここまで設定した内容でドロー
 	d3dDeviceContext->DrawIndexed(6, 0, 0);
 	
+}
+
+
+
+void Sprite::CreateDepthStencilState()
+{
+	//D3Dデバイスを取得。
+	auto pd3d = g_graphicsEngine->GetD3DDevice();
+	//作成する深度ステンシルステートの定義を設定していく。
+	D3D11_DEPTH_STENCIL_DESC desc = { 0 };
+	desc.DepthEnable = false;					 //Zテストが有効。
+	//desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; //ZバッファにZ値を描き込む。
+	//desc.DepthFunc = D3D11_COMPARISON_LESS;		 //Z値が小さければフレームバッファに描き込む。
+	   //デプスステンシルステートを作成。
+	pd3d->CreateDepthStencilState(&desc, &m_depthStencilState);
+}
+
+void Sprite::InitTranslucentBlendState()
+{
+	//例のごとく、作成するブレンドステートの情報を設定する。
+	CD3D11_DEFAULT defaultSettings;
+	//デフォルトセッティングで初期化する。
+	CD3D11_BLEND_DESC blendDesc(defaultSettings);
+
+	//αブレンディングを有効にする。
+	blendDesc.RenderTarget[0].BlendEnable = true;
+
+	//ソースカラーのブレンディング方法を指定している。
+	//ソースカラーとはピクセルシェーダ―からの出力を指している。
+	//この指定では、ソースカラーをSRC(rgba)とすると、
+	//最終的なソースカラーは下記のように計算される。
+	//最終的なソースカラー = SRC.rgb × SRC.a・・・・・・　①
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+
+	//ディスティネーションカラーのブレンディング方法を指定している。
+	//ディスティネーションカラーとは、
+	//すでに描き込まれているレンダリングターゲットのカラーを指している。
+	//この指定では、ディスティネーションカラーをDEST(rgba)、
+	//ソースカラーをSRC(RGBA)とすると、最終的なディスティネーションカラーは
+	//下記のように計算される。
+	//最終的なディスティネーションカラー = DEST.rgb × (1.0f - SRC.a)・・・・・②
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+
+	//最終的にレンダリングターゲットに描き込まれるカラーの計算方法を指定している。
+	//この指定だと、①＋②のカラーが書き込まれる。
+	//つまり、最終的にレンダリングターゲットに描き込まれるカラーは
+	//SRC.rgb × SRC.a + DEST.rgb × (1.0f - SRC.a)
+	//となる。
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+
+	//この設定で、ブレンドステートを作成すると
+	//半透明合成を行えるブレンドステートが作成できる。
+	auto d3dDevice = g_graphicsEngine->GetD3DDevice();
+	d3dDevice->CreateBlendState(&blendDesc, &m_translucentBlendState);
 }
