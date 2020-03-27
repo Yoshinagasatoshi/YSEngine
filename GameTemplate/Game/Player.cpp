@@ -220,10 +220,6 @@ void Player::Update()
 			m_game->GameDelete();
 		}
 	}
-	if (this != nullptr
-		&&m_pl_Wepon != nullptr) {
-		m_pl_Wepon->SetPosition(m_position);
-	}
 	Execute();
 	/// <summary>
 	/// デバック用コマンド。後で消す。

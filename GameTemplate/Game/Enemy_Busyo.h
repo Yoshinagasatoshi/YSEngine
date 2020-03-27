@@ -32,7 +32,7 @@ private:
 	//Œv‘ªŠÔ‚à‰Šú‰»‚·‚é
 	float AttackframeNum()
 	{
-		m_attackFrameNum = 500.0f + rand() % 200;
+		m_attackFrameNum = 100.0f + rand() % 200;
 		return m_attackFrameNum;
 	}
 	enum State

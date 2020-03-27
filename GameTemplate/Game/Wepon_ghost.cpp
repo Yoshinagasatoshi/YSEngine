@@ -23,14 +23,16 @@ void Wepon_ghost::Update()
 {
 	//バグあり。後で直す
 	//多分デリートしたghostにアクセスした疑い
-	GhostInit();
+	if (!m_hanteifin) {
+		GhostInit();
+	}
+	else{
+		DeleteGO(this);
+	}
 }
 
 void Wepon_ghost::GhostInit()
 {
-	if (m_hanteifin) {
-		DeleteGO(this);
-	}
 	//nullptrなら
 	if (m_player != nullptr) {
 		if (!m_hanteifin) {
@@ -39,8 +41,8 @@ void Wepon_ghost::GhostInit()
 				m_rotation,
 				m_scale * m_ghostscale
 			);
-			m_hanteifin = true;
 		}
+		m_hanteifin = true;
 	}
 	else {
 		if (!m_hanteifin) {
@@ -49,7 +51,7 @@ void Wepon_ghost::GhostInit()
 				m_rotation,
 				m_scale * m_ghostscale
 			);
-			m_hanteifin = true;
 		}
+		m_hanteifin = true;
 	}
 }
