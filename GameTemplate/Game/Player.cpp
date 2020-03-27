@@ -99,7 +99,7 @@ Player::Player()
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 
-		m_se.Init(L"Assets/sound/katana.wav");
+		m_se.Init(L"Assets/sound/slash1.wav");
 		m_se.Play(false);
 		m_se.SetVolume(0.2f);
 	}
