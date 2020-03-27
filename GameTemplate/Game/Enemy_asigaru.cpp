@@ -268,9 +268,8 @@ void Enemy_asigaru::idlePosInit()
 //‹——£‚É‚æ‚é”»’èˆ—
 void Enemy_asigaru::StateJudge()
 {
-	//``Range
-	m_playerPos = m_player->GetPosition();
-	CVector3 kyori = m_playerPos - m_position;
+	//``Range 
+	CVector3 kyori = m_player->GetPosition() - m_position;
 	//y¬•ª‚ğ0‚É‚·‚éB
 	kyori.y = 0.0f;
 	

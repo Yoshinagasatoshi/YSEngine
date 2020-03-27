@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "GameCamera.h"
+#include "gameObject/ysGameObjectManager.h"
 GameCamera::GameCamera()
 {
 	
 }
 GameCamera::~GameCamera()
 {
-
+	g_goMgr.DeleteGOObject(this);
 }
 void GameCamera::Update()
 {

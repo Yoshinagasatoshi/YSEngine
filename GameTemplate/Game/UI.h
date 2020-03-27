@@ -16,10 +16,20 @@ public:
 	}
 private:
 	Sprite m_sprite;
-	CVector3 m_position = CVector3{60.0f,-200.0f,0.0f};
+	Sprite m_sprite2;
+
+	//sprite1 体力ゲージのデータ
+	CVector3 m_position = CVector3{0.0f,-280.0f,0.0f};
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 m_scale = CVector3::One();
-	CVector2 m_pivot = { 0.5f,0.5f };
+	CVector2 m_pivot = { 0.0f,0.5f };
+
+	//sprite2
+	CVector3 m_position2 = CVector3{ -60.0f,-280.0f,0.0f };
+	CQuaternion m_rotation2 = CQuaternion::Identity();
+	CVector3 m_scale2 = CVector3::One();
+	CVector2 m_pivot2 = { 0.5f,0.5f };
+
 	Player* m_player;
 	//プレイヤーのHPを保存
 	int m_playerHP;

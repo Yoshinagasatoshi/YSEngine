@@ -9,6 +9,7 @@
 #include "GameData.h"
 #include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "Fade.h"
 
 //倒された数の指標
 const int knockDownNum = 5;
@@ -23,8 +24,8 @@ Game::Game()
 	m_ui->SetPlayerInfo(m_player);
 	m_backGround = g_goMgr.NewGameObject<BackGround>("BackGround");
 	m_gameCamera = g_goMgr.NewGameObject<GameCamera>("GameCamera");
-	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gameCamera->SetPlayerInfo(m_player);
+	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
@@ -48,7 +49,7 @@ Game::Game()
 				return true;
 			}
 		});
-
+	Fade::Getinstance().StartFadeOut();
 	////メインとなるレンダリングターゲット
 	//m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
 
@@ -68,10 +69,22 @@ Game::~Game()
 	g_goMgr.DeleteGOObject(m_ui);
 	g_goMgr.DeleteGOObject(m_gameCamera);
 	g_goMgr.DeleteGOObject(m_gamedata);
+	g_goMgr.FindGameObjects<Enemy>("Enemy_asigaru", [&](Enemy* enemy) {
+		g_goMgr.DeleteGOObject(enemy);
+		return true;
+		});
+	g_goMgr.FindGameObjects<Enemy>("Enemy_busyo", [&](Enemy* enemy) {
+		g_goMgr.DeleteGOObject(enemy);
+		return true;
+		});
 }
 
 void Game::Update()
 {
+	if (m_gameDelete) {
+		m_gameDelete = false;
+		g_goMgr.DeleteGOObject(this);
+	}
 	if (g_goMgr.GetCount() > knockDownNum) {
 		if (!m_busyofrag) {
 			m_busyofrag = true;
@@ -83,15 +96,13 @@ void Game::Update()
 					m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
 					m_enemy->SetPos(objdata.position);
 					m_enemy->SetPlayerInfo(m_player);
+					m_enemy->SetGameinfo(this);
 					return true;
 				}
 			});
 		}
 	}
-	if (m_gameDelete) {
-		m_gameDelete = false;
-		g_goMgr.DeleteGOObject(this);
-	}
+
 }
 
 

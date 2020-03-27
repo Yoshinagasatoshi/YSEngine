@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BackGround.h"
+#include "gameObject/ysGameObjectManager.h"
 
 BackGround::BackGround()
 {
@@ -10,7 +11,7 @@ BackGround::BackGround()
 }
 BackGround::~BackGround()
 {
-
+	g_goMgr.DeleteGOObject(this);
 }
 void BackGround::Update()
 {

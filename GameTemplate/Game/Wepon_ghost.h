@@ -29,7 +29,6 @@ public:
 		return &m_ghostObject;
 	}
 	void GhostInit();
-
 private:
 	PhysicsGhostObject m_ghostObject;
 	CVector3 m_position;
@@ -39,5 +38,6 @@ private:
 	//char eventName;
 	bool m_hanteifin = false;
 	Player* m_player;
+	bool m_PLSLASH = false;
 };
 

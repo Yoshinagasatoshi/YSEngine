@@ -66,20 +66,34 @@
 			}
 		}
 
+		void DeleteGOObjects(IGameObject* go, const char * objname)
+		{
+			//リストから検索して
+			for (auto it = IGameObjectList.begin();
+				it != IGameObjectList.end();
+				it++) {
+				if ((*it) == go) {
+					//削除リクエストを送る。
+
+				}
+			}
+		}
+
 		/// <summary>
 		/// ゲームオブジェクト名の検索。重い
 		/// </summary>
 		template<class T>
-		T* FindGameObject(const char* objactName, bool enableErrorMessage)
+		T* FindGameObject(const char* objectName, bool enableErrorMessage = true)
 		{
-			unsigned int nameKey = Util::MakeHash(ObjectName);
+			unsigned int nameKey = Util::MakeHash(objectName);
 			for (auto goList : IGameObjectList) {
 				if (goList->m_nameKey == nameKey) {
 					//発見
-					T* p = dynamic_cast<T*>(go);
+					T* p = dynamic_cast<T*>(goList);
 					if (p == nullptr && enableErrorMessage == true) {
 						//型変換に失敗
-						MessageBox("型変換に失敗しました");
+						//MessageBox("型変換に失敗しました");
+						abort();
 					}
 					return p;
 				}

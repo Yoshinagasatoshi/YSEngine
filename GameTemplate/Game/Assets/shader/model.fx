@@ -179,11 +179,17 @@ float4 PSMain(PSInput In) : SV_Target0
 	//albedoテクスチャからカラーをフェッチする。
 	//拡散反射
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
-	float3 lig;
+	float3 lig = 0.0f;
     for (int i = 0; i < Light_number; i++) {
-	lig += max(0.0f, dot(In.Normal * -1.0f, directionLight.Direction[i].rgb)) * directionLight.Color[i];
+		float t = max( dot(In.Normal * -1.0f, directionLight.Direction[i].rgb), 0.0f );
+		if (t < 0.2f) {
+			lig += directionLight.Color[i] * 0.5f;
+		}
+		else {
+			lig += directionLight.Color[i]*1.5f;
+		}
 	}
-	//for (int i = 0; i < Light_number; i++)
+	for (int i = 0; i < Light_number; i++)
 	////ディレクションライトの鏡面反射光を計算する。
 	{
 		//実習　鏡面反射を計算しなさい。
@@ -199,9 +205,9 @@ float4 PSMain(PSInput In) : SV_Target0
 		//3 スペキュラ反射をライトに追加する。
 		lig += directionLight.Color[0].xyz * pow(specPower, specPow);
 	
-		//4　環境光を当てる。
-		lig += Amblight;
 	}
+		//4　環境光を当てる。
+	lig += Amblight;
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;
 

@@ -10,6 +10,7 @@
 /// </summary>
 class Player;
 class GameCamera;
+class Game;
 class Enemy : public IGameObject
 {
 public:
@@ -34,6 +35,10 @@ public:
 	{
 		m_gameCamera = camera;
 	}
+	void SetGameinfo(Game* game)
+	{
+		m_game = game;
+	}
 protected:
 	SkinModel m_model;			//スキンモデル。
 	SkinModel m_model_Row;		//ローポリのスキンモデル。アニメはつけない予定
@@ -43,6 +48,7 @@ protected:
 	CVector3 m_playerPos;		//プレイヤーのポジション
 	Player* m_player;			//プレイヤーのポイント型
 	GameCamera* m_gameCamera;	//ゲームカメラのポイント型。
+	Game* m_game;				//ゲーム
 	const float grabity = -9.8f * 2.0f;//重力
 	const float BattleRange = 180.0f * 180.0f;			//この距離の範囲内に近づくとバトル
 	const float VigilanceRange = 600.0f * 600.0f;		//この距離の範囲内ならプレイヤーに近づく。

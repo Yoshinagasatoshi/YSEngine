@@ -9,11 +9,12 @@ UI::UI()
 	//m_sprite.SetPosition(m_position);
 	//m_sprite.SetRotation(m_rotation);
 	//m_sprite.SetScale(m_scale);
+	m_sprite2.Init(L"Assets/sprite/new_Busyo_icon.dds", 80.0f, 80.0f);
 }
 
 UI::~UI()
 {
-
+	g_goMgr.DeleteGOObject(this);
 }
 
 void UI::Update()
@@ -36,9 +37,11 @@ void UI::Update()
 	}
 	m_oldPlayerHP = m_playerHP;
 	m_sprite.Update(m_position, m_rotation, m_scale, m_pivot);
+	m_sprite2.Update(m_position2,m_rotation2,m_scale2,m_pivot2);
 }
 
 void UI::PostDraw()
 {
 	m_sprite.Draw();
+	m_sprite2.Draw();
 }

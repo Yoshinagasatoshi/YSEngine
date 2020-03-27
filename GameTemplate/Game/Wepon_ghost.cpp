@@ -11,9 +11,6 @@ Wepon_ghost::Wepon_ghost()
 
 Wepon_ghost::~Wepon_ghost()
 {
-	if (m_player != nullptr) {
-		m_player = nullptr;
-	}
 	g_goMgr.DeleteGOObject(this);
 }
 

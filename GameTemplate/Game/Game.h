@@ -4,6 +4,7 @@
 #include "graphics/RenderTarget.h"
 #include "graphics/Sprite.h"
 #include "level/Level.h"
+class Fade;
 class UI;
 class Player;
 class Enemy;
@@ -51,4 +52,5 @@ private:
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 	bool m_busyofrag = false;
 	bool m_gameDelete = false;					//ゲームから出る時にtrueになるようにする
+	Fade* m_fade;
 };
