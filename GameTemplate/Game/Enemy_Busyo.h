@@ -60,5 +60,7 @@ private:
 	float m_frameTimer = 0.0f;		//時間を図るため
 	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
+
+	bool m_isDestroyed = false;
 };
 

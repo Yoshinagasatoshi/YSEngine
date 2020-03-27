@@ -58,19 +58,42 @@ public:
 	/// <param name="mView">カメラ行列</param>
 	/// /// <param name="mView">プロジェクション行列</param>
 	void Draw();
+	/// <summary>
+	/// 場所をセッティング
+	/// </summary>
+	/// <param name="pos"></param>
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
 	}
+	/// <summary>
+	/// 角度をセッティング
+	/// </summary>
+	/// <param name="rot"></param>
 	void SetRotation(CQuaternion rot)
 	{
 		m_rotation = rot;
 	}
+	/// <summary>
+	/// 大きさをセッティング
+	/// </summary>
+	/// <param name="scale"></param>
 	void SetScale(CVector3 scale)
 	{
 		m_scale = scale;
 	}
-
+	/*!
+* @brief	乗算カラーを設定。
+*@param[in]	mulColor	乗算カラー。
+*/
+	void SetMulColor(const CVector4& mulColor)
+	{
+		m_mulColor = mulColor;
+	}
+	void SetAlpha(float alpha)
+	{
+		m_alpha = alpha;
+	}
 private:
 	/// <summary>
 	/// シェーダーをロード。
@@ -99,6 +122,7 @@ private:
 	void LoadTexture(const wchar_t* textureFIlePath);
 	void InitTranslucentBlendState();
 	void CreateDepthStencilState();
+
 private:
 	struct ConstantBuffer {
 		CMatrix WVP;  //WorldViewProjection(行列)の略
@@ -119,5 +143,6 @@ private:
 	CVector3 m_scale = CVector3::One();
 	CVector2 m_size = CVector2::Zero();
 	float m_alpha = 1.0f;
+	CVector4 m_mulColor = CVector4::White();
 	
 };

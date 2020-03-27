@@ -181,6 +181,7 @@
     <ClCompile Include="Enemy_Busyo.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="Fade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -324,6 +325,7 @@
     <ClInclude Include="Enemy_Busyo.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="Fade.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
@@ -370,5 +372,9 @@
     <ImageContentTask Include="Assets\sprite\Win2.png">
       <Filter>Assets\sprite</Filter>
     </ImageContentTask>
+    <ImageContentTask Include="Assets\sprite\new_BUSYO_icon.png">
+      <Filter>Assets\sprite</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Assets\sprite\fade.png" />
   </ItemGroup>
 </Project>

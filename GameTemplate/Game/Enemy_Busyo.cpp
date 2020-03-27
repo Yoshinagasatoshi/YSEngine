@@ -3,11 +3,12 @@
 #include "Wepon_ghost.h"
 #include "Enemy_Busyo.h"
 #include "GameClear.h"
-
+#include "Game.h"
 const float power = 500.0f;
-
+const float InitHP = 25;
 Enemy_Busyo::Enemy_Busyo()
 {
+	m_HP = InitHP;
 	//モデルがぶっ壊れる？
 	//とりあえず仮の箱、後で差し替える。。
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
@@ -45,7 +46,7 @@ Enemy_Busyo::Enemy_Busyo()
 
 Enemy_Busyo::~Enemy_Busyo()
 {
-	g_goMgr.DeleteGOObject(this);
+
 }
 
 void Enemy_Busyo::Update()
@@ -230,10 +231,12 @@ void Enemy_Busyo::ThisDelete()
 	//なくなっていたらこちらを通る
 	else {
 		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
-		if (!m_enemy_BusyoAnime.IsPlaying()) {
+		if (!m_isDestroyed && !m_enemy_BusyoAnime.IsPlaying()) {
 			//三人倒せばokという状態にしたい。今はゲームループのため仮実装
 			g_goMgr.NewGameObject<GameClear>("GameClear");
-			DeleteGO(this);
+			//消せてねえ？
+			m_game->GameDelete();
+			m_isDestroyed = true;
 		}
 	}
 }

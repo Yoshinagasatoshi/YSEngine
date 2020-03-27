@@ -24,11 +24,14 @@ const int Timer_ZERO = 0;						//0になる。そのまま
 
 Player::Player()
 {
+	testID = rand();
+	//サウンドはゲームじゃ…
 	//サウンドエンジンを初期化
 	m_soundEngine.Init();
 	//音SE素材
-	m_bgm.Init(L"Assets/sound/n82.wav");
+	m_bgm.Init(L"Assets/sound/Chanbara.wav");
 	m_bgm.Play(true);
+	m_bgm.SetVolume(0.5f);
 	CharaconInit();
 	//cmoファイルの読み込み。
 	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
@@ -98,6 +101,7 @@ Player::Player()
 
 		m_se.Init(L"Assets/sound/katana.wav");
 		m_se.Play(false);
+		m_se.SetVolume(0.2f);
 	}
 	);
 }
@@ -105,6 +109,7 @@ Player::Player()
 
 Player::~Player()
 {
+	//g_goMgr.DeleteGOObject(this);
 }
 
 void Player::CharaconInit()
@@ -208,18 +213,18 @@ void Player::Update()
 		//プレイヤーが死んでいる時の処理
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
-		if (!m_busyoAnime.IsPlaying()) {
+		if (!m_busyoAnime.IsPlaying()
+			&&!m_isDestroyed) {
+			m_isDestroyed = true;
 			g_goMgr.NewGameObject<GameOver>("GameOver");
 			m_game->GameDelete();
-			//DeleteGO(this);
 		}
 	}
-	if (m_pl_Wepon != nullptr) {
+	if (this != nullptr
+		&&m_pl_Wepon != nullptr) {
 		m_pl_Wepon->SetPosition(m_position);
 	}
-	if (this!=nullptr) {
-		Execute();
-	}
+	Execute();
 	/// <summary>
 	/// デバック用コマンド。後で消す。
 	/// </summary>
@@ -364,7 +369,6 @@ void Player::Execute()
 	rotMatrix.Mul(footStep);
 	footStep *= 60.0f;
 	m_moveSpeed += footStep;
-	//}
 	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Title.h"
 #include "Game.h"
+#include "Fade.h"
 #include "gameObject/ysGameObjectManager.h"
 Title::Title()
 {
@@ -13,19 +14,27 @@ Title::Title()
 	g_camera2D.SetPosition({ CameraPos });
 	g_camera2D.SetTarget(CVector3::Zero());
 	g_camera2D.Update();
+	Fade::Getinstance().StartFadeOut();
 }
 
 Title::~Title()
 {
-	
+	//g_goMgr.DeleteGOObject(this);
+	//m_sprite.~Sprite();
 }
 
 void Title::Update()
 {
 	if (g_pad->IsTrigger(enButtonA)) {
-		Game* game = g_goMgr.NewGameObject<Game>("Game");
-		g_goMgr.DeleteGOObject(this);
+		if (!Fade::Getinstance().IsFade()) {
+			Game* game = g_goMgr.NewGameObject<Game>("Game");
+			g_goMgr.DeleteGOObject(this);
+		}
+		else {
+			Fade::Getinstance().StartFadeIn();
+		}
 	}
+
 }
 
 void Title::Draw()

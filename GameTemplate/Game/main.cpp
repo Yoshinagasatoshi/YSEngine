@@ -3,6 +3,7 @@
 #include "level/Level.h"
 #include "Title.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "Fade.h"
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -27,6 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//g_camera2D.InitCamera();
 	//タイトル
+	Fade::Getinstance();
 	Title* title = g_goMgr.NewGameObject<Title>("Title");
 
 	//ゲームループ。
@@ -45,6 +47,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_goMgr.Render();
 		g_goMgr.Draw();
 		g_graphicsEngine->Render();
+		Fade::Getinstance().Update();
+		Fade::Getinstance().PostDraw();
+		
 		//カメラの更新。
 		g_camera3D.Update();
 		g_camera2D.Update();

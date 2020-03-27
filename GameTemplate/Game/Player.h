@@ -18,6 +18,7 @@ class Wepon_ghost;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
+	int testID = -1;
 	Enemy* enemy;
 public:
 	Player();
@@ -159,6 +160,7 @@ private:
 	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
 	bool m_jumpAttackfrag = false;						//ジャンプアタック中？
 	bool m_gamefinal = false;							//終わりだ…
+	bool m_isDestroyed = false;							//1度のみゲームオーバーを呼ぶ
 	
 	CSoundEngine m_soundEngine;
 	CSoundSource m_se;									//効果音
