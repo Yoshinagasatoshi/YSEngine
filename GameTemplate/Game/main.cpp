@@ -2,7 +2,7 @@
 #include "system/system.h"
 #include "level/Level.h"
 #include "Title.h"
-#include "gameObject/ysGameObjectManager.h"
+//#include "gameObject/ysGameObjectManager.h"
 #include "Fade.h"
 
 ///////////////////////////////////////////////////////////////////
@@ -13,7 +13,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
 	
+	//サウンドはゲームじゃ…
+	//サウンドエンジンを初期化
+	
 	g_goMgr.InitEffekseer();
+	
 	//カメラを初期化。
 	g_camera3D.InitCamera();
 	g_camera3D.SetPosition({ 0.0f, 100.0f, 300.0f });
@@ -29,6 +33,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//g_camera2D.InitCamera();
 	//タイトル
 	Fade::Getinstance();
+
 	Title* title = g_goMgr.NewGameObject<Title>("Title");
 
 	//ゲームループ。

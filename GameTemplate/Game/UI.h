@@ -15,8 +15,8 @@ public:
 		m_player = pl;
 	}
 private:
-	Sprite m_sprite;
-	Sprite m_sprite2;
+	Sprite m_lifeGauge;
+	Sprite m_face;
 
 	Sprite m_mapSprite;
 
@@ -33,7 +33,7 @@ private:
 	CVector2 m_pivot2 = { 0.5f,0.5f };
 
 	//ƒ}ƒbƒv
-	CVector3 m_position3 = CVector3{ 200.0f,280.0f,0.0f };
+	CVector3 m_position3 = CVector3{ 300.0f,280.0f,0.0f };
 	CQuaternion m_rotation3 = CQuaternion::Identity();
 	CVector3 m_scale3 = CVector3::One();
 	CVector2 m_pivot3 = { 0.5f,0.5f };

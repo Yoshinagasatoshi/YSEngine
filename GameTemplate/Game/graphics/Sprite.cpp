@@ -270,7 +270,7 @@ void Sprite::Draw()
 	//サンプラステートを設定
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//ブレンドステートを設定
-	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float blendFactor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	d3dDeviceContext->OMSetBlendState(
 		m_translucentBlendState,//設定するブレンディングステート
 		blendFactor,

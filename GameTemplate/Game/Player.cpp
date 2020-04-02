@@ -9,6 +9,7 @@
 #include "sound/SoundSource.h"
 #include "GameOver.h"
 #include "Game.h"
+#include "Fade.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
@@ -90,7 +91,7 @@ Player::Player()
 		//OnAnimationEvent(clipName,eventName);
 
 		//ボーンのposとプレイヤーのposを足した場所
-		m_calcPos = m_position;
+		m_calcPos = m_position + bonepos;
 		//ghostが半分埋まっていたので少し上に合わせる。
 		m_calcPos.y += 70.0f;
 
@@ -99,9 +100,9 @@ Player::Player()
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 
-		m_se.Init(L"Assets/sound/slash1.wav");
+		m_se.Init(L"Assets/sound/swing.wav");
 		m_se.Play(false);
-		m_se.SetVolume(0.2f);
+		m_se.SetVolume(1.0f);
 	}
 	);
 }
@@ -153,7 +154,7 @@ void Player::Update()
 			}
 			//ジャンプ状態じゃなければ移動速度によってアニメーションを変える。
 			if (!m_Jumpfrag) {
-				if (m_moveSpeed.Length() > 1.0f) {
+				if (m_moveSpeed.Length() > 300.0f) {
 					m_busyoAnime.Play(animClip_Walk, 0.1f);
 				}
 				else {
@@ -169,7 +170,7 @@ void Player::Update()
 		{
 			m_damagefrag = false;
 			if (m_PL_HP != 0) {
-				m_PL_HP -= 480;
+				m_PL_HP -= 240;
 			}
 			else {
 				//m_deadFrag = true;
@@ -195,12 +196,12 @@ void Player::Update()
 		Move();
 		//回転処理
 		Turn();
-		//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
+		//敵武器のゴーストが当たったらダメージを受ける。
 		QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
 			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
-					//通っているのは確認完了
+
 					PlayerDamage();
 
 					g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
@@ -210,11 +211,14 @@ void Player::Update()
 			});
 	}
 	else {
-		//プレイヤーが死んでいる時の処理
+		//プレイヤーが死んでいる時の処理 BusyoDead;
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
 		if (!m_busyoAnime.IsPlaying()
-			&&!m_isDestroyed) {
+			&& !m_isDestroyed) {
+			Fade::Getinstance().StartFadeIn();
+		}
+		if (!Fade::Getinstance().IsFade()) {
 			m_isDestroyed = true;
 			g_goMgr.NewGameObject<GameOver>("GameOver");
 			m_game->GameDelete();

@@ -18,7 +18,7 @@ void Fade::Update()
 		//a’l‚ª1ˆÈ‰º‚È‚ç”Z‚­‚µ‚Ä‚¢‚­
 	case enState_FadeIn:
 		if (m_currentAlpha < 1.0f) {
-			m_currentAlpha += 0.01f;
+			m_currentAlpha += 0.03f;
 			m_isFade = true;
 			m_isEnd = false;
 		}
@@ -29,7 +29,7 @@ void Fade::Update()
 	case enState_FadeOut:
 		//a’l‚ª0ˆÈã‚È‚ç”–‚­‚µ‚Ä‚¢‚­
 		if (m_currentAlpha >= 0.0f) {
-			m_currentAlpha -= 0.01f;
+			m_currentAlpha -= 0.03f;
 			m_isFade = true;
 		}
 		else {

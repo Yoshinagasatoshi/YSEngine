@@ -120,9 +120,15 @@
 		{
 			Count++;
 		}
+		//確認
 		int GetCount()
 		{
 			return Count;
+		}
+		//カウントリセット
+		void ResetCount()
+		{
+			Count = 0;
 		}
 		//実行。ExecuteからDrawとUpdateに分離
 		void Execute();
@@ -165,6 +171,9 @@
 		/// </summary>
 		std::vector<GameObjectList> m_deleteObjectArray[2];
 	};
+
+
+
 	//外部アクセスをするので、extern宣言がいる。
 	extern ysGameObjectManager g_goMgr;
 	/// <summary>

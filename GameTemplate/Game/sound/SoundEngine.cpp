@@ -7,7 +7,7 @@
 #include "sound/WaveFile.h"
 #include "sound/SoundSource.h"
 
-CSoundEngine* g_soundEngine = nullptr;
+CSoundEngine* g_soundEngine;
 
 #define NUM_PRESETS 30
 

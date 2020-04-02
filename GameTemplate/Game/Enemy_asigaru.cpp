@@ -12,6 +12,7 @@ const float Timer_ZERO = 0.0f;
 const float DeleteTime = 10.0f;
 const float drawNearSpeed = 50.0f;
 const float ViewLenght = 0.25f;						//視野角範囲
+const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が多くなる
 
 /// <summary>
 /// boid
@@ -62,6 +63,7 @@ Enemy_asigaru::Enemy_asigaru()
 
 	//ghostInit();
 
+
 	m_asigaruAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
 		m_en_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("EN_Wepon");
@@ -79,11 +81,8 @@ Enemy_asigaru::Enemy_asigaru()
 Enemy_asigaru::~Enemy_asigaru()
 {
 	g_goMgr.DeleteGOObject(this);
+	//敵を倒した数を計測
 	g_goMgr.Counting();
-	//if (g_Effect.m_sampleEffect != nullptr)
-	//{
-	//	g_Effect.m_sampleEffect->Release();
-	//}
 }
 
 void Enemy_asigaru::CharaconInit()
@@ -112,7 +111,16 @@ void Enemy_asigaru::Update()
 	if (m_isDeadfrag
 		&&m_characon.IsOnGround()){
 		m_moveSpeed = CVector3::Zero();
+
+		//音をロード。1回だけ鳴らす。
+		if (m_Deathtimer_f <= fastTime) {
+			CSoundSource* m_se = new CSoundSource;
+			m_se->Init(L"Assets/sound/falldown2.wav");
+			m_se->Play(false);
+			m_se->SetVolume(0.4f);//小さめに
+		}
 		m_Deathtimer_f++;
+
 		//死んだ後に少したってモデルが消える
 		if (m_Deathtimer_f > DeleteTime) {
 			//m_characon.RemoveRigidBoby();
@@ -142,7 +150,10 @@ void Enemy_asigaru::Update()
 		if (ghostobject->IsSelf(contactObject) == true) {
 			//通っているのは確認完了
 			m_isDeadfrag = true;
-
+			CSoundSource* m_se2 = new CSoundSource;
+			m_se2->Init(L"Assets/sound/slash1.wav");
+			m_se2->Play(false);
+			m_se2->SetVolume(0.55f);//
 			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
 		}
 		});

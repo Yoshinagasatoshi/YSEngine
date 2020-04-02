@@ -131,5 +131,7 @@ private:
 	Skeleton* m_skeleton;
 	//ゲームデータのポインタ。数値をここから抜粋していく。
 	GameData* gamedata = nullptr;
+
+
 };
 

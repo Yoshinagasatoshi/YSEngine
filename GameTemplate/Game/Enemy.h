@@ -50,7 +50,7 @@ protected:
 	GameCamera* m_gameCamera;	//ゲームカメラのポイント型。
 	Game* m_game;				//ゲーム
 	const float grabity = -9.8f * 2.0f;//重力
-	const float BattleRange = 180.0f * 180.0f;			//この距離の範囲内に近づくとバトル
-	const float VigilanceRange = 600.0f * 600.0f;		//この距離の範囲内ならプレイヤーに近づく。
+	const float BattleRange = 200.0f * 200.0f;			//この距離の範囲内に近づくとバトル
+	const float VigilanceRange = 700.0f * 700.0f;		//この距離の範囲内ならプレイヤーに近づく。
 };
 

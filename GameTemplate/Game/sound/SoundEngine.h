@@ -110,4 +110,4 @@ private:
 };
 
 //サウンドエンジンのインスタンス。
-extern CSoundEngine* g_soundEngine ;
+extern CSoundEngine* g_soundEngine;

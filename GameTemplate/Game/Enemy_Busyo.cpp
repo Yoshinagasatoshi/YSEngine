@@ -4,7 +4,8 @@
 #include "Enemy_Busyo.h"
 #include "GameClear.h"
 #include "Game.h"
-const float power = 500.0f;
+#include "Fade.h"
+const float power = 250.0f;
 const float InitHP = 25;
 Enemy_Busyo::Enemy_Busyo()
 {
@@ -28,7 +29,7 @@ Enemy_Busyo::Enemy_Busyo()
 	);
 
 	m_animClip[ATK].SetLoopFlag(false);
-	m_animClip[MOVE].SetLoopFlag(true);
+	m_animClip[MOVE].SetLoopFlag(false);
 	m_animClip[IDL].SetLoopFlag(true);
 	m_animClip[DAMAGE].SetLoopFlag(false);
 	m_animClip[DEATH].SetLoopFlag(false);
@@ -87,11 +88,13 @@ void Enemy_Busyo::Update()
 	rotMatrix.MakeRotationFromQuaternion(m_rotation);
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
-	footStep *= 60.0f;
+	footStep *= 600.0f;
 	m_moveSpeed += footStep;
 
+	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	m_enemy_BusyoAnime.Update(1/30.0f);
+	//m_enemy_BusyoAnime.Update(1/30.0f);
 }
 
 void Enemy_Busyo::CharaconInit()
@@ -169,6 +172,7 @@ void Enemy_Busyo::AttackMove()
 void Enemy_Busyo::NormalMove()
 {
 	CVector3 direction = distance;
+	direction.y = 0.0f;
 	direction.Normalize();
 	m_moveSpeed = direction * power;
 	//ワールド座標の更新
@@ -179,6 +183,11 @@ void Enemy_Busyo::NormalMove()
 	float angle = atan2(distance.x, distance.z);
 	m_rotation.SetRotation(CVector3::AxisY(), angle);
 	m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+	//アニメーションイベントのために歩きアニメをループ再生からワンショット再生に変更。
+	//それをごまかすために、アニメーション再生が終わったら1フレームだけ別のアニメを入れる。
+	if (!m_enemy_BusyoAnime.IsPlaying()) {
+		m_enemy_BusyoAnime.Play(IDL,0.1f);
+	}
 	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
 }
 
@@ -232,11 +241,18 @@ void Enemy_Busyo::ThisDelete()
 	else {
 		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
 		if (!m_isDestroyed && !m_enemy_BusyoAnime.IsPlaying()) {
-			//三人倒せばokという状態にしたい。今はゲームループのため仮実装
-			g_goMgr.NewGameObject<GameClear>("GameClear");
-			//消せてねえ？
-			m_game->GameDelete();
-			m_isDestroyed = true;
+			{
+				Fade::Getinstance().StartFadeIn();
+			}
+			if (!Fade::Getinstance().IsFade()) {
+				g_goMgr.ResetCount();
+				//三人倒せばokという状態にしたい。今はゲームループのため仮実装
+				g_goMgr.NewGameObject<GameClear>("GameClear");
+				//消せてねえ？
+				m_game->GameDelete();
+				m_isDestroyed = true;
+			}
 		}
+
 	}
 }

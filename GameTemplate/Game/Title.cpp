@@ -25,16 +25,14 @@ Title::~Title()
 
 void Title::Update()
 {
-	if (g_pad->IsTrigger(enButtonA)) {
-		if (!Fade::Getinstance().IsFade()) {
-			Game* game = g_goMgr.NewGameObject<Game>("Game");
-			g_goMgr.DeleteGOObject(this);
-		}
-		else {
-			Fade::Getinstance().StartFadeIn();
-		}
+	if (g_pad->IsTrigger(enButtonA)) 
+	{
+		Fade::Getinstance().StartFadeIn();
 	}
-
+	if (!Fade::Getinstance().IsFade()) {
+		Game* game = g_goMgr.NewGameObject<Game>("Game");
+		g_goMgr.DeleteGOObject(this);
+	}
 }
 
 void Title::Draw()

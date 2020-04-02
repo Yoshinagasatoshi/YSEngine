@@ -4,6 +4,8 @@
 #include "graphics/RenderTarget.h"
 #include "graphics/Sprite.h"
 #include "level/Level.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 class Fade;
 class UI;
 class Player;
@@ -53,4 +55,6 @@ private:
 	bool m_busyofrag = false;
 	bool m_gameDelete = false;					//ƒQ[ƒ€‚©‚ço‚é‚Étrue‚É‚È‚é‚æ‚¤‚É‚·‚é
 	Fade* m_fade;
+	CSoundEngine m_soundEngine;
+	CSoundSource m_bgm;
 };
