@@ -16,6 +16,7 @@ const int knockDownNum = 50;
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
 {
+	g_goMgr.ResetCount();
 	//InitCamera();
 	//プレイヤー
 	m_player = g_goMgr.NewGameObject<Player>("Player");

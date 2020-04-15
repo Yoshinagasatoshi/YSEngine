@@ -3,6 +3,7 @@
 
 Camera g_camera3D;		//3Dカメラ。
 Camera g_camera2D;		//2Dカメラ。
+Camera g_cameraMap;		//2Dマップ用カメラ
 
 void Camera::Update()
 {
@@ -34,6 +35,7 @@ void Camera::Update()
 		m_near,
 		m_far
 	);
+	
 }
 
 void Camera::InitCamera()
@@ -43,10 +45,10 @@ void Camera::InitCamera()
 	//g_camera3D.Update();
 
 	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	g_camera2D.SetWidth(FRAME_BUFFER_W);
-	g_camera2D.SetHeight(FRAME_BUFFER_H);
+	//g_camera2D.SetWidth(FRAME_BUFFER_W);
+	//g_camera2D.SetHeight(FRAME_BUFFER_H);
 	//-600がちょうどいい感じ
-	g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
-	g_camera2D.SetTarget(CVector3::Zero());
+	//g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
+	//g_camera2D.SetTarget(CVector3::Zero());
 	//g_camera2D.Update();
 }
