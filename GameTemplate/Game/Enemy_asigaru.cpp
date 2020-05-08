@@ -154,7 +154,13 @@ void Enemy_asigaru::Update()
 			m_se2->Init(L"Assets/sound/slash1.wav");
 			m_se2->Play(false);
 			m_se2->SetVolume(0.55f);//
-			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
+			//エフェクトも出す。
+			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
+				g_Effect.m_sampleEffect,
+				m_position.x,
+				m_position.y + 100.0f,
+				m_position.z
+			);
 		}
 		});
 		return true;
@@ -229,8 +235,8 @@ void Enemy_asigaru::Move()
 	}
 	else {
 		CVector3 kaiten = m_playerPos - m_position;
-		float angle = atan2(kaiten.x, kaiten.z);
-		m_rotation.SetRotation(CVector3::AxisY(), angle);
+		//float angle = atan2(kaiten.x, kaiten.z);
+		//m_rotation.SetRotation(CVector3::AxisY(), angle);
 
 		if (kaiten.LengthSq() < BattleRange) {
 			int i = 0;
@@ -338,7 +344,7 @@ void Enemy_asigaru::StateJudge()
 		}
 		//tikazukiの処理
 		kyori.Normalize();
-		m_moveSpeed = kyori * drawNearSpeed;
+		m_moveSpeed = kyori * drawNearSpeed * 2.0f;
 		//Move();
 		break;
 
@@ -353,9 +359,24 @@ void Enemy_asigaru::StateJudge()
 			}
 		}
 		//totugekiの処理
-		m_moveSpeed = CVector3::Zero();
+
+		/// <summary>
+		/// 今日の課題
+		/// 兵士たちが待機している時にどんな動きをするかを考えよう
+		/// 動画を見た感じ、マジで遠い兵士は自分の方の位置を見ながらも
+		/// ゆったりと近づいている感じ
+		
+		/// ある程度近づいてきたら寄ってくる感じ
+		/// 今のままだと距離が近すぎる気がするので要調整
+		/// 移動速度ももっと早いほうがいいね
+		/// </summary>
+
+		kyori.Normalize();
+		m_moveSpeed = kyori * drawNearSpeed * 0.1f;
+		//今の処理
+		//m_moveSpeed = CVector3::Zero();
 		CQuaternion ADDrot = CQuaternion::Identity();
-		ADDrot.SetRotationDeg(CVector3::AxisY(), 2.0f);
+		ADDrot.SetRotationDeg(CVector3::AxisY(), 0.1f);
 		m_rotation.Multiply(ADDrot);
 		break;
 	}

@@ -3,18 +3,25 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Title.h"
 #include "Fade.h"
-
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 GameOver::GameOver()
 {
-	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
+	m_soundEngine.Init();
+	//音SE素材
+	m_bgm.Init(L"Assets/sound/GameOver.wav");
+	m_bgm.Play(true);
+	m_bgm.SetVolume(0.2f);
 
+	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
+	m_skinModelStage.Init(L"Assets/modelData/result_stage.cmo");
 
 	//ゲームオーバーはゲームオーバーの処理だけ書くべき、本来は美しくない。
 	m_animClip[anim_Lose].Load(L"Assets/animData/busyo_dead.tka");
 	m_animClip[anim_Lose].SetLoopFlag(false);
 
 
-	m_sprite2.Init(L"Assets/sprite/Lose.dds", 640.0f, 360.0f);
+	m_sprite2.Init(L"Assets/sprite/Lose.dds", 1280.0f, 240.0f);
 	Fade::Getinstance().StartFadeOut();
 	
 	//アニメーション先モデルとアニメーションの個数を設定。
@@ -50,11 +57,16 @@ void GameOver::Update()
 	m_animeModel.Update(1.0f / 30.0f);
 	m_sprite2.Update(m_position, m_rot, m_scale, m_pivot);
 	m_skinModel.UpdateWorldMatrix(CVector3::Zero(), m_rot, m_scale);
+	m_skinModelStage.UpdateWorldMatrix(CVector3::Zero(), m_rot, m_scale);
 }
 
 void GameOver::Draw()
 {
 	m_skinModel.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix()
+	);
+	m_skinModelStage.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);

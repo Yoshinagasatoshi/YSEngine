@@ -3,8 +3,15 @@
 #include "Game.h"
 #include "Fade.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 Title::Title()
 {
+	m_soundEngine.Init();
+	//‰¹SE‘fÞ
+	m_bgm.Init(L"Assets/sound/Hokora.wav");
+	m_bgm.Play(true);
+	m_bgm.SetVolume(0.5f);
 	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);
 	//
@@ -25,6 +32,7 @@ Title::~Title()
 
 void Title::Update()
 {
+	//™X‚É‰¹‚ð—Ž‚Æ‚·Š´‚¶‚Å
 	if (g_pad->IsTrigger(enButtonA)) 
 	{
 		Fade::Getinstance().StartFadeIn();

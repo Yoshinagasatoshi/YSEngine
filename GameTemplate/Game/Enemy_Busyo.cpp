@@ -118,6 +118,9 @@ void Enemy_Busyo::Draw()
 
 void Enemy_Busyo::StateJudge()
 {
+	/// <summary>
+	/// プレイヤーとの距離で呼ぶ関数を変えている処理
+	/// </summary>
 	distance = m_player->GetPosition() - m_position;
 	if (distance.LengthSq() < BattleRange) {
 		m_state = ATK;
@@ -145,7 +148,7 @@ void Enemy_Busyo::AttackMove()
 	//攻撃中の動き
 	m_moveSpeed = CVector3::Zero();
 	//ワールド座標の更新
-	m_moveSpeed.y += grabity;
+	m_moveSpeed.y += grabity * 10.0f;
 	if (m_characon.IsOnGround()) {
 		m_moveSpeed.y = 0.0f;
 	}

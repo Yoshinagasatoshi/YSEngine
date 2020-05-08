@@ -99,6 +99,7 @@ public:
 		animClip_ATK3,
 		animClip_ATK4,
 		animClip_ATK5,
+		animClip_XATK,
 		animClip_JUMP_ATK,
 		animClip_SmallDamage,
 		animClip_busyo_dead,
@@ -128,6 +129,7 @@ private:
 	//囲いの数
 	static const int DestinationNum = 5;
 	void AttackMove();									//無双の攻撃の処理を書く
+	void XAttackMove();									//Xボタンが押されたときの処理
 	void JumpAttackMove();								//ジャンプアタックの処理。
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
@@ -162,6 +164,7 @@ private:
 	bool m_gamefinal = false;							//終わりだ…
 	bool m_isDestroyed = false;							//1度のみゲームオーバーを呼ぶ
 	bool m_plWeponSwhich = true;
+	bool m_XTrigger = false;
 	
 	CSoundEngine m_soundEngine;
 	CSoundSource m_se;									//効果音

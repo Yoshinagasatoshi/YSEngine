@@ -1,6 +1,8 @@
 #pragma once
 #include "graphics/Sprite.h"
 #include "gameObject/ysGameObject.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 class Title : public IGameObject
 {
 public:
@@ -14,5 +16,9 @@ private:
 	float m_timer = 0.0f;
 	float m_targetTime = 5.0f;
 	bool ando = false;
+
+	CSoundEngine m_soundEngine;
+	CSoundSource m_se;									//Œø‰Ê‰¹
+	CSoundSource m_bgm;
 };
 

@@ -22,6 +22,7 @@ const float JumpATKPower = 350.0f;				//ジャンプ義理の強さ
 const float standardPower = 200.0f;				//プレイヤーの敵吹き飛ばし力
 const float limit = 2.0f;						//重力係数の上限
 const int Timer_ZERO = 0;						//0になる。そのまま
+const float InterpolationTime = 0.2f;			//アニメーションの補間時間
 
 Player::Player()
 {
@@ -49,6 +50,7 @@ Player::Player()
 	m_busyoAnimeClip[animClip_ATK3].Load(L"Assets/animData/busyo_kougeki3.tka");
 	m_busyoAnimeClip[animClip_ATK4].Load(L"Assets/animData/busyo_kougeki4.tka");
 	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki5.tka");
+	m_busyoAnimeClip[animClip_XATK].Load(L"Assets/animData/busyo_kaitengiri.tka");
 	m_busyoAnimeClip[animClip_JUMP_ATK].Load(L"Assets/animData/busyo_jump_kougeki.tka");
 	//ダメージロード
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
@@ -170,7 +172,7 @@ void Player::Update()
 		{
 			m_damagefrag = false;
 			if (m_PL_HP != 0) {
-				m_PL_HP -= 240;
+				m_PL_HP -= 24;
 			}
 			else {
 				//m_deadFrag = true;
@@ -289,8 +291,7 @@ void Player::Turn()
 
 void Player::AttackMove()
 {
-	//補間時間
-	float InterpolationTime = 0.2f;
+
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
 		
 	//m_busyoState = BusyoAttack;
@@ -330,7 +331,10 @@ void Player::AttackMove()
 			break;
 		}
 	}
+	XAttackMove();
+
 	m_playTimer++;
+
 	if (m_animStep != 0) {
 		if (m_animStep != m_oldAnimStep) {
 			m_playTimer = Timer_ZERO;
@@ -339,7 +343,7 @@ void Player::AttackMove()
 		//最後まで行くと隙をさらす時間を増やす
 		if (m_animStep == animClip_ATK5) {
 			//増やす処理
-			m_TimerRelease = 30;
+			m_TimerRelease = 22;
 		}
 		if (m_playTimer >= m_TimerRelease) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
@@ -351,6 +355,23 @@ void Player::AttackMove()
 			m_busyoAnime.Play(animClip_idle, InterpolationTime*2.0f);
 			m_underAttack = false;
 		}
+	}
+}
+
+void Player::XAttackMove()
+{
+	float interTime = 0.1f;
+	//攻撃してないかつYが押されたら
+	if (g_pad->IsTrigger(enButtonY)&&!m_underAttack) {
+		m_busyoState = BusyoAttack;
+		m_busyoAnime.Play(animClip_XATK, interTime);
+		m_blowOffPower = standardPower * 1.7f;
+		m_underAttack = true;
+		m_XTrigger = true;
+	}
+	if (m_XTrigger && !m_busyoAnime.IsPlaying()) {
+		m_XTrigger = false;
+		m_underAttack = false;
 	}
 }
 

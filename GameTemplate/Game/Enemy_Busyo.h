@@ -32,7 +32,7 @@ private:
 	//計測時間も初期化する
 	float AttackframeNum()
 	{
-		m_attackFrameNum = 100.0f + rand() % 200;
+		m_attackFrameNum = 150.0f + rand() % 200;
 		return m_attackFrameNum;
 	}
 	enum State
@@ -55,12 +55,13 @@ private:
 	bool m_charaConUse = false;//キャラコンが入っているか確認する変数。
 	bool m_isDeadfrag = false;
 	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
-	int m_HP = 25;					//仮
+	bool m_isDestroyed = false;
+
 	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
 	float m_frameTimer = 0.0f;		//時間を図るため
 	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
 
-	bool m_isDestroyed = false;
+	int m_HP = 15;					//仮
 };
 
