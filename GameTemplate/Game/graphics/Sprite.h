@@ -62,6 +62,12 @@ public:
 	/// 場所をセッティング
 	/// </summary>
 	/// <param name="pos"></param>
+	/// <summary>
+	/// αブレンディングなしでドロー
+	/// </summary>
+	void DrawNoAlphaBlend();
+	
+	/// <param name="pos"></param>
 	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
@@ -95,6 +101,7 @@ public:
 		m_alpha = alpha;
 	}
 private:
+	void InternalDraw(ID3D11BlendState* blendState);
 	/// <summary>
 	/// シェーダーをロード。
 	/// </summary>
@@ -135,6 +142,7 @@ private:
 	ID3D11SamplerState* m_samplerState = nullptr;	//サンプラステート。
 	ID3D11BlendState* m_translucentBlendState = nullptr;
 	ID3D11DepthStencilState* m_depthStencilState = nullptr;
+	ID3D11BlendState* m_disableBlendState = nullptr;
 	Shader	m_vs;											//頂点シェーダー。
 	Shader	m_ps;											//ピクセルシェーダー。
 	CMatrix m_world = CMatrix::Identity();					//ワールド行列。
@@ -145,4 +153,10 @@ private:
 	float m_alpha = 1.0f;
 	CVector4 m_mulColor = CVector4::White();
 	
+	enum state {
+		a = 0,
+		i,
+		num
+	};
+	state m_aiueo = num;
 };

@@ -43,6 +43,8 @@ private:
 		DAMAGE,
 		DEATH,
 		FIGHTING,
+		FIGHTING_KICK,
+		FIGHTING_LONG,
 		AnimationClip_Num
 	};
 	Animation m_enemy_BusyoAnime;
@@ -63,5 +65,6 @@ private:
 	Wepon_ghost* m_en_Wepon;
 
 	int m_HP = 15;					//‰¼
+	int m_gacha = -1;				//UŒ‚•û–@‚Ì’Š‘I‚ğ‚·‚é•Ï”
 };
 

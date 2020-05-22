@@ -51,6 +51,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_goMgr.Update();
 		g_goMgr.Render();
 		g_goMgr.Draw();
+		//g_goMgr.DrawNoAlphaBlend();
 		g_graphicsEngine->Render();
 		Fade::Getinstance().Update();
 		Fade::Getinstance().PostDraw();

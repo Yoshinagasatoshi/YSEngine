@@ -45,7 +45,7 @@ void UI::Update()
 
 void UI::PostDraw()
 {
-	m_lifeGauge.Draw();
-	m_face.Draw();
-	m_mapSprite.Draw();
+	m_lifeGauge.DrawNoAlphaBlend();
+	m_face.DrawNoAlphaBlend();
+	m_mapSprite.DrawNoAlphaBlend();
 }

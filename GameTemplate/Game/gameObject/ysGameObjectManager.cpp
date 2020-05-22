@@ -77,6 +77,13 @@ ysGameObjectManager::EffectTool g_Effect;
 		}
 	}
 
+	//void ysGameObjectManager::DrawNoAlphaBlend()
+	//{
+	//	for (auto go : IGameObjectList) {
+	//		go->DrawNoAlphaBlend();
+	//	}
+	//}
+
 	void ysGameObjectManager::PostRender()
 	{
 		for (auto go : IGameObjectList) {

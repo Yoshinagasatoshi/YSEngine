@@ -21,6 +21,8 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
 	m_animClip[FIGHTING].Load(L"Assets/animData/enemy_Busyo_Fighting_Pose.tka");
+	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemy_Busyo_kick.tka");
+	m_animClip[FIGHTING_LONG].Load(L"Assets/animData/enemy_Busyo_LongAttack.tka");
 
 	m_enemy_BusyoAnime.Init(
 		m_model,
@@ -34,6 +36,8 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[DAMAGE].SetLoopFlag(false);
 	m_animClip[DEATH].SetLoopFlag(false);
 	m_animClip[FIGHTING].SetLoopFlag(true);
+	m_animClip[FIGHTING_KICK].SetLoopFlag(false);
+	m_animClip[FIGHTING_LONG].SetLoopFlag(false);
 
 	m_enemy_BusyoAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
@@ -156,14 +160,42 @@ void Enemy_Busyo::AttackMove()
 	AttackframeNum();
 	if (m_frameTimer > m_attackFrameNum)
 	{
-		m_isFight = true;
-		m_enemy_BusyoAnime.Play(ATK, 0.2f);
-		if (!m_enemy_BusyoAnime.IsPlaying())
-		{
-			m_frameTimer = 0;
-			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-			m_isFight = false;
+		if (!m_isFight) {
+			//çUåÇï˚ñ@ÇÃíäëI
+			m_gacha = rand() % 3;
+			m_isFight = true;
 		}
+		switch (m_gacha)
+		{
+		case 0:
+			m_enemy_BusyoAnime.Play(ATK, 0.2f);
+			if (!m_enemy_BusyoAnime.IsPlaying())
+			{
+				m_frameTimer = 0;
+				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+				m_isFight = false;
+			}
+		break;
+		case 1:
+			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.2f);
+			if (!m_enemy_BusyoAnime.IsPlaying())
+			{
+				m_frameTimer = 0;
+				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+				m_isFight = false;
+			}
+			break;
+		case 2:
+			m_enemy_BusyoAnime.Play(FIGHTING_LONG, 0.2f);
+			if (!m_enemy_BusyoAnime.IsPlaying())
+			{
+				m_frameTimer = 0;
+				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+				m_isFight = false;
+			}
+			break;
+		}
+
 	}
 	if (!m_isFight) {
 		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);

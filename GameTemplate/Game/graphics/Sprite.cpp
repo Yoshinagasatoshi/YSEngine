@@ -41,6 +41,9 @@ Sprite::~Sprite()
 		m_depthStencilState->Release();
 		m_depthStencilState = nullptr;
 	}
+	if (m_disableBlendState != nullptr) {
+		m_disableBlendState->Release();
+	}
 }
 
 void Sprite::Init(const wchar_t* textureFilePath, float w, float h)
@@ -77,9 +80,6 @@ void Sprite::InitCommon(float w, float h)
 	CreateDepthStencilState();
 	//ブレンドステートの作成
 	InitTranslucentBlendState();
-
-	//シェーダーのロード
-	//LoadShader();
 	//シェーダーをロードする。
 	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
 	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
@@ -246,7 +246,19 @@ void Sprite::Update(const CVector3& trans, CQuaternion rot, CVector3 scale, CVec
 	m_world.Mul(m_world, mRot);
 	m_world.Mul(m_world, mTrans);
 }
+void Sprite::DrawNoAlphaBlend()
+{
+	m_aiueo = i;
+	//αブレンディングなしでドロー
+	InternalDraw(m_disableBlendState);
+}
 void Sprite::Draw()
+{
+	m_aiueo = a;
+	//こちらは半透明合成
+	InternalDraw(m_translucentBlendState);
+}
+void Sprite::InternalDraw(ID3D11BlendState* blendState)
 {
 	//デバイスコンテキストを引っ張ってくる。
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
@@ -272,7 +284,7 @@ void Sprite::Draw()
 	//ブレンドステートを設定
 	float blendFactor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	d3dDeviceContext->OMSetBlendState(
-		m_translucentBlendState,//設定するブレンディングステート
+		blendState,//設定するブレンディングステート
 		blendFactor,
 		0xffffffff
 		);
@@ -282,8 +294,9 @@ void Sprite::Draw()
 	//2Dカメラクラスがないやん！つくる
 	cb.WVP.Mul(cb.WVP,g_camera2D.GetViewMatrix());
 	cb.WVP.Mul(cb.WVP,g_camera2D.GetProjectionMatrix());
-	cb.alpha = m_alpha;
-
+	if (m_aiueo != i) {
+		cb.alpha = m_alpha;
+	}
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, NULL, &cb, 0, 0);
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb);
 	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb);
@@ -346,4 +359,8 @@ void Sprite::InitTranslucentBlendState()
 	//半透明合成を行えるブレンドステートが作成できる。
 	auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 	d3dDevice->CreateBlendState(&blendDesc, &m_translucentBlendState);
+
+	//αブレンディング向こうのステートを作成
+	blendDesc.RenderTarget[0].BlendEnable = false;
+	d3dDevice->CreateBlendState(&blendDesc, &m_disableBlendState);
 }

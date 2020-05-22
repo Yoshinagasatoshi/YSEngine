@@ -46,6 +46,7 @@
 		/// 2D描画
 		/// </summary>
 		virtual void PostDraw() {}
+		//virtual void DrawNoAlphaBlend() {}
 		/// <summary>
 		/// ポストレンダ
 		/// </summary>
