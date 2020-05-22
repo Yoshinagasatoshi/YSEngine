@@ -255,7 +255,7 @@ void GraphicsEngine::PostRender()
 		&m_frameBufferViewports
 	);
 	//ƒhƒ[
-	m_copyMainRtToFrameBufferSprite.Draw();
+	m_copyMainRtToFrameBufferSprite.DrawNoAlphaBlend();
 
 	m_frameBufferRenderTargetView->Release();
 	m_frameBufferDepthStencilView->Release();
