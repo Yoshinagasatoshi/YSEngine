@@ -29,7 +29,7 @@ Game::Game()
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
 	//レベルでモデルを出す。
-	m_level.Init(L"Assets/level/a.tkl",
+	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		//musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
@@ -43,13 +43,14 @@ Game::Game()
 				//可変長配列に↑のインスタンスを追加
 				return true;
 			}
-			//if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
-			//	//インスタンスの作成
-			//	m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
-			//	m_enemy->SetPos(objdata.position);
-			//	m_enemy->SetPlayerInfo(m_player);
-			//	return true;
-			//}
+			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
+				//インスタンスの作成
+				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
+				m_enemy->SetPos(objdata.position);
+				m_enemy->SetPlayerInfo(m_player);
+				m_enemy->SetGameinfo(this);
+				return true;
+			}
 		});
 	Fade::Getinstance().StartFadeOut();
 	////メインとなるレンダリングターゲット
@@ -88,24 +89,6 @@ void Game::Update()
 		m_gameDelete = false;
 		g_goMgr.DeleteGOObject(this);
 	}
-	if (g_goMgr.GetCount() > knockDownNum) {
-		if (!m_busyofrag) {
-			m_busyofrag = true;
-			//レベルでモデルを出す。
-			m_level_EnemyBusyo.Init(L"Assets/level/musou_EnemyBusyoLevel.tkl",
-			[&](const LevelObjectData& objdata) {
-				if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
-					//インスタンスの作成
-					m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
-					m_enemy->SetPos(objdata.position);
-					m_enemy->SetPlayerInfo(m_player);
-					m_enemy->SetGameinfo(this);
-					return true;
-				}
-			});
-		}
-	}
-
 }
 
 

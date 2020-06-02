@@ -46,6 +46,15 @@
     <Filter Include="Assets\sprite">
       <UniqueIdentifier>{f5d87536-3cca-4dbc-9d5e-9fafb7e8a3e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{3205d0bc-58a9-499b-81c1-f7d03ad240b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Wepon">
+      <UniqueIdentifier>{c0413689-ce91-4f49-9e9d-78c5bbfacb39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{3188c53e-0f61-43ea-9ccd-28a55606518e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -120,7 +129,6 @@
     <ClCompile Include="level\MapChip.cpp">
       <Filter>level</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="gameObject\ysGameObject.cpp">
       <Filter>gameObject</Filter>
@@ -135,11 +143,9 @@
       <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="BackGround.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
-    <ClCompile Include="Enemy_asigaru.cpp" />
     <ClCompile Include="graphics\SkinModelRender.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -178,11 +184,27 @@
       <Filter>sound</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp" />
-    <ClCompile Include="Enemy_Busyo.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Fade.cpp" />
-    <ClCompile Include="kunai.cpp" />
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="kunai.cpp">
+      <Filter>Wepon</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_asigaru.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_Bomber.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_Busyo.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -266,7 +288,6 @@
     <ClInclude Include="level\MapChip.h">
       <Filter>level</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="gameObject\ysGameObject.h">
       <Filter>gameObject</Filter>
@@ -281,10 +302,8 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="BackGround.h" />
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
-    <ClInclude Include="Enemy_asigaru.h" />
     <ClInclude Include="graphics\SkinModelRender.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -323,11 +342,27 @@
       <Filter>sound</Filter>
     </ClInclude>
     <ClInclude Include="Title.h" />
-    <ClInclude Include="Enemy_Busyo.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Fade.h" />
-    <ClInclude Include="kunai.h" />
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="kunai.h">
+      <Filter>Wepon</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_asigaru.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_Bomber.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_Busyo.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
