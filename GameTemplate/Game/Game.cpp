@@ -12,7 +12,7 @@
 #include "Fade.h"
 
 //倒された数の指標
-const int knockDownNum = 50;
+//const int knockDownNum = 50;
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
 {
