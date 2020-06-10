@@ -6,8 +6,6 @@ public:
 	~kunai();
 
 	void Update();
-	void GhostInit();
 private:
-	SkinModel m_kunaiModel;							//スキンモデル。
 };
 

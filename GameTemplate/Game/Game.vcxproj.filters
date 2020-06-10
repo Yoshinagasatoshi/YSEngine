@@ -205,6 +205,12 @@
     <ClCompile Include="Enemy_Busyo.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Wepon.cpp">
+      <Filter>Wepon</Filter>
+    </ClCompile>
+    <ClCompile Include="bom.cpp">
+      <Filter>Wepon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -363,6 +369,12 @@
     <ClInclude Include="Enemy_Busyo.h">
       <Filter>Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Wepon.h">
+      <Filter>Wepon</Filter>
+    </ClInclude>
+    <ClInclude Include="bom.h">
+      <Filter>Wepon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">
@@ -393,6 +405,12 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\kunai.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\asigaru_taicho.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\bom.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>

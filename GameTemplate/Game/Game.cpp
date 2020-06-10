@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Enemy_asigaru.h"
 #include "Enemy_Busyo.h"
+#include "Enemy_Bomber.h"
 #include "BackGround.h"
 #include "GameCamera.h"
 #include "GameData.h"
@@ -51,9 +52,17 @@ Game::Game()
 				m_enemy->SetGameinfo(this);
 				return true;
 			}
+			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
+				//インスタンスの作成
+				m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
+				m_enemy->SetPos(objdata.position);
+				m_enemy->SetPlayerInfo(m_player);
+				m_enemy->SetGameinfo(this);
+				return true;
+			}
 		});
 	Fade::Getinstance().StartFadeOut();
-	////メインとなるレンダリングターゲット
+	//メインとなるレンダリングターゲット
 	//m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
 
 	////↑に描かれた絵を
@@ -77,6 +86,10 @@ Game::~Game()
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_busyo", [&](Enemy* enemy) {
+		g_goMgr.DeleteGOObject(enemy);
+		return true;
+		});
+	g_goMgr.FindGameObjects<Enemy>("Enemy_bomber", [&](Enemy* enemy) {
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});

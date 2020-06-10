@@ -99,6 +99,16 @@ void Enemy_Busyo::Update()
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//m_enemy_BusyoAnime.Update(1/30.0f);
+		/// <summary>
+	/// デバック用コマンド。後で消す。
+	/// </summary>
+	if (g_pad->IsTrigger(enButtonRight)) {
+		//三人倒せばokという状態にしたい。今はゲームループのため仮実装
+		g_goMgr.NewGameObject<GameClear>("GameClear");
+		//消せてねえ？
+		m_game->GameDelete();
+		m_isDestroyed = true;
+	}
 }
 
 void Enemy_Busyo::CharaconInit()
