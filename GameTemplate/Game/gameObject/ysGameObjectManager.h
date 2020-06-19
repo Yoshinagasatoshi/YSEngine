@@ -139,7 +139,7 @@
 		//2dも追加
 		void Render();
 		//配列数を取りたいがためにしたけど不便、
-		std::vector<IGameObject*> GetIGameObjectList()
+		std::list<IGameObject*> GetIGameObjectList()
 		{
 			return IGameObjectList;
 		}
@@ -160,7 +160,7 @@
 		
 	private:
 		//授業版格納庫
-		std::vector<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト
+		std::list<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト
 		//配列の格納庫
 		typedef std::list<IGameObject*> GameObjectList;
 		//Listはつけない

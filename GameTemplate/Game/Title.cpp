@@ -35,12 +35,17 @@ void Title::Update()
 	//™X‚É‰¹‚ð—Ž‚Æ‚·Š´‚¶‚Å
 	if (g_pad->IsTrigger(enButtonA)) 
 	{
+		m_isWaitFadeOut = true;
+	}
+	if (m_isWaitFadeOut) {
 		Fade::Getinstance().StartFadeIn();
+		if (!Fade::Getinstance().IsFade()) {
+			m_bgm.Stop();
+			Game* game = g_goMgr.NewGameObject<Game>("Game");
+			g_goMgr.DeleteGOObject(this);
+		}
 	}
-	if (!Fade::Getinstance().IsFade()) {
-		Game* game = g_goMgr.NewGameObject<Game>("Game");
-		g_goMgr.DeleteGOObject(this);
-	}
+
 }
 
 void Title::Draw()

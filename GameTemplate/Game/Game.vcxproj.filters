@@ -375,6 +375,12 @@
     <ClInclude Include="bom.h">
       <Filter>Wepon</Filter>
     </ClInclude>
+    <ClInclude Include="system\Stopwatch.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\GameTime.h">
+      <Filter>system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">

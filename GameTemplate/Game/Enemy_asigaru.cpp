@@ -170,7 +170,7 @@ void Enemy_asigaru::Update()
 	m_moveSpeed.y = ySpeed + grabity;
 
 	//m_position += m_moveSpeed;
-	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	m_model_Row.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//EffekseerƒJƒƒ‰s—ñ‚ðÝ’èB
@@ -183,7 +183,7 @@ void Enemy_asigaru::Update()
 	g_Effect.m_effekseerRenderer->SetCameraMatrix(efCameraMat);
 	g_Effect.m_effekseerRenderer->SetProjectionMatrix(efProjMat);
 	//m_ghostObject.SetPosition(m_position);
-	m_asigaruAnime.Update(1.0f / 30.0f);
+	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
 	g_Effect.m_effekseerManager->Update();
 }
 void Enemy_asigaru::Draw()

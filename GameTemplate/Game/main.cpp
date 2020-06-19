@@ -36,9 +36,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	Title* title = g_goMgr.NewGameObject<Title>("Title");
 
+	CStopwatch sw;
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
+		//1フレームの時間計測を開始。
+		sw.Start();
 		
 		//ゲームパッドの更新。	
 		for (auto& pad : g_pad) {
@@ -61,5 +64,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_camera2D.Update();
 		//描画終了。
 		g_graphicsEngine->EndRender();
+		//1フレームの時間計測終了。
+		sw.Stop();
+		//1フレームの時間を記憶しておく。
+		GameTime().PushFrameDeltaTime(sw.GetElapsed());
 	}
 }

@@ -31,6 +31,8 @@
 #include "DirectXTK/Inc/SpriteFont.h"
 #include "DirectXTK/Inc/DDSTextureLoader.h"
 
+#include "system/Stopwatch.h"
+#include "system/GameTime.h"
 #include "physics/Physics.h"
 #include "HID/Pad.h"
 

@@ -23,7 +23,9 @@ void Fade::Update()
 			m_isEnd = false;
 		}
 		else {
+			m_currentAlpha = 1.0f;
 			m_isFade = false;
+			m_state = enState_Idle;
 		}
 		break;
 	case enState_FadeOut:
@@ -31,10 +33,12 @@ void Fade::Update()
 		if (m_currentAlpha >= 0.0f) {
 			m_currentAlpha -= 0.03f;
 			m_isFade = true;
+			m_isEnd = false;
 		}
 		else {
 			m_currentAlpha = 0.0f;
 			m_isEnd = true;
+			m_state = enState_Idle;
 		}
 		break;
 	case enState_Idle:

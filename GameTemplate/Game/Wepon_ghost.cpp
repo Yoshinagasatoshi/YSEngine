@@ -1,3 +1,7 @@
+/// <summary>
+/// このクラス、名前間違えた感がすごい
+/// 敵兵orプレイヤーの武器判定をつけているクラス
+/// </summary>
 #include "stdafx.h"
 #include "Wepon_ghost.h"
 #include "gameObject/ysGameObjectManager.h"
@@ -11,7 +15,7 @@ Wepon_ghost::Wepon_ghost()
 
 Wepon_ghost::~Wepon_ghost()
 {
-	g_goMgr.DeleteGOObject(this);
+	
 }
 
 //bool Wepon_ghost::Start()

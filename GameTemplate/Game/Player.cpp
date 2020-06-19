@@ -11,7 +11,7 @@
 #include "Game.h"
 #include "Fade.h"
 
-const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。
+const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。ゲームクリアではない
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
 const float PLAYER_COLLIDER_RADIUS = 60.0f;		//プレイヤーのカプセルコライダーの半径。
 
@@ -127,6 +127,9 @@ void Player::CharaconInit()
 
 void Player::Update()
 {
+	if (m_deadFrag) {
+		m_busyoState = BusyoDead;
+	}
 	m_soundEngine.Update();
 	if (m_busyoState != BusyoDead) {
 		//地面ついてる？
@@ -175,8 +178,7 @@ void Player::Update()
 				m_PL_HP -= 24;
 			}
 			else {
-				//m_deadFrag = true;
-				m_busyoState = BusyoDead;
+				m_deadFrag = true;
 			}
 			m_animState = animClip_SmallDamage;
 			m_busyoAnime.Play(animClip_SmallDamage, 0.5f);
@@ -213,7 +215,7 @@ void Player::Update()
 			});
 	}
 	else {
-		//プレイヤーが死んでいる時の処理 BusyoDead;
+		//プレイヤーが死んでいる時の処理
 		m_moveSpeed = CVector3::Zero();
 		m_busyoAnime.Play(animClip_busyo_dead);
 		if (!m_busyoAnime.IsPlaying()
@@ -232,6 +234,11 @@ void Player::Update()
 	/// </summary>
 	if (g_pad->IsTrigger(enButtonLeft)) {
 		m_busyoState = BusyoDead;
+	}
+	if (g_pad->IsTrigger(enButtonY)) {
+		g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/bom.efk");
+		//エフェクトを再生する。
+		g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x,m_position.y,m_position.z);
 	}
 }
 
@@ -378,7 +385,7 @@ void Player::XAttackMove()
 void Player::Execute()
 {
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
-	auto footStep = m_busyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
+	auto footStep = m_busyoAnime.Update(GameTime().GetFrameDeltaTime());//ローカル座標の更新　こっちはいじらない
 	//if (m_busyoState == BusyoAttack) {
 	//攻撃中はフットステップの移動量を加算する。
 	CMatrix mBias = CMatrix::Identity();
@@ -390,7 +397,7 @@ void Player::Execute()
 	rotMatrix.Mul(footStep);
 	footStep *= 60.0f;
 	m_moveSpeed += footStep;
-	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 }

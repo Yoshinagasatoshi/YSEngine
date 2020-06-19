@@ -29,21 +29,22 @@ Game::Game()
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
+	bool isHoge = true;
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		//musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-			if (wcscmp(objdata.name, L"asigaru") == 0) {
-				//インスタンスの作成
-				m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
-				m_enemy->SetPos(objdata.position);
-				//enemy->SetRot(objdata.rotation);
-				m_enemy->SetPlayerInfo(m_player);
-				m_enemy->SetGameCameraInfo(m_gameCamera);
-				//可変長配列に↑のインスタンスを追加
-				return true;
-			}
+			//if (wcscmp(objdata.name, L"asigaru") == 0) {
+			//	//インスタンスの作成
+			//	m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
+			//	m_enemy->SetPos(objdata.position);
+			//	//enemy->SetRot(objdata.rotation);
+			//	m_enemy->SetPlayerInfo(m_player);
+			//	m_enemy->SetGameCameraInfo(m_gameCamera);
+			//	//可変長配列に↑のインスタンスを追加
+			//	return true;
+			//}
 			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 				//インスタンスの作成
 				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
@@ -54,10 +55,13 @@ Game::Game()
 			}
 			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
 				//インスタンスの作成
-				m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
-				m_enemy->SetPos(objdata.position);
-				m_enemy->SetPlayerInfo(m_player);
-				m_enemy->SetGameinfo(this);
+				if (isHoge) {
+					isHoge = false;
+					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
+					m_enemy->SetPos(objdata.position);
+					m_enemy->SetPlayerInfo(m_player);
+					m_enemy->SetGameinfo(this);
+				}
 				return true;
 			}
 		});

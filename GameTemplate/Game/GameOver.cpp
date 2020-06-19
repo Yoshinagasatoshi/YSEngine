@@ -44,11 +44,14 @@ void GameOver::Update()
 	m_animeModel.Play(anim_Lose, 0.1f);
 
 	if (g_pad->IsTrigger(enButtonA)) {
-		Fade::Getinstance().StartFadeIn();
+		m_isWaitFadeOut = true;
 	}
-	if (!Fade::Getinstance().IsFade()) {
-	g_goMgr.NewGameObject<Title>("Title");
-	DeleteGO(this);
+	if (m_isWaitFadeOut) {
+		Fade::Getinstance().StartFadeIn();
+		if (!Fade::Getinstance().IsFade()) {
+			g_goMgr.NewGameObject<Title>("Title");
+			DeleteGO(this);
+		}
 	}
 	g_camera3D.SetTarget(CVector3::Zero());
 	

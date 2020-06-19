@@ -35,5 +35,6 @@ private:
 	CSoundEngine m_soundEngine;
 	CSoundSource m_se;									//Œø‰Ê‰¹
 	CSoundSource m_bgm;
+	bool m_isWaitFadeOut = false;
 };
 

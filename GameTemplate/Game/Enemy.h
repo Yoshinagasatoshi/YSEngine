@@ -23,6 +23,11 @@ public:
 	{
 		return m_position = position;
 	}
+	CVector3 GetPos()
+	{
+		return m_position;
+	}
+
 	CQuaternion SetRot(const CQuaternion qrot)
 	{
 		return m_rotation = qrot;

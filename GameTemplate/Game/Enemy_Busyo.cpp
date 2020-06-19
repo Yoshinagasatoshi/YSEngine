@@ -95,7 +95,7 @@ void Enemy_Busyo::Update()
 	footStep *= 600.0f;
 	m_moveSpeed += footStep;
 
-	m_position = m_characon.Execute(1.0f / 60.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	//m_enemy_BusyoAnime.Update(1/30.0f);
@@ -210,7 +210,7 @@ void Enemy_Busyo::AttackMove()
 	if (!m_isFight) {
 		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);
 	}
-	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
 
 //索敵範囲に来たらここに入る
@@ -233,7 +233,7 @@ void Enemy_Busyo::NormalMove()
 	if (!m_enemy_BusyoAnime.IsPlaying()) {
 		m_enemy_BusyoAnime.Play(IDL,0.1f);
 	}
-	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
 
 //距離が遠すぎたらここに入る。
@@ -247,7 +247,7 @@ void Enemy_Busyo::IdleMove()
 	}
 
 	m_enemy_BusyoAnime.Play(IDL, 0.2f);
-	m_position = m_characon.Execute(1.0f / 30.0f, m_moveSpeed);
+	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
 
 void Enemy_Busyo::ThisDamage()

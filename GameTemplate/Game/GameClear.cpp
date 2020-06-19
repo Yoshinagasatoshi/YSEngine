@@ -45,13 +45,18 @@ void GameClear::Update()
 	m_animeModel.Play(anim_Win, 0.1f);
 	//m_sprite2.Update(m_position, m_rot, m_scale, m_pivot);
 
+
 	if (g_pad->IsTrigger(enButtonA)) {
+		m_isWaitFadeOut = true;
+	}
+	if (m_isWaitFadeOut) {
 		Fade::Getinstance().StartFadeIn();
+		if (!Fade::Getinstance().IsFade()) {
+			g_goMgr.NewGameObject<Title>("Title");
+			DeleteGO(this);
+		}
 	}
-	if (!Fade::Getinstance().IsFade()) {
-		g_goMgr.NewGameObject<Title>("Title");
-		DeleteGO(this);
-	}
+
 	g_camera3D.SetTarget(targetPos);
 
 	g_camera3D.SetPosition(cameraPos);

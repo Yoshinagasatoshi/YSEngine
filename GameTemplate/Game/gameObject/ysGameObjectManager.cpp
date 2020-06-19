@@ -108,7 +108,7 @@ ysGameObjectManager::EffectTool g_Effect;
 
 	void ysGameObjectManager::Init(int gameObjectPrioMax)
 	{
-		IGameObjectList.reserve(gameObjectPrioMax);
+	//	IGameObjectList.reserve(gameObjectPrioMax);
 		m_gameObjectListArray.resize(gameObjectPrioMax);
 		m_deleteObjectArray[0].resize(gameObjectPrioMax);
 		m_deleteObjectArray[1].resize(gameObjectPrioMax);
