@@ -6,13 +6,12 @@
 #include "GameCamera.h"
 #include "math/Matrix.h"
 
-
 const float tikadukisugi = 2.0f;
 const float Timer_ZERO = 0.0f;
 const float DeleteTime = 10.0f;
-const float drawNearSpeed = 50.0f;
+const float drawNearSpeed = 110.0f;
 const float ViewLenght = 0.25f;						//視野角範囲
-const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が多くなる
+const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
 
 /// <summary>
 /// boid
@@ -136,7 +135,6 @@ void Enemy_asigaru::Update()
 		ySpeed = m_moveSpeed.y;
 	}
 	else if(!m_isDeadfrag){
-
 		//回転処理。プレイヤーの方に向くだけ
 		Turn();
 		StateJudge();
@@ -169,6 +167,7 @@ void Enemy_asigaru::Update()
 	//ワールド座標の更新
 	m_moveSpeed.y = ySpeed + grabity;
 
+	PlayertoDistans();
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -193,19 +192,19 @@ void Enemy_asigaru::Draw()
 	CVector3 Lenght = cameraPos - m_position;
 	Lenght.y = 0.0f;
 	//カメラとの距離を測って、距離が遠すぎたらローポリに切り替えるようにする
-	if (Lenght.LengthSq() <2500.0f * 2500.0f) {
+	//if (Lenght.LengthSq() <2500.0f * 2500.0f) {
 		//モデルの描画
 		m_model.Draw(
 			g_camera3D.GetViewMatrix(),
 			g_camera3D.GetProjectionMatrix()
 		);
-	}
-	else {
-		m_model_Row.Draw(
-			g_camera3D.GetViewMatrix(),
-			g_camera3D.GetProjectionMatrix()
-		);
-	}
+	//}
+	//else {
+	//	m_model_Row.Draw(
+	//		g_camera3D.GetViewMatrix(),
+	//		g_camera3D.GetProjectionMatrix()
+	//	);
+	//}
 }
 
 //ここが　取り巻く処理を書いている場所
@@ -213,16 +212,16 @@ void Enemy_asigaru::Move()
 {
 	const int NomalMove = -1;
 	int kakoi_num = m_player->RequestEnemyData(m_position, this);
-	int a = kakoi_num;
 	//周辺を取り巻くやつらなのか？
 	if (kakoi_num != NomalMove) {
+		m_torimaki = true;
 		//ここから下は取り巻くやつの処理
 		CVector3 kaiten = m_playerPos - m_position;
 		//ここだけ動きと回転の処理を変える
 		idlePosInit();
 		m_moveSpeed = m_idlePos[kakoi_num].idlePos - m_position;
 		//目的地と距離があまりにも近いときは動かない
-		if (m_moveSpeed.Length() < 5.0f) {
+		if (m_moveSpeed.Length() < 7.0f) {
 			m_moveSpeed = CVector3::Zero();
 		}
 		else {
@@ -234,19 +233,23 @@ void Enemy_asigaru::Move()
 	return;
 	}
 	else {
+		m_torimaki = false;
 		CVector3 kaiten = m_playerPos - m_position;
-		//float angle = atan2(kaiten.x, kaiten.z);
-		//m_rotation.SetRotation(CVector3::AxisY(), angle);
-
-		if (kaiten.LengthSq() < BattleRange) {
-			int i = 0;
-			i = rand() % 5;
-			CVector3 panko = CVector3::Zero();
-			panko = m_idlePos[i].idlePos - m_position;
-			panko.Normalize();
+		m_moveSpeed = kaiten;
+		Turn();
+		CVector3 lain = kaiten;
+		if (kaiten.Length() < 50.0f) {
+			lain * -1;
+			lain.Normalize();
+			m_moveSpeed = lain * 1.5f;
+		}
+		else if (kaiten.Length() < 120.0f) {
+			lain.Normalize();
+			m_moveSpeed = kaiten * 1.5f;
+		}
+		else {
 			m_moveSpeed = CVector3::Zero();
 		}
-
 	}
 }
 
@@ -275,11 +278,22 @@ void Enemy_asigaru::idlePosInit()
 	//後でレベルに変える。
 	m_playerPos = m_player->GetPosition();
 
-	m_idlePos[0].idlePos = m_playerPos + CVector3{150.0f,0.0f,0.0f};
-	m_idlePos[1].idlePos = m_playerPos + CVector3{ -150.0f,0.0f,0.0f };
-	m_idlePos[2].idlePos = m_playerPos + CVector3{ 100.0f,0.0f,100.0f };
-	m_idlePos[3].idlePos = m_playerPos + CVector3{ -100.0f,0.0f,100.0f };
-	m_idlePos[4].idlePos = m_playerPos + CVector3{ 0.0f,0.0f,-150.0f };
+	CVector3 aho = m_playerPos - m_position;
+	if (aho.Length() < 300.0f) {
+		aho = aho;
+	}
+	else {
+		aho.y = 0.0f;
+		aho.Normalize();
+		aho *= 300.0f;
+	}
+	//問題は6対名港
+	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);
+	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);
+	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);
+	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);
+	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);
+
 }
 
 //距離による判定処理
@@ -345,7 +359,6 @@ void Enemy_asigaru::StateJudge()
 		//tikazukiの処理
 		kyori.Normalize();
 		m_moveSpeed = kyori * drawNearSpeed * 2.0f;
-		//Move();
 		break;
 
 
@@ -400,5 +413,5 @@ void Enemy_asigaru::DeadMove()
 	m_moveSpeed -= pushPower;
 	m_asigaruAnime.Play(Asigaru_dead,0.1f);
 	//死んだアニメーションは早く再生する
-	m_asigaruAnime.Update(1/60.0f);
+	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
 }

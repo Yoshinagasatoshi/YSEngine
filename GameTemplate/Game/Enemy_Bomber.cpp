@@ -6,7 +6,7 @@
 const float InterpolationTime = 0.2f;			//アニメーションの補間時間
 const float bomberSpeed = 5.0f;
 const float harfrenge = 1400.0f;
-const float socialdistance = 700.0f;			//密です。嘘です。プレイヤーとの間合いです
+const float socialdistance = 700.0f;			//密です。嘘です。プレイヤーとの間合いです。
 const float escapeSpeed = 200.0f;				//逃げ足スピード
 const float gravity = -20.0f;					//重力
 Enemy_Bomber::Enemy_Bomber()
@@ -46,6 +46,10 @@ Enemy_Bomber::Enemy_Bomber()
 
 Enemy_Bomber::~Enemy_Bomber()
 {
+	if (m_bom != nullptr) {
+		m_bom = nullptr;
+		DeleteGO(m_bom);
+	}
 	g_goMgr.DeleteGOObject(this);
 }
 

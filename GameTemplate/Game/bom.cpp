@@ -3,7 +3,9 @@
 #include "gameObject/ysGameObjectManager.h"
 
 const float B_radius = 30.0f;			//ゴーストの当たり判定の大きさ用
-const float BOM_GRAVITY_ACC = -400.0f;	//爆弾の重力加速度。
+const float BOM_GRAVITY_ACC = -1000.0f;	//爆弾の重力加速度。
+const float BOM_VELOCITY_HORIZON = 200;	//爆弾の水平方向の移動速度。
+
 bom::bom()
 {
 	m_skinModel.Init(L"Assets/modelData/bom.cmo");
@@ -55,7 +57,7 @@ void bom::FirstSet()
 	CVector3 vec = m_inpactPoint - m_position;
 	vec.y = 0.0f;
 	vec.Normalize();
-	vec *= 400.0f;
+	vec *= BOM_VELOCITY_HORIZON;
 	
 	CVector3 distans = m_inpactPoint - m_position;
 	distans.y = 0.0f;
@@ -97,6 +99,9 @@ void bom::HitThebom()
 	//エラーがよく起こる場所
 	//プレイヤーが死んだ後に、投げられた状態のボムが死んだプレイヤーの距離を測っているからエラーが起こっている？
 	if (!m_player->GetPlayerDead()) {
+		if (m_player == nullptr) {
+			DeleteGO(this);
+		}
 		auto P_diff = m_player->GetPosition() - m_position;
 		if (P_diff.Length() < 150.0f)
 		{

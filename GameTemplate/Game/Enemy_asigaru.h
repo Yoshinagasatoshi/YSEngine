@@ -121,6 +121,8 @@ private:
 	float m_recivePower;
 	//円周率。必要なためここに書いた
 	double PI = 3.14159265358979323846f;
+	//取り巻けなかった奴らが使う変数
+	bool m_torimaki = false;
 
 	//前方向
 	CVector3 m_forward = CVector3::AxisZ();
@@ -131,7 +133,5 @@ private:
 	Skeleton* m_skeleton;
 	//ゲームデータのポインタ。数値をここから抜粋していく。
 	GameData* gamedata = nullptr;
-
-
 };
 

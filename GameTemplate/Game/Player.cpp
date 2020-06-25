@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Player_target.h"
 #include <iostream>
 #include "gameObject/ysGameObjectManager.h"
 #include "Enemy.h"
@@ -17,12 +18,19 @@ const float PLAYER_COLLIDER_RADIUS = 60.0f;		//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì”
 
 const float SpeedAmount = 1500.0f;				//•½–Ê‚ÌˆÚ“®—Ê
 const float gravity = 200.0f;					//d—Í
-const float JumpPower = 2000.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
+const float JumpPower = 800.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
 const float JumpATKPower = 350.0f;				//ƒWƒƒƒ“ƒv‹`—‚Ì‹­‚³
 const float standardPower = 200.0f;				//ƒvƒŒƒCƒ„[‚Ì“G‚«”ò‚Î‚µ—Í
 const float limit = 2.0f;						//d—ÍŒW”‚ÌãŒÀ
 const int Timer_ZERO = 0;						//0‚É‚È‚éB‚»‚Ì‚Ü‚Ü
 const float InterpolationTime = 0.2f;			//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠÔŠÔ
+const int	 onebrock = 24;						//’è”ƒ_ƒ[ƒWBƒ{ƒX‚©‚ç‚ÌUŒ‚‚Æ‚©ˆĞ—Í‚ª‚‚¢“z‚É‚Í*2‚Æ‚©‚·‚é‚Æv‚¤
+//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠÔŠÔE¬
+const float InterpolationTimeS = 0.1f;		
+//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠÔŠÔE’†
+const float InterpolationTimeM = 0.2f;		
+//ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠÔŠÔE‘å
+const float InterpolationTimeL = 0.5f;			
 
 Player::Player()
 {
@@ -35,6 +43,8 @@ Player::Player()
 	m_bgm.Play(true);
 	m_bgm.SetVolume(0.5f);
 	CharaconInit();
+	m_pl_target = g_goMgr.NewGameObject<Player_target>("PLT");
+	m_pl_target->SetPlayerInfo(this);
 	//cmoƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İB
 	m_playerModel.Init(L"Assets/modelData/busyo.cmo");
 	//ˆÚ“®ó‘Ô‚Ìƒ[ƒh
@@ -107,6 +117,7 @@ Player::Player()
 		m_se.SetVolume(1.0f);
 	}
 	);
+
 }
 
 
@@ -160,10 +171,10 @@ void Player::Update()
 			//ƒWƒƒƒ“ƒvó‘Ô‚¶‚á‚È‚¯‚ê‚ÎˆÚ“®‘¬“x‚É‚æ‚Á‚ÄƒAƒjƒ[ƒVƒ‡ƒ“‚ğ•Ï‚¦‚éB
 			if (!m_Jumpfrag) {
 				if (m_moveSpeed.Length() > 300.0f) {
-					m_busyoAnime.Play(animClip_Walk, 0.1f);
+					m_busyoAnime.Play(animClip_Walk, InterpolationTimeS);
 				}
 				else {
-					m_busyoAnime.Play(animClip_idle, 0.1f);
+					m_busyoAnime.Play(animClip_idle, InterpolationTimeS);
 				}
 			}
 			else {
@@ -181,7 +192,7 @@ void Player::Update()
 				m_deadFrag = true;
 			}
 			m_animState = animClip_SmallDamage;
-			m_busyoAnime.Play(animClip_SmallDamage, 0.5f);
+			m_busyoAnime.Play(animClip_SmallDamage,InterpolationTimeL);
 		}
 
 		//ƒ_ƒ[ƒWƒAƒjƒ[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚ç—§‚¿p‚É
@@ -193,13 +204,15 @@ void Player::Update()
 			//	m_underAttack = false;
 			//}
 			if (!m_Jumpfrag) {
-				m_busyoAnime.Play(animClip_idle, 0.2f);
+				m_busyoAnime.Play(animClip_idle,InterpolationTimeM);
 			}
 		}
 		//ˆÚ“®ˆ—
 		Move();
+		//haha
 		//‰ñ“]ˆ—
 		Turn();
+		
 		//“G•Ší‚ÌƒS[ƒXƒg‚ª“–‚½‚Á‚½‚çƒ_ƒ[ƒW‚ğó‚¯‚éB
 		QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
 			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
@@ -234,11 +247,6 @@ void Player::Update()
 	/// </summary>
 	if (g_pad->IsTrigger(enButtonLeft)) {
 		m_busyoState = BusyoDead;
-	}
-	if (g_pad->IsTrigger(enButtonY)) {
-		g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/bom.efk");
-		//ƒGƒtƒFƒNƒg‚ğÄ¶‚·‚éB
-		g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x,m_position.y,m_position.z);
 	}
 }
 
@@ -283,7 +291,7 @@ void Player::Draw()
 
 void Player::Turn()
 {
-	if (m_busyoState != BusyoAttack) {
+	if(m_busyoState != BusyoAttack) {
 
 		if (fabsf(m_moveSpeed.x) <= 0.001f    //fabsf‚Íâ‘Î’lBm_movespeed.x&m_movespeedz‚ª
 			&& fabsf(m_moveSpeed.z) <= 0.001f) {//0.001ˆÈ‰º‚Ì‚É‚Í‰½‚à‚µ‚È‚¢B
@@ -291,6 +299,14 @@ void Player::Turn()
 		}
 		else {
 			float angle = atan2(m_moveSpeed.x, m_moveSpeed.z);
+			m_rotation.SetRotation(CVector3::AxisY(), angle);
+		}
+	}
+	else {
+		//–¼‘Ol‚¦‚é‚Ì‚µ‚ñ‚Ç‚¢B
+		if (m_pl_target->GetHosei()) {
+			CVector3 kaiten = m_pl_target->GetDistans();
+			float angle = atan2(-kaiten.x, -kaiten.z);
 			m_rotation.SetRotation(CVector3::AxisY(), angle);
 		}
 	}
@@ -307,6 +323,9 @@ void Player::AttackMove()
 			m_underAttack = true;
 		}
 		m_busyoState = BusyoAttack;
+		//•â³‚ğ‚©‚¯‚é‚×‚«‚È‚Ì‚©‚ğ’²‚×‚Ü‚·B
+		bool hosei = m_pl_target->GetHosei();
+		
 		//”»’è‚µ‚Ü‚·B
 		//ƒXƒgƒ‰ƒeƒW[ƒpƒ^[ƒ“—\”õŒR
 		switch (m_animStep)
@@ -350,12 +369,12 @@ void Player::AttackMove()
 		//ÅŒã‚Ü‚Ås‚­‚ÆŒ„‚ğ‚³‚ç‚·ŠÔ‚ğ‘‚â‚·
 		if (m_animStep == animClip_ATK5) {
 			//‘‚â‚·ˆ—
-			m_TimerRelease = 22;
+			m_TimerRelease = 15;
 		}
 		if (m_playTimer >= m_TimerRelease) {
 			//ˆê’è‚ÌŠÔ‚ª‰ß‚¬‚½‚çƒAƒjƒƒXƒe[ƒgŠÖŒW‚ğ‰Šú‰»
 			m_busyoState = BusyoNormal;
-			m_TimerRelease = 20;
+			m_TimerRelease = 15;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = Timer_ZERO;
@@ -395,22 +414,29 @@ void Player::Execute()
 	rotMatrix.MakeRotationFromQuaternion(m_rotation);
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
-	footStep *= 60.0f;
+
+	footStep *= 32.0f;
 	m_moveSpeed += footStep;
+
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ƒ[ƒ‹ƒhs—ñ‚ÌXVB
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+
+	m_pl_target->IsHosei();
 }
 
-
+//ƒGƒlƒ~[‚ÉŒÄ‚Î‚ê‚é“z
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
-	for (int i = 0; i < DestinationNum; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		//ˆê”ÔÅ‰‚ÉƒGƒlƒ~[‚Ì‹ó‚¢‚Ä‚¢‚éŠ‚Éî•ñ‚ğ“ü‚ê‚é
 		if (m_enemydata[i].position.y == 0.0f) {
 			m_enemydata[i].position = pos;
 			m_enemydata[i].enemy = enemy;
+			//‚±‚Ìƒ^ƒCƒ~ƒ“ƒO‚Å“G‚Æ‚Ì‹——£Œv‚é(‹——£‚ª‹ß‚©‚Á‚½‚çŒÄ‚Î‚ê‚éˆ—‚È‚Ì‚ÉcH)
+			m_pl_target->SetEnemyInfo(enemy);
+
 			return i;
 		}
 		else if (m_enemydata[i].enemy == enemy) {
@@ -422,6 +448,7 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 			if (kyori.LengthSq() > posClearRange) {
 				m_enemydata[i].enemy = NULL;
 				m_enemydata[i].position = CVector3{0.0f,0.0f,0.0f};
+				m_pl_target->Hoseioff();
 				return -1;
 			}
 		}
@@ -436,11 +463,11 @@ void Player::JumpAttackMove() {
 	if (m_Jumpfrag && !m_jumpAttackfrag) {
 		if (g_pad->IsTrigger(enButtonX)) {
 			m_jumpAttackfrag = true;
-			m_busyoAnime.Play(animClip_JUMP_ATK, 0.1f);
+			m_busyoAnime.Play(animClip_JUMP_ATK, InterpolationTimeS);
 			m_blowOffPower = JumpATKPower;
 		}
 	}
 	if (!m_jumpAttackfrag) {
-		m_busyoAnime.Play(animClip_jump, 0.2f);
+		m_busyoAnime.Play(animClip_jump, InterpolationTimeM);
 	}
 }

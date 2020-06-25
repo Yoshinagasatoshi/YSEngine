@@ -56,6 +56,7 @@ Enemy_Busyo::~Enemy_Busyo()
 
 void Enemy_Busyo::Update()
 {
+	
 	//ƒLƒƒƒ‰ƒRƒ“‚ª“ü‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“ü‚ê‚éB
 	if (!m_charaConUse) {
 		CharaconInit();
@@ -67,6 +68,7 @@ void Enemy_Busyo::Update()
 	switch (m_state)
 	{
 	case ATK:
+		m_player->RequestEnemyData(m_position, this);
 		AttackMove();
 		break;
 	case MOVE:

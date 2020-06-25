@@ -15,6 +15,7 @@ class Game;
 class Enemy;
 //class Skeleton;
 class Wepon_ghost;
+class Player_target;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
@@ -74,9 +75,6 @@ public:
 	{
 		return m_PL_HP;
 	}
-	//PhysicsGhostObject* GetGhostObject() {
-	//	return &m_ghostObject;
-	//}
 
 	//武将の状態を格納
 	enum busyoState {
@@ -124,7 +122,10 @@ public:
 	}
 	//敵情報のリクエストを受け取る
 	int RequestEnemyData(CVector3 position, Enemy* enemy);
-
+	void SetEnemyData(Enemy*en)
+	{
+		enemy = en;
+	}
 private:
 	//囲いの数
 	static const int DestinationNum = 5;
@@ -134,8 +135,8 @@ private:
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
-	int m_TimerRelease = 15;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 48;									//今の体力
+	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
+	int m_PL_HP = 480;									//今の体力
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る
@@ -154,7 +155,6 @@ private:
 	CharacterController m_characon;						//キャラクターコントローラー
 	Game* m_game;										//ゲームのインスタンスを格納する
 
-
 	bool m_dead = false;								//死亡スイッチ。役割がかぶってそうなやつがいるのであとで直す
 	bool m_deadFrag = false;							//死亡したときのスイッチ
 	bool m_underAttack = false;							//攻撃中？
@@ -171,5 +171,6 @@ private:
 	CSoundSource m_bgm;
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
+	Player_target* m_pl_target = nullptr;				//はあ
 };
 

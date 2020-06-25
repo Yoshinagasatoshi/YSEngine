@@ -30,29 +30,34 @@ Game::Game()
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
 	bool isHoge = true;
+	int enemyCount = 0;
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
-		//musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-			//if (wcscmp(objdata.name, L"asigaru") == 0) {
+			//if (enemyCount < 20) {
+				if (wcscmp(objdata.name, L"asigaru") == 0) {
+				//	enemyCount++;
+					isHoge = false;
+					//インスタンスの作成
+					m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
+					m_enemy->SetPos(objdata.position);
+					//enemy->SetRot(objdata.rotation);
+					m_enemy->SetPlayerInfo(m_player);
+					m_enemy->SetGameCameraInfo(m_gameCamera);
+					//可変長配列に↑のインスタンスを追加
+					return true;
+				}
+			//}
+			//return true;
+			//if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 			//	//インスタンスの作成
-			//	m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
+			//	m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
 			//	m_enemy->SetPos(objdata.position);
-			//	//enemy->SetRot(objdata.rotation);
 			//	m_enemy->SetPlayerInfo(m_player);
-			//	m_enemy->SetGameCameraInfo(m_gameCamera);
-			//	//可変長配列に↑のインスタンスを追加
+			//	m_enemy->SetGameinfo(this);
 			//	return true;
 			//}
-			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
-				//インスタンスの作成
-				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
-				m_enemy->SetPos(objdata.position);
-				m_enemy->SetPlayerInfo(m_player);
-				m_enemy->SetGameinfo(this);
-				return true;
-			}
 			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
 				//インスタンスの作成
 				if (isHoge) {
@@ -68,32 +73,32 @@ Game::Game()
 	Fade::Getinstance().StartFadeOut();
 	//メインとなるレンダリングターゲット
 	//m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
-
-	////↑に描かれた絵を
-	////フレームバッファにコピーするためのスプライトの初期化する
-	//m_copyMainRtToFrameBufferSprite.Init(
-	//	m_renderTarget.GetRenderTargetSRV(),
-	//	FRAME_BUFFER_W,
-	//	FRAME_BUFFER_H
-	//);
 }
 
 Game::~Game()
 {
+	m_player = nullptr;
 	g_goMgr.DeleteGOObject(m_player);
+	m_backGround = nullptr;
 	g_goMgr.DeleteGOObject(m_backGround);
+	m_ui = nullptr;
 	g_goMgr.DeleteGOObject(m_ui);
+	m_gameCamera = nullptr;
 	g_goMgr.DeleteGOObject(m_gameCamera);
+	m_gamedata = nullptr;
 	g_goMgr.DeleteGOObject(m_gamedata);
 	g_goMgr.FindGameObjects<Enemy>("Enemy_asigaru", [&](Enemy* enemy) {
+		enemy = nullptr;
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_busyo", [&](Enemy* enemy) {
+		enemy = nullptr;
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_bomber", [&](Enemy* enemy) {
+		enemy = nullptr;
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});

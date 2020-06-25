@@ -44,6 +44,16 @@ public:
 	{
 		m_game = game;
 	}
+	//プレイヤーとエネミーの距離をはかる
+	//m_playerに情報が入っている時だけつかう
+	void PlayertoDistans()
+	{
+		m_PtDistans = m_player->GetPosition() - m_position;
+	}
+	CVector3 GetPlayertoDistans()
+	{
+		return m_PtDistans;
+	}
 protected:
 	SkinModel m_model;			//スキンモデル。
 	SkinModel m_model_Row;		//ローポリのスキンモデル。アニメはつけない予定
@@ -54,6 +64,7 @@ protected:
 	Player* m_player;			//プレイヤーのポイント型
 	GameCamera* m_gameCamera;	//ゲームカメラのポイント型。
 	Game* m_game;				//ゲーム
+	CVector3 m_PtDistans;		//プレイヤーとエネミーの距離
 	const float grabity = -9.8f * 2.0f;//重力
 	const float BattleRange = 200.0f * 200.0f;			//この距離の範囲内に近づくとバトル
 	const float VigilanceRange = 700.0f * 700.0f;		//この距離の範囲内ならプレイヤーに近づく。
