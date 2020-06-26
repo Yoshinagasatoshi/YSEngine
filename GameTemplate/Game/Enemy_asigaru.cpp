@@ -79,9 +79,9 @@ Enemy_asigaru::Enemy_asigaru()
 //デストラクタ
 Enemy_asigaru::~Enemy_asigaru()
 {
-	g_goMgr.DeleteGOObject(this);
 	//敵を倒した数を計測
 	g_goMgr.Counting();
+	g_goMgr.DeleteGOObject(this);
 }
 
 void Enemy_asigaru::CharaconInit()
@@ -123,6 +123,7 @@ void Enemy_asigaru::Update()
 		//死んだ後に少したってモデルが消える
 		if (m_Deathtimer_f > DeleteTime) {
 			//m_characon.RemoveRigidBoby();
+			g_goMgr.EnemyNumSubtract();
 			DeleteGO(this);
 		}
 	}

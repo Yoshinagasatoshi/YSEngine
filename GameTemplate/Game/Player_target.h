@@ -36,7 +36,7 @@ public:
 	{
 		m_isHosei = false;
 	}
-	void IsHosei();
+	void HoseiJujge();
 private:
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;

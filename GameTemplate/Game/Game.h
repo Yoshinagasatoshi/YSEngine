@@ -35,6 +35,7 @@ public:
 	//void PostRender();
 	//カメラの初期カー
 	//void InitCamera();
+
 private:
 	//プレイヤー
 	Player* m_player = nullptr;

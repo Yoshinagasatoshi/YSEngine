@@ -43,7 +43,7 @@ void Wepon_ghost::GhostInit()
 			m_ghostObject.CreateBox(
 				m_player->GetPosition(),
 				m_rotation,
-				m_scale * m_ghostscale * 0.01f//プレイヤーだけひいきします。いまだけちいさくします
+				m_scale * m_ghostscale * 1.2f//プレイヤーだけひいきします。いまだけちいさくします
 			);
 		}
 		m_hanteifin = true;

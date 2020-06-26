@@ -422,7 +422,8 @@ void Player::Execute()
 	//ワールド行列の更新。
 	m_playerModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 
-	m_pl_target->IsHosei();
+	
+	m_pl_target->HoseiJujge();
 }
 
 //エネミーに呼ばれる奴
@@ -435,8 +436,9 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 			m_enemydata[i].position = pos;
 			m_enemydata[i].enemy = enemy;
 			//このタイミングで敵との距離計る(距離が近かったら呼ばれる処理なのに…？)
-			m_pl_target->SetEnemyInfo(enemy);
-
+			if (g_goMgr.GetEnemyNum() == 0) {
+				m_pl_target->SetEnemyInfo(enemy);
+			}
 			return i;
 		}
 		else if (m_enemydata[i].enemy == enemy) {

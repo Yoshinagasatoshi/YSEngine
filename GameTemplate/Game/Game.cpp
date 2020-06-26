@@ -30,15 +30,15 @@ Game::Game()
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
 	bool isHoge = true;
-	int enemyCount = 0;
+	//敵の総数は何体？数えます。
+	g_goMgr.EnemyNumResetCount();
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
 			//if (enemyCount < 20) {
 				if (wcscmp(objdata.name, L"asigaru") == 0) {
-				//	enemyCount++;
-					isHoge = false;
+					g_goMgr.EnemyCounting();
 					//インスタンスの作成
 					m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
 					m_enemy->SetPos(objdata.position);
@@ -77,17 +77,13 @@ Game::Game()
 
 Game::~Game()
 {
-	m_player = nullptr;
 	g_goMgr.DeleteGOObject(m_player);
-	m_backGround = nullptr;
 	g_goMgr.DeleteGOObject(m_backGround);
-	m_ui = nullptr;
 	g_goMgr.DeleteGOObject(m_ui);
-	m_gameCamera = nullptr;
 	g_goMgr.DeleteGOObject(m_gameCamera);
-	m_gamedata = nullptr;
 	g_goMgr.DeleteGOObject(m_gamedata);
 	g_goMgr.FindGameObjects<Enemy>("Enemy_asigaru", [&](Enemy* enemy) {
+		g_goMgr.EnemyNumSubtract();
 		enemy = nullptr;
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
