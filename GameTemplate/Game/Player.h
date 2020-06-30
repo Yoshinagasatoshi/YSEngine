@@ -168,6 +168,8 @@ private:
 	
 	CSoundEngine m_soundEngine;
 	CSoundSource m_se;									//効果音
+	CSoundSource m_se2;									//効果音
+
 	CSoundSource m_bgm;
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト

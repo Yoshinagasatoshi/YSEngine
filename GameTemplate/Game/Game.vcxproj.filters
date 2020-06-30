@@ -214,6 +214,7 @@
     <ClCompile Include="Player_target.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="SoundDirector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -387,6 +388,7 @@
     <ClInclude Include="Player_target.h">
       <Filter>Player</Filter>
     </ClInclude>
+    <ClInclude Include="SoundDirector.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\busyo.fbx">

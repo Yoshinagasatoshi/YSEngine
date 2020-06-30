@@ -32,7 +32,7 @@ void bom::Update()
 			CSoundSource* se = new CSoundSource;
 			se->Init(L"Assets/sound/fuse.wav");
 			se->Play(false);
-			se->SetVolume(1.5f);
+			se->SetVolume(1.0f);
 		}
 		/// <summary>
 		/// プレイヤーアクセスクラスを通して伝令

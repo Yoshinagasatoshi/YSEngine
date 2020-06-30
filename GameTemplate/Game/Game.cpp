@@ -12,6 +12,10 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Fade.h"
 
+//緊急ではないけれど、ゲームループをするとき少しずつメモリが多くなっていく。
+//何かが消せていない。
+//一番怪しいのはtargetでnullptrにしたenemy。
+//ゲームとして完成してきたらここのバグを直そう。
 
 //倒された数の指標
 //const int knockDownNum = 50;

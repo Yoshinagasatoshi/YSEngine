@@ -12,6 +12,7 @@ const float DeleteTime = 10.0f;
 const float drawNearSpeed = 110.0f;
 const float ViewLenght = 0.25f;						//視野角範囲
 const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
+const int	MAX_RING_SE = 1;						//seを鳴らす上限数			
 
 /// <summary>
 /// boid
@@ -151,10 +152,8 @@ void Enemy_asigaru::Update()
 			m_isDeadfrag = true;
 			//enemy用にも
 			ThisDeath();
-			CSoundSource* m_se2 = new CSoundSource;
-			m_se2->Init(L"Assets/sound/slash1.wav");
-			m_se2->Play(false);
-			m_se2->SetVolume(0.55f);//
+			//音を鳴らす関数
+			RingorStockSE();
 			//エフェクトも出す。
 			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 				g_Effect.m_sampleEffect,
@@ -420,4 +419,47 @@ void Enemy_asigaru::DeadMove()
 	m_asigaruAnime.Play(Asigaru_dead,0.1f);
 	//死んだアニメーションは早く再生する
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
+}
+
+//もう一つ関数を作るか…？これの外側でも音を鳴らせるクラスを一つ作りたい
+//今のままだと斬られた時にしか音が鳴らないので、遅れてSEが出せない。
+void Enemy_asigaru::RingorStockSE()
+{
+	//効果音を鳴らしていい上限数以下であるならば
+	if (m_seRingCount < MAX_RING_SE) {
+		CSoundSource* se = new CSoundSource;
+		m_seRingCount++;
+		se->Init(L"Assets/sound/slash1.wav");
+		se->Play(false);
+		se->SetVolume(0.55f);//調整
+		if (!se->IsPlaying()) {
+			//SEが再生し終えたのならカウントを減らす。
+			m_seRingCount--;
+			//カウントを減らしたとき、ストックがあるのなら
+			if (m_seRingCount < MAX_RING_SE
+				&& m_seStockCount > 0) {
+				m_seStockCount--;
+				m_seRingCount++;
+				se->Init(L"Assets/sound/slash1.wav");
+				se->Play(false);
+				se->SetVolume(0.55f);//調整
+			}
+		}
+	}
+	else {
+		m_seStockCount++;
+	}
+	//if (!se->IsPlaying()) {
+	//	//SEが再生し終えたのならカウントを減らす。
+	//	m_seRingCount--;
+	//	//カウントを減らしたとき、ストックがあるのなら
+	//	if (m_seRingCount < MAX_RING_SE
+	//		&& m_seStockCount > 0) {
+	//		m_seStockCount--;
+	//		m_seRingCount++;
+	//		se->Init(L"Assets/sound/slash1.wav");
+	//		se->Play(false);
+	//		se->SetVolume(0.55f);//調整
+	//	}
+	//}
 }

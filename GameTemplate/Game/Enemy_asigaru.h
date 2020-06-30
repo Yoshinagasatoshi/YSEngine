@@ -32,6 +32,9 @@ public:
 	//ゴーストのInit
 	//void ghostInit();
 
+	//処理を自分がわかりやすくするために関数にした
+	void RingorStockSE();
+
 	//ふっとばし量を受け取る。
 	void SetDamage(float recive)
 	{
@@ -133,5 +136,9 @@ private:
 	Skeleton* m_skeleton;
 	//ゲームデータのポインタ。数値をここから抜粋していく。
 	GameData* gamedata = nullptr;
+	//SEがどれだけなっているかをカウントする。
+	int m_seRingCount = 0;
+	//待機待ちのseがどれだけあるかをカウントする。
+	int m_seStockCount = 0;
 };
 

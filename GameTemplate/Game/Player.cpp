@@ -39,9 +39,11 @@ Player::Player()
 	//サウンドエンジンを初期化
 	m_soundEngine.Init();
 	//音SE素材
+	//よく考えたらなんでこいつがBGMならしてるんだ…
 	m_bgm.Init(L"Assets/sound/Chanbara.wav");
 	m_bgm.Play(true);
-	m_bgm.SetVolume(0.5f);
+	//seチェックのために、大分下げる
+	m_bgm.SetVolume(0.05f);
 	CharaconInit();
 	m_pl_target = g_goMgr.NewGameObject<Player_target>("PLT");
 	m_pl_target->SetPlayerInfo(this);
@@ -112,9 +114,19 @@ Player::Player()
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 
-		m_se.Init(L"Assets/sound/swing.wav");
-		m_se.Play(false);
-		m_se.SetVolume(1.0f);
+		//これは解決した気がします。
+		if (!m_se.IsPlaying()) {
+			m_se.Init(L"Assets/sound/swing.wav");
+			m_se.Play(false);
+			m_se.SetVolume(3.0f);//試しにでかくしている。後で調整
+		}
+		else {
+			if (!m_se2.IsPlaying()) {
+				m_se2.Init(L"Assets/sound/swing.wav");
+				m_se2.Play(false);
+				m_se2.SetVolume(3.0f);//試しにでかくしている。後で調整
+			}
+		}
 	}
 	);
 
@@ -303,7 +315,6 @@ void Player::Turn()
 		}
 	}
 	else {
-		//名前考えるのしんどい。
 		if (m_pl_target->GetHosei()) {
 			CVector3 kaiten = m_pl_target->GetDistans();
 			float angle = atan2(-kaiten.x, -kaiten.z);
@@ -314,7 +325,6 @@ void Player::Turn()
 
 void Player::AttackMove()
 {
-
 	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
 		
 	//m_busyoState = BusyoAttack;
