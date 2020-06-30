@@ -172,5 +172,6 @@ private:
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 	Player_target* m_pl_target = nullptr;				//はあ
+	//PlayerAcceseStatus* m_accese = nullptr;				//
 };
 

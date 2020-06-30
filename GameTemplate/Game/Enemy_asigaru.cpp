@@ -149,6 +149,8 @@ void Enemy_asigaru::Update()
 		if (ghostobject->IsSelf(contactObject) == true) {
 			//通っているのは確認完了
 			m_isDeadfrag = true;
+			//enemy用にも
+			ThisDeath();
 			CSoundSource* m_se2 = new CSoundSource;
 			m_se2->Init(L"Assets/sound/slash1.wav");
 			m_se2->Play(false);
@@ -289,22 +291,27 @@ void Enemy_asigaru::idlePosInit()
 		aho *= 300.0f;
 	}
 	//問題は6対名港
-	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);
-	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);
-	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);
-	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);
-	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);
+	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター(レッド)
+	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣1(ブルー)
+	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1(イエロー)
+	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);	//端っこ2(グリーン)
+	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);	//奥にいるやつの隣2(ピンク)
 
 }
 
 //距離による判定処理
 void Enemy_asigaru::StateJudge()
 {
+	//プレイヤーが死んだときにも図られてしまう
 	//～～Range 
+	/// <summary>
+	/// -282497216
+	/// -87308032
+	/// </summary>
 	CVector3 kyori = m_player->GetPosition() - m_position;
 	//y成分を0にする。
 	kyori.y = 0.0f;
-	
+
 	m_player_isdead = m_player->GetPlayerDead();
 	//ステートごとの処理を書く
 	switch (m_asigaruState)
@@ -319,7 +326,7 @@ void Enemy_asigaru::StateJudge()
 	case Asigaru_sentou:
 		if (m_isAttack) {
 			m_isAttack = false;
-		}
+		}	
 		if (kyori.LengthSq() > BattleRange) {
 			m_asigaruState = Asigaru_tikazuki;
 			m_frameTimer = Timer_ZERO;
@@ -373,13 +380,11 @@ void Enemy_asigaru::StateJudge()
 			}
 		}
 		//totugekiの処理
-
 		/// <summary>
 		/// 今日の課題
 		/// 兵士たちが待機している時にどんな動きをするかを考えよう
 		/// 動画を見た感じ、マジで遠い兵士は自分の方の位置を見ながらも
 		/// ゆったりと近づいている感じ
-		
 		/// ある程度近づいてきたら寄ってくる感じ
 		/// 今のままだと距離が近すぎる気がするので要調整
 		/// 移動速度ももっと早いほうがいいね
@@ -394,7 +399,7 @@ void Enemy_asigaru::StateJudge()
 		m_rotation.Multiply(ADDrot);
 		break;
 	}
-		m_asigaruAnime.Play(m_asigaruState, 0.2f);
+	m_asigaruAnime.Play(m_asigaruState, 0.2f);
 }
 
 /// <summary>

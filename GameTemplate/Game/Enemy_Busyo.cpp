@@ -259,10 +259,8 @@ void Enemy_Busyo::ThisDamage()
 		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 			if (ghostobject->IsSelf(contactObject) == true) {
-
 				//通っているのは確認完了
 				m_isDeadfrag = true;
-
 				//エフェクトも出す。
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 					g_Effect.m_sampleEffect,
@@ -286,6 +284,8 @@ void Enemy_Busyo::ThisDelete()
 	}
 	//なくなっていたらこちらを通る
 	else {
+		//enemy用にも
+		ThisDeath();
 		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
 		if (!m_isDestroyed && !m_enemy_BusyoAnime.IsPlaying()) {
 			{

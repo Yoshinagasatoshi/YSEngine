@@ -36,10 +36,10 @@ Enemy_Bomber::Enemy_Bomber()
 	);
 	m_bomberAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
-		m_bom = g_goMgr.NewGameObject<bom>("bom");
-		m_bom->SetPosition(m_position);
-		m_bom->SetPlayerInfo(m_player);
-		m_bom->SetInpactPosition(m_player->GetPosition());
+			m_bom = g_goMgr.NewGameObject<bom>("bom");
+			m_bom->SetPosition(m_position);
+			m_bom->SetPlayerInfo(m_player);
+			m_bom->SetInpactPosition(m_player->GetPosition());
 		}
 	);
 }
@@ -89,6 +89,8 @@ void Enemy_Bomber::Update()
 			if (ghostobject->IsSelf(contactObject) == true) {
 				//’Ê‚Á‚Ä‚¢‚é‚Ì‚ÍŠm”FŠ®—¹
 				m_isDeadfrag = true;
+				//enemy—p‚É‚à
+				ThisDeath();
 				CSoundSource* m_se2 = new CSoundSource;
 				m_se2->Init(L"Assets/sound/slash1.wav");
 				m_se2->Play(false);

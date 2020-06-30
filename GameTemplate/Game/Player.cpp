@@ -431,28 +431,34 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
 	for (int i = 0; i < 5; i++)
 	{
-		//一番最初にエネミーの空いている所に情報を入れる
-		if (m_enemydata[i].position.y == 0.0f) {
-			m_enemydata[i].position = pos;
-			m_enemydata[i].enemy = enemy;
-			//このタイミングで敵との距離計る(距離が近かったら呼ばれる処理なのに…？)
-			if (g_goMgr.GetEnemyNum() == 0) {
-				m_pl_target->SetEnemyInfo(enemy);
+		if (!enemy->GetenemyDeath()) {
+			//一番最初にエネミーの空いている所に情報を入れる
+			if (m_enemydata[i].position.y == 0.0f) {
+				m_enemydata[i].position = pos;
+				m_enemydata[i].enemy = enemy;
+				//このタイミングで敵との距離計る(距離が近かったら呼ばれる処理なのに…？)
+				if (g_goMgr.GetEnemyNum() != 0) {
+					m_pl_target->SetEnemyInfo(enemy);
+				}
+				return i;
 			}
-			return i;
-		}
-		else if (m_enemydata[i].enemy == enemy) {
-			return i;
-		}
+			else if (m_enemydata[i].enemy == enemy) {
+				return i;
+			}
 
-		if (m_enemydata[i].position.y != 0.0f) {
-			CVector3 kyori = m_enemydata[i].position - pos;
-			if (kyori.LengthSq() > posClearRange) {
-				m_enemydata[i].enemy = NULL;
-				m_enemydata[i].position = CVector3{0.0f,0.0f,0.0f};
-				m_pl_target->Hoseioff();
-				return -1;
+			if (m_enemydata[i].position.y != 0.0f) {
+				CVector3 kyori = m_enemydata[i].position - pos;
+				if (kyori.LengthSq() > posClearRange) {
+					m_enemydata[i].enemy = NULL;
+					m_enemydata[i].position = CVector3{ 0.0f,0.0f,0.0f };
+					m_pl_target->Hoseioff();
+					return -1;
+				}
 			}
+		}
+		else {
+			enemy = nullptr;
+			m_pl_target->SetEnemyInfo(enemy);
 		}
 	}
 	//nullでないかつ

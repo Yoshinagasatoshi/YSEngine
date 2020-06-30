@@ -43,5 +43,6 @@ private:
 	CVector3 m_distans = CVector3::Zero();
 	bool m_isHosei = false;
 	//std::list<Enemy*> m_enemyList;
+	int i = 0;//テストコード
 };
 

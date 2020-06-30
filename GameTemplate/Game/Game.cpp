@@ -12,6 +12,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Fade.h"
 
+
 //倒された数の指標
 //const int knockDownNum = 50;
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
@@ -30,13 +31,16 @@ Game::Game()
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
 	bool isHoge = true;
+	int enemyCount = 0;
 	//敵の総数は何体？数えます。
 	g_goMgr.EnemyNumResetCount();
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-			//if (enemyCount < 20) {
+
+			//if (enemyCount < 5) {
+				enemyCount++;
 				if (wcscmp(objdata.name, L"asigaru") == 0) {
 					g_goMgr.EnemyCounting();
 					//インスタンスの作成
@@ -50,25 +54,26 @@ Game::Game()
 				}
 			//}
 			//return true;
-			//if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
-			//	//インスタンスの作成
-			//	m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
-			//	m_enemy->SetPos(objdata.position);
-			//	m_enemy->SetPlayerInfo(m_player);
-			//	m_enemy->SetGameinfo(this);
-			//	return true;
-			//}
-			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
+			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
+				//g_goMgr.EnemyCounting();
 				//インスタンスの作成
-				if (isHoge) {
-					isHoge = false;
-					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
-					m_enemy->SetPos(objdata.position);
-					m_enemy->SetPlayerInfo(m_player);
-					m_enemy->SetGameinfo(this);
-				}
+				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
+				m_enemy->SetPos(objdata.position);
+				m_enemy->SetPlayerInfo(m_player);
+				m_enemy->SetGameinfo(this);
 				return true;
 			}
+			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
+				//インスタンスの作成
+				//g_goMgr.EnemyCounting();
+				isHoge = false;
+				m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
+				m_enemy->SetPos(objdata.position);
+				m_enemy->SetPlayerInfo(m_player);
+				m_enemy->SetGameinfo(this);
+				return true;
+			}
+			return true;
 		});
 	Fade::Getinstance().StartFadeOut();
 	//メインとなるレンダリングターゲット
@@ -82,19 +87,28 @@ Game::~Game()
 	g_goMgr.DeleteGOObject(m_ui);
 	g_goMgr.DeleteGOObject(m_gameCamera);
 	g_goMgr.DeleteGOObject(m_gamedata);
+	//ちゃんと140回呼ばれている
 	g_goMgr.FindGameObjects<Enemy>("Enemy_asigaru", [&](Enemy* enemy) {
-		g_goMgr.EnemyNumSubtract();
-		enemy = nullptr;
 		g_goMgr.DeleteGOObject(enemy);
+		//if (enemy != nullptr) {
+		//	enemy = nullptr;
+		//}
+		g_goMgr.EnemyNumSubtract();
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_busyo", [&](Enemy* enemy) {
-		enemy = nullptr;
+		g_goMgr.EnemyNumSubtract();
+		//if (enemy != nullptr) {
+		//	enemy = nullptr;
+		//}
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_bomber", [&](Enemy* enemy) {
-		enemy = nullptr;
+		g_goMgr.EnemyNumSubtract();
+		//if (enemy != nullptr) {
+		//	enemy = nullptr;
+		//}
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});

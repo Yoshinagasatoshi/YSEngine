@@ -115,6 +115,7 @@
 				}
 			}
 		}
+
 		//呼ばれたら1追加
 		void Counting()
 		{
@@ -130,6 +131,7 @@
 		{
 			Count = 0;
 		}
+
 		//ふえてもろて…
 		void EnemyCounting()
 		{
@@ -143,7 +145,7 @@
 		//みせてもろて…
 		int GetEnemyNum()
 		{
-			return m_enemyCount;
+			return  m_enemyCount;
 		}
 		//リセットしてもろて…
 		void EnemyNumResetCount()
@@ -154,7 +156,7 @@
 		void Execute();
 		//void Update();
 		void Draw();
-		//
+
 		//void DrawNoAlphaBlend();
 		//2dも追加
 		void Render();
@@ -177,7 +179,12 @@
 	private:
 		//配列の数が変動したらカウントする変数を作りたかったので追加
 		int Count = 0;
+		//COuntとほぼ同じ、カウントとは別枠で数えたいものがあれば使う。名前変えるかも
 		int m_enemyCount = 0;
+		//クリア通知、届くようにしようか
+		bool isCrear = false;
+		//ゲームオーバー通知
+		bool isGameOver = false;
 	private:
 		//授業版格納庫
 		std::list<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト
