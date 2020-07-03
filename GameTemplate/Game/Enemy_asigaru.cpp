@@ -2,6 +2,8 @@
 #include "Enemy_asigaru.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
+#include "SoundDirector.h"
+#include "SoundDirector.h"
 #include "Wepon_ghost.h"
 #include "GameCamera.h"
 #include "math/Matrix.h"
@@ -23,6 +25,8 @@ Enemy_asigaru::Enemy_asigaru()
 {
 	gamedata = &GameData::GetInstans();
 	m_scale = CVector3::One();
+	m_sd = &SoundDirector::GetInstans();
+	//m_sd = g_goMgr.NewGameObject<SoundDirector>("SoundDirector");
 
 	//asigaruのモデルをロードする。
 	m_model.Init(L"Assets/modelData/asigaru.cmo");
@@ -97,6 +101,20 @@ void Enemy_asigaru::CharaconInit()
 
 void Enemy_asigaru::Update()
 {
+	if (isRingSE) {
+		timer -= 60.0f * GameTime().GetFrameDeltaTime();
+		//タイマーが0未満になるとリセット。音が出せるようになる
+		if (timer < 0.0f) {
+			//なっている効果音が0じゃなかったら減らす
+			if (!m_sd->GetReturnRingNum() == 0) {
+				m_sd->mainasuRingnum();
+			}
+			if (m_sd->GetReturnRingNum() <= 0) {
+				isRingSE = false;
+				timer = 10.0f;
+			}
+		}
+	}
 	//Y成分の移動速度をバックアップしておく。
 	float ySpeed = m_moveSpeed.y;
 
@@ -114,10 +132,8 @@ void Enemy_asigaru::Update()
 
 		//音をロード。1回だけ鳴らす。
 		if (m_Deathtimer_f <= fastTime) {
-			CSoundSource* m_se = new CSoundSource;
-			m_se->Init(L"Assets/sound/falldown2.wav");
-			m_se->Play(false);
-			m_se->SetVolume(0.4f);//小さめに
+			//引数のDはdownのD
+			RingorStockSE('D');
 		}
 		m_Deathtimer_f++;
 
@@ -153,12 +169,12 @@ void Enemy_asigaru::Update()
 			//enemy用にも
 			ThisDeath();
 			//音を鳴らす関数
-			RingorStockSE();
+			RingorStockSE('S');
 			//エフェクトも出す。
 			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 				g_Effect.m_sampleEffect,
 				m_position.x,
-				m_position.y + 100.0f,
+				m_position.y + 100.0f, //少し上に出す
 				m_position.z
 			);
 		}
@@ -378,17 +394,6 @@ void Enemy_asigaru::StateJudge()
 				m_asigaruState = Asigaru_tikazuki;
 			}
 		}
-		//totugekiの処理
-		/// <summary>
-		/// 今日の課題
-		/// 兵士たちが待機している時にどんな動きをするかを考えよう
-		/// 動画を見た感じ、マジで遠い兵士は自分の方の位置を見ながらも
-		/// ゆったりと近づいている感じ
-		/// ある程度近づいてきたら寄ってくる感じ
-		/// 今のままだと距離が近すぎる気がするので要調整
-		/// 移動速度ももっと早いほうがいいね
-		/// </summary>
-
 		kyori.Normalize();
 		m_moveSpeed = kyori * drawNearSpeed * 0.1f;
 		//今の処理
@@ -421,30 +426,24 @@ void Enemy_asigaru::DeadMove()
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
 }
 
-//もう一つ関数を作るか…？これの外側でも音を鳴らせるクラスを一つ作りたい
-//今のままだと斬られた時にしか音が鳴らないので、遅れてSEが出せない。
-void Enemy_asigaru::RingorStockSE()
+//呼ばれたら音を出してくれる関数。
+//ただし、鳴らしていい上限数を超える数分を鳴らすことはしない。
+void Enemy_asigaru::RingorStockSE(char Alf)
 {
-	//効果音を鳴らしていい上限数以下であるならば
-	if (m_seRingCount < MAX_RING_SE) {
+	//効果音を鳴らしていい上限数未満であるならば
+	if (m_sd->GetReturnRingNum() < MAX_RING_SE) {
+		m_sd->addringnum();
 		CSoundSource* se = new CSoundSource;
-		m_seRingCount++;
-		se->Init(L"Assets/sound/slash1.wav");
-		se->Play(false);
-		se->SetVolume(0.55f);//調整
-		if (!se->IsPlaying()) {
-			//SEが再生し終えたのならカウントを減らす。
-			m_seRingCount--;
-			//カウントを減らしたとき、ストックがあるのなら
-			if (m_seRingCount < MAX_RING_SE
-				&& m_seStockCount > 0) {
-				m_seStockCount--;
-				m_seRingCount++;
-				se->Init(L"Assets/sound/slash1.wav");
-				se->Play(false);
-				se->SetVolume(0.55f);//調整
-			}
+		//m_seRingCount++;
+		if (Alf == 'S') {
+			se->Init(L"Assets/sound/slash1.wav");
 		}
+		else if(Alf == 'D') {
+			se->Init(L"Assets/sound/falldown2.wav");
+		}
+		se->Play(false);
+		se->SetVolume(1.5f);//調整
+		isRingSE = true;
 	}
 	else {
 		m_seStockCount++;

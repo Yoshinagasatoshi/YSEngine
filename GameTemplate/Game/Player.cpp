@@ -43,7 +43,7 @@ Player::Player()
 	m_bgm.Init(L"Assets/sound/Chanbara.wav");
 	m_bgm.Play(true);
 	//seチェックのために、大分下げる
-	m_bgm.SetVolume(0.05f);
+	m_bgm.SetVolume(1.0f);
 	CharaconInit();
 	m_pl_target = g_goMgr.NewGameObject<Player_target>("PLT");
 	m_pl_target->SetPlayerInfo(this);

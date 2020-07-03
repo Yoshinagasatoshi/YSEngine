@@ -18,14 +18,23 @@ public:
 	{
 		return m_position;
 	}
+	//描写
 	void Draw();
+	//プレイヤーを発見したときの動き
 	void NormalMove();
+	//プレイヤーが発見されていない時の動き
 	void IdleMove();
+	//プレイヤーに攻撃するときの関数
 	void AttackMove();
+	//いつもの更新処理
 	void Update();
+	//キャラコンを入れる
 	void CharaconInit();
+	//enemy_busyoのステートを判定する
 	void StateJudge();
+	//ダメージ食らった時の処理
 	void ThisDamage();
+	//死ぬ処理
 	void ThisDelete();
 private:
 	//攻撃時間が何秒か抽選する関数
@@ -64,7 +73,7 @@ private:
 	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
 
-	int m_HP = 15;					//仮
-	int m_gacha = -1;				//攻撃方法の抽選をする変数
+	int m_HP = 15;					//仮体力
+	int m_gacha = -1;				//攻撃方法の抽選をする変数。最初だけ-1
 };
 

@@ -177,6 +177,7 @@ void Enemy_Busyo::AttackMove()
 			m_gacha = rand() % 3;
 			m_isFight = true;
 		}
+		//多分長くなるから関数にすっぞ
 		switch (m_gacha)
 		{
 		case 0:
@@ -218,22 +219,28 @@ void Enemy_Busyo::AttackMove()
 //索敵範囲に来たらここに入る
 void Enemy_Busyo::NormalMove()
 {
-	CVector3 direction = distance;
-	direction.y = 0.0f;
-	direction.Normalize();
-	m_moveSpeed = direction * power;
-	//ワールド座標の更新
-	m_moveSpeed.y += grabity;
-	if (m_characon.IsOnGround()) {
-		m_moveSpeed.y = 0.0f;
+	if (distance.LengthSq() > 200.0f * 200.0f) {
+		CVector3 direction = distance;
+		direction.y = 0.0f;
+		direction.Normalize();
+		m_moveSpeed = direction * power;
+		//ワールド座標の更新
+		m_moveSpeed.y += grabity;
+		if (m_characon.IsOnGround()) {
+			m_moveSpeed.y = 0.0f;
+		}
+		float angle = atan2(distance.x, distance.z);
+		m_rotation.SetRotation(CVector3::AxisY(), angle);
+		m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+		//アニメーションイベントのために歩きアニメをループ再生からワンショット再生に変更。
+		//それをごまかすために、アニメーション再生が終わったら1フレームだけ別のアニメを入れる。
+		if (!m_enemy_BusyoAnime.IsPlaying()) {
+			m_enemy_BusyoAnime.Play(IDL, 0.1f);
+		}
 	}
-	float angle = atan2(distance.x, distance.z);
-	m_rotation.SetRotation(CVector3::AxisY(), angle);
-	m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-	//アニメーションイベントのために歩きアニメをループ再生からワンショット再生に変更。
-	//それをごまかすために、アニメーション再生が終わったら1フレームだけ別のアニメを入れる。
-	if (!m_enemy_BusyoAnime.IsPlaying()) {
-		m_enemy_BusyoAnime.Play(IDL,0.1f);
+	else {
+		m_moveSpeed = CVector3::Zero();
+		m_enemy_BusyoAnime.Play(IDL, 0.1f);
 	}
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
@@ -293,7 +300,7 @@ void Enemy_Busyo::ThisDelete()
 			}
 			if (!Fade::Getinstance().IsFade()) {
 				g_goMgr.ResetCount();
-				//三人倒せばokという状態にしたい。今はゲームループのため仮実装
+				//倒せばokという状態に
 				g_goMgr.NewGameObject<GameClear>("GameClear");
 				//消せてねえ？
 				m_game->GameDelete();

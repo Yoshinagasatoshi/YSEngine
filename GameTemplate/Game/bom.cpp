@@ -29,10 +29,10 @@ void bom::Update()
 	if (Fade::Getinstance().IsFade()) {
 		if (!m_isFirst) {
 			FirstSet();//所見の大きさとか設定
-			CSoundSource* se = new CSoundSource;
-			se->Init(L"Assets/sound/fuse.wav");
-			se->Play(false);
-			se->SetVolume(1.0f);
+			//CSoundSource* se = new CSoundSource;
+			//se->Init(L"Assets/sound/fuse.wav");
+			//se->Play(false);
+			//se->SetVolume(0.1f);
 		}
 		/// <summary>
 		/// プレイヤーアクセスクラスを通して伝令
@@ -101,10 +101,10 @@ void bom::Finalbom()
 	auto I_diff = m_inpactPoint - m_position;
 	//着地処理。プレイヤーに当たっていない時の処理
 	if (I_diff.Length() < 100.0f) {
-		CSoundSource* se = new CSoundSource;
-		se->Init(L"Assets/sound/destruction.wav");
-		se->Play(false);
-		se->SetVolume(1.0f);
+		//CSoundSource* se = new CSoundSource;
+		//se->Init(L"Assets/sound/destruction.wav");
+		//se->Play(false);
+		//se->SetVolume(0.1f);
 		g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/bom.efk");
 		//エフェクトを再生する。
 		g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x,m_position.y,m_position.z);
@@ -134,10 +134,10 @@ void bom::HitThebom()
 		{
 			m_player->PlayerDamage();
 
-			CSoundSource* se = new CSoundSource;
-			se->Init(L"Assets/sound/destruction.wav");
-			se->Play(false);
-			se->SetVolume(1.0f);
+			//CSoundSource* se = new CSoundSource;
+			//se->Init(L"Assets/sound/destruction.wav");
+			//se->Play(false);
+			//se->SetVolume(0.1f);
 
 			g_Effect.m_sampleEffect = Effekseer::Effect::Create(g_Effect.m_effekseerManager, (const EFK_CHAR*)L"Assets/effect/bom.efk");
 			//エフェクトを再生する。

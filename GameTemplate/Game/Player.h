@@ -16,6 +16,7 @@ class Enemy;
 //class Skeleton;
 class Wepon_ghost;
 class Player_target;
+//class SoundDirector;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
@@ -167,13 +168,14 @@ private:
 	bool m_XTrigger = false;
 	
 	CSoundEngine m_soundEngine;
+	CSoundSource m_bgm;
 	CSoundSource m_se;									//効果音
 	CSoundSource m_se2;									//効果音
 
-	CSoundSource m_bgm;
+
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 	Player_target* m_pl_target = nullptr;				//はあ
-	//PlayerAcceseStatus* m_accese = nullptr;				//
+	//SoundDirector* m_sd;						//鳴らす
 };
 
