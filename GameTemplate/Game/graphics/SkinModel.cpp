@@ -119,7 +119,7 @@ void SkinModel::InitDirectionLight()
 	m_light.directionLight.color[3] = { 0.0f,0.0f,0.0f,1.0f };
 
 	m_light.specPow = 10.0f;
-	m_light.AmbLight = { 1.0f,1.0f,1.0f };
+	m_light.AmbLight = { 0.8f,0.8f,0.8f };
 }
 
 void SkinModel::InitAlbedoTexture()

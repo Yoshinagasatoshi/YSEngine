@@ -209,7 +209,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	//拡散反射
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
 	float3 lig = 0.0f;
-    /*for (int i = 0; i < Light_number; i++) {
+    for (int i = 0; i < Light_number; i++) {
 		float t = max( dot(In.Normal * -1.0f, directionLight.Direction[i].rgb), 0.0f );
 		if (t < 0.2f) {
 			lig += directionLight.Color[i] * 0.5f;
@@ -234,7 +234,7 @@ float4 PSMain(PSInput In) : SV_Target0
 		//3 スペキュラ反射をライトに追加する。
 		lig += directionLight.Color[0].xyz * pow(specPower, specPow);
 	
-	}*/
+	}
 
 	
 		//4　環境光を当てる。
