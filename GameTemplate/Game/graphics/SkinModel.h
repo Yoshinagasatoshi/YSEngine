@@ -60,7 +60,7 @@ public:
 	*@param[in]	projMatrix		プロジェクション行列。
 	*  カメラ座標系の3Dモデルをスクリーン座標系に変換する行列です。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix );
+	void Draw( CMatrix viewMatrix, CMatrix projMatrix ,EnRenderMode enRenderMode = enRenderMode_Normal);
 
 	/// <summary>
 	// マテリアルに対してクエリを行う
@@ -94,6 +94,38 @@ public:
 	{
 		return m_worldMatrix;
 	}
+	/// <summary>
+	/// シャドウレシーバーを設定
+	/// </summary>
+	/// <param name="flag"></param>
+	void SetShadowReciever(bool flag)
+	{
+		m_isShadowReciever = flag;
+	}
+	/// <summary>
+	/// シャドウレシーバーを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetShadowReciever()
+	{
+		return m_isShadowReciever;
+	}
+	/// <summary>
+	/// シャドウキャスターを設定
+	/// </summary>
+	/// <param name="flag"></param>
+	void SetShadowCaster(bool flag)
+	{
+		m_isShadowCaster = flag;
+	}
+	/// <summary>
+	/// シャドウキャスターを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetShadowCaster()
+	{
+		return m_isShadowCaster;
+	}
 	/*!
 	*@brief	SRVのレジスタ番号。
 	*/
@@ -124,13 +156,21 @@ private:
 	*@param[in]	filePath		ロードするcmoファイルのファイルパス。
 	*/
 	void InitSkeleton(const wchar_t* filePath);
-	
+
+
 private:
 	//定数バッファ。
 	struct SVSConstantBuffer {
 		CMatrix mWorld;
 		CMatrix mView;
 		CMatrix mProj;
+		CMatrix mLightView;		//todo ライトビュー行列。
+		CMatrix mLightProj;		//todo ライトプロジェクション行列。
+		int isShadowReciever;	//todo シャドウレシーバーのフラグ。
+		//CMatrix mLightViewProj[CascadeShadowMap::SHADOWMAP_NUM];	//ライトビュープロジェクション行列
+		//CMatrix mLightViewInv[CascadeShadowMap::SHADOWMAP_NUM];		//ライトビューの逆行列
+		//CVector4 mFar[CascadeShadowMap::SHADOWMAP_NUM];
+	
 	};
 	//ディレクションライトの定数バッファ
 	struct SDirectionLight {
@@ -155,5 +195,7 @@ private:
 	ID3D11SamplerState* m_samplerState = nullptr;		   //!<サンプラステート。
 	ID3D11ShaderResourceView* m_albedoTextureSRV = nullptr;//!<アルベドテクスチャ。
 	const int Lightnumber = 4;
+	bool m_isShadowReciever = true;
+	bool m_isShadowCaster = true;
 };
 

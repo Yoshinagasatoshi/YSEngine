@@ -10,7 +10,7 @@
 Texture2D<float4> albedoTexture : register(t0);	
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t1);
-
+Texture2D<float4> shadowMap : register(t2);		//todo シャドウマップ。
 /////////////////////////////////////////////////////////////
 // SamplerState
 /////////////////////////////////////////////////////////////
@@ -26,6 +26,10 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mWorld;
 	float4x4 mView;
 	float4x4 mProj;
+	//todo ライトビュー行列を追加。
+	float4x4 mLightView;	//ライトビュー行列。
+	float4x4 mLightProj;	//ライトプロジェクション行列。
+	int isShadowReciever;	//シャドウレシーバーフラグ。
 };
 /// <summary>
 /// ライトの数
@@ -43,7 +47,7 @@ struct SDirectionLight {
 /// <summary>
 /// ライト用の定数バッファ
 /// </summary>
-cbuffer LightCB : register(b0) {
+cbuffer LightCB : register(b1) {
 	SDirectionLight directionLight; //ディレクションライト
 	float3          eyePos;         //カメラの視点
 	float           specPow;        //スペキュラライトの絞り
@@ -76,6 +80,13 @@ struct VSInputNmTxWeights
     float4 Weights  : BLENDWEIGHT0;			//この頂点に関連付けされているボーンへのスキンウェイト。x,y,z,wの要素に入っている。4ボーンスキニング。
 };
 
+/// <summary>
+/// シャドウマップ用のピクセルシェーダへの入力構造体。
+/// </summary>
+struct PSInput_ShadowMap {
+	float4 Position 			: SV_POSITION;	//座標。
+};
+
 /*!
  * @brief	ピクセルシェーダーの入力。
  */
@@ -85,6 +96,7 @@ struct PSInput{
 	float3 Tangent		: TANGENT;
 	float2 TexCoord 	: TEXCOORD0;
 	float3 worldPos		: TEXCOORD1;	//ワールド座標。解説６
+	float4 posInLVP	: TEXCOORD2;	//ライトビュープロジェクション空間での座標
 };
 /*!
  *@brief	スキン行列を計算。
@@ -113,7 +125,15 @@ PSInput VSMain( VSInputNmTxVcTangent In )
 
 	//ワールド座標をピクセルシェーダに渡す。
 	psInput.worldPos = pos;
-
+	if (isShadowReciever == 1) {
+		float4 p = pos;
+		p = mul(mLightView, p);
+		psInput.posInLVP = mul(mLightProj, p);
+		//ライトビュープロジェクション座標に変換
+		/*for (int i = 0; i < NUM_CASCADES; i++) {
+			psInput.posInLVP[i] = mul(mLightViewProj[i], pos);
+		}*/
+	}
 	pos = mul(mView, pos);
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
@@ -154,6 +174,15 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 	  	//頂点座標にスキン行列を乗算して、頂点をワールド空間に変換。
 		//mulは乗算命令。
 	    pos = mul(skinning, In.Position);
+		if (isShadowReciever == 1) {
+			float4 p = pos;
+			p = mul(mLightView, p);
+			psInput.posInLVP = mul(mLightProj, p);
+			//ライトビュープロジェクション座標に変換
+			/*for (int i = 0; i < NUM_CASCADES; i++) {
+				psInput.posInLVP[i] = mul(mLightViewProj[i], pos);
+			}*/
+		}
 	}
 	
 	psInput.Normal = normalize( mul(skinning, In.Normal) );
@@ -180,7 +209,7 @@ float4 PSMain(PSInput In) : SV_Target0
 	//拡散反射
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
 	float3 lig = 0.0f;
-    for (int i = 0; i < Light_number; i++) {
+    /*for (int i = 0; i < Light_number; i++) {
 		float t = max( dot(In.Normal * -1.0f, directionLight.Direction[i].rgb), 0.0f );
 		if (t < 0.2f) {
 			lig += directionLight.Color[i] * 0.5f;
@@ -205,9 +234,39 @@ float4 PSMain(PSInput In) : SV_Target0
 		//3 スペキュラ反射をライトに追加する。
 		lig += directionLight.Color[0].xyz * pow(specPower, specPow);
 	
-	}
+	}*/
+
+	
 		//4　環境光を当てる。
 	lig += Amblight;
+
+	if (isShadowReciever == 1) {
+		//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。
+		//プロジェクション行列をシャドウマップのUV座標に変換している
+		float2 shadowMapUV = In.posInLVP.xy / In.posInLVP.w;
+		shadowMapUV *= float2(0.5f, -0.5f);
+		shadowMapUV += 0.5f;
+		//spsOut.shadow = shadowMapUV.x;
+		//シャドウマップのUV座標範囲内かどうかを判定する。
+		if (shadowMapUV.x < 1.0f
+			&& shadowMapUV.x > 0.0f
+			&& shadowMapUV.y < 1.0f
+			&& shadowMapUV.y > 0.0f
+			) {
+			///LVP空間での深度値を計算。
+			float zInLVP = In.posInLVP.z / In.posInLVP.w;
+			float zInShadowMap = 1.0f;
+			//シャドウマップに書き込まれている深度値を取得。
+			zInShadowMap = shadowMap.Sample(Sampler, shadowMapUV);
+			if (zInLVP > zInShadowMap + 0.0001f) {
+				//影が落ちているので、光を弱くする
+				lig *= 0.5f;
+			}
+		}
+	}
+
+
+
 	float4 finalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	finalColor.xyz = albedoColor.xyz * lig;
 
@@ -217,3 +276,45 @@ float4 PSMain(PSInput In) : SV_Target0
 //-----------------------------------------------
 // シルエット描画用のピクセルシェーダーのエントリー関数
 //-----------------------------------------------
+
+
+// <summary>
+/// スキン無しシャドウマップ生成用の頂点シェーダー。
+/// </summary>
+PSInput_ShadowMap VSMain_ShadowMap(VSInputNmTxVcTangent In)
+{
+	PSInput_ShadowMap psInput = (PSInput_ShadowMap)0;
+	//ライトプロジェクション行列に変換している
+	float4 pos = mul(mWorld, In.Position);
+	pos = mul(mView, pos);
+	pos = mul(mProj, pos);
+	//pos = mul(mLightView, pos);
+	//pos = mul(mLightProj, pos);
+	psInput.Position = pos;
+	return psInput;
+}
+
+// <summary>
+/// スキンありシャドウマップ生成用の頂点シェーダー。
+/// </summary>
+PSInput_ShadowMap VSMainSkin_ShadowMap(VSInputNmTxWeights In)
+{
+	PSInput_ShadowMap psInput = (PSInput_ShadowMap)0;
+	float4x4 skinning = CalcSkinMatrix(In);
+	float4 pos = mul(skinning, In.Position);
+	pos = mul(mView, pos);
+	pos = mul(mProj, pos);
+	//pos = mul(mLightView, pos);
+	//pos = mul(mLightProj, pos);
+	psInput.Position = pos;
+	return psInput;
+}
+
+/// <summary>
+/// ピクセルシェーダーのエントリ関数。
+/// </summary>
+float4 PSMain_ShadowMap(PSInput_ShadowMap In) : SV_Target0
+{
+	//射影空間でのZ値を返す。
+	return In.Position.z / In.Position.w;
+}

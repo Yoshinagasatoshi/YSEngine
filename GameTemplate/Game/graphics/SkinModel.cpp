@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SkinModel.h"
 #include "SkinModelDataManager.h"
+#include "shadow\ShadowMap.h"
 
 SkinModel::SkinModel()
 {
@@ -118,7 +119,7 @@ void SkinModel::InitDirectionLight()
 	m_light.directionLight.color[3] = { 0.0f,0.0f,0.0f,1.0f };
 
 	m_light.specPow = 10.0f;
-	m_light.AmbLight = { 0.5f,0.5f,0.5f };
+	m_light.AmbLight = { 1.0f,1.0f,1.0f };
 }
 
 void SkinModel::InitAlbedoTexture()
@@ -180,18 +181,47 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
+
+	if (m_isShadowCaster) {
+		g_graphicsEngine->GetShadowMap()->RegistShadowCaster(this);
+	}
 }
-void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
+void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRenderMode)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 
 	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	auto shadowMap = g_graphicsEngine->GetShadowMap();
+
 
 	//定数バッファの内容を更新。
 	SVSConstantBuffer vsCb;
 	vsCb.mWorld = m_worldMatrix;
-	vsCb.mProj = projMatrix;
-	vsCb.mView = viewMatrix;
+	if (enRenderMode == enRenderMode_CreateShadowMap) {
+		vsCb.mView = shadowMap->GetLightViewMatrix();
+		vsCb.mProj = shadowMap->GetLightProjMatrix();
+	}
+	else if(enRenderMode == enRenderMode_Normal){
+		vsCb.mProj = projMatrix;
+		vsCb.mView = viewMatrix;
+	}
+
+	vsCb.mLightView = shadowMap->GetLightViewMatrix();
+	vsCb.mLightProj = shadowMap->GetLightProjMatrix();
+
+	if (m_isShadowReciever) {
+		vsCb.isShadowReciever = 1;
+	}
+	else {
+		vsCb.isShadowReciever = 0;
+	}
+
+	ID3D11ShaderResourceView* srvArray[]{
+		shadowMap->GetShadowMapSRV()
+	};
+	//引数がポインタのポインタ、t2なので引数を2、1にしてる
+	d3dDeviceContext->PSSetShaderResources(2, 1, srvArray);
+
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を更新
 	m_light.eyePos = g_camera3D.GetPosition();
@@ -199,13 +229,19 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	d3dDeviceContext->UpdateSubresource(m_lightCb, 0 ,nullptr,&m_light,0,0);
 	//定数バッファをGPUに転送。
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb);
-	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_lightCb);
+	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb);
+	d3dDeviceContext->PSSetConstantBuffers(1, 1, &m_lightCb);
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//アルベドテクスチャを設定する。
 	//d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
 	//ボーン行列をGPUに転送。
 	m_skeleton.SendBoneMatrixArrayToGPU();
+
+	m_modelDx->UpdateEffects([&](DirectX::IEffect* material) {
+		auto modelMaterial = reinterpret_cast<ModelEffect*>(material);
+		modelMaterial->SetRenderMode(enRenderMode);
+	});
 
 	//描画。
 	m_modelDx->Draw(

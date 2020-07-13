@@ -55,6 +55,9 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{3188c53e-0f61-43ea-9ccd-28a55606518e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\shadow">
+      <UniqueIdentifier>{89716739-f397-487c-b1ed-a2294673ad3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -215,6 +218,9 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="SoundDirector.cpp" />
+    <ClCompile Include="graphics\shadow\ShadowMap.cpp">
+      <Filter>graphics\shadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -389,80 +395,83 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="SoundDirector.h" />
+    <ClInclude Include="graphics\shadow\ShadowMap.h">
+      <Filter>graphics\shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru_Rowpori.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\musou_stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\enemy_busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\protoenemy_busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\result_stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\kunai.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru_taicho.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\bom.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru_kunai.fbx">
-      <Filter>Assets\modelData</Filter>
-    </MeshContentTask>
-  </ItemGroup>
-  <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Title.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Green.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Lose1.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Lose2.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Win1.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Win2.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\new_BUSYO_icon.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
     <ImageContentTask Include="Assets\sprite\fade.png" />
-    <ImageContentTask Include="Assets\sprite\minimap.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Lose.png">
-      <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
     <ImageContentTask Include="Assets\sprite\Win.png" />
-    <ImageContentTask Include="Assets\sprite\Green_ura.png">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\sprite\Win2.png">
       <Filter>Assets\sprite</Filter>
-    </ImageContentTask>
+    </None>
+    <None Include="Assets\sprite\Win1.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\new_BUSYO_icon.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Title.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Lose2.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\minimap.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Lose1.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Lose.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Green_ura.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\sprite\Green.png">
+      <Filter>Assets\sprite</Filter>
+    </None>
+    <None Include="Assets\modelData\unityChan.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\result_stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\protoenemy_busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\musou_stage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\enemy_busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\kunai.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\busyo.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\bom.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\asigaru_taicho.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\asigaru_Rowpori.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\asigaru_kunai.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
+    <None Include="Assets\modelData\asigaru.fbx">
+      <Filter>Assets\modelData</Filter>
+    </None>
   </ItemGroup>
 </Project>

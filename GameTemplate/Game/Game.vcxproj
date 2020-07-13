@@ -123,6 +123,7 @@
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="graphics\Shader.cpp" />
     <ClCompile Include="graphics\ShaderResources.cpp" />
+    <ClCompile Include="graphics\shadow\ShadowMap.cpp" />
     <ClCompile Include="graphics\Skeleton.cpp" />
     <ClCompile Include="graphics\SkinModel.cpp" />
     <ClCompile Include="graphics\SkinModelData.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="graphics\Shader.h" />
     <ClInclude Include="graphics\ShaderResources.h" />
+    <ClInclude Include="graphics\shadow\ShadowMap.h" />
     <ClInclude Include="graphics\Skeleton.h" />
     <ClInclude Include="graphics\SkinModel.h" />
     <ClInclude Include="graphics\SkinModelData.h" />
@@ -234,98 +236,110 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\asigaru_kunai.fbx">
+    <None Include="Assets\modelData\asigaru_kunai.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru_taicho.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\asigaru_taicho.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\bom.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\bom.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\enemy_busyo.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\enemy_busyo.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\kunai.fbx">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\kunai.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\musou_stage.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\musou_stage.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\protoenemy_busyo.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\protoenemy_busyo.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\result_stage.fbx">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\result_stage.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\unityChan.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\unityChan.fbx">
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).cmo</ContentOutput>
       <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Assets\modelData\%(Filename).cmo</ContentOutput>
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\asigaru.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\modelData\asigaru.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\asigaru_Rowpori.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\asigaru_Rowpori.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\busyo.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\busyo.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\stage.fbx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Assets\modelData\stage.fbx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </MeshContentTask>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Title.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\sprite\Title.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Green.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\sprite\Green.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Lose1.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\sprite\Lose1.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Lose2.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Assets\sprite\Lose2.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Win1.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Assets\sprite\Win1.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
-    <ImageContentTask Include="Assets\sprite\Win2.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="Assets\sprite\Win2.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\new_BUSYO_icon.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\sprite\new_BUSYO_icon.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\fade.png">
@@ -333,16 +347,16 @@
     </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\minimap.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    <None Include="Assets\sprite\minimap.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Lose.png">
+    <None Include="Assets\sprite\Lose.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ImageContentTask>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\Win.png">
@@ -351,7 +365,7 @@
     </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\Green_ura.png" />
+    <None Include="Assets\sprite\Green_ura.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

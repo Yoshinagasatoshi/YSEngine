@@ -12,6 +12,7 @@
 #include "GameOver.h"
 #include "Game.h"
 #include "Fade.h"
+#include "graphics\shadow\ShadowMap.h"
 
 const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。ゲームクリアではない
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
@@ -260,6 +261,8 @@ void Player::Update()
 	if (g_pad->IsTrigger(enButtonLeft)) {
 		m_busyoState = BusyoDead;
 	}
+
+	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(m_position + CVector3::One() * 300.0f,m_position);
 }
 
 void Player::Move()

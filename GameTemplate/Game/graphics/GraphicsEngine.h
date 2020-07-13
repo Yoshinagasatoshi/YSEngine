@@ -1,6 +1,20 @@
 #pragma once
 #include "graphics/RenderTarget.h"
 #include "graphics/Sprite.h"
+
+/// <summary>
+ /// レンダリングモード。
+ /// </summary>
+enum EnRenderMode {
+	enRenderMode_Invalid,			//不正なレンダリングモード。
+	enRenderMode_CreateCascadeShadowMap,    //カスケードシャドウマップ生成
+	enRenderMode_CreateShadowMap,	//シャドウマップ生成。
+	enRenderMode_Normal,			//通常レンダリング。
+	enRenderMode_Num,				//レンダリングモードの数。
+};
+
+class ShadowMap;
+
 /*!
  *@brief	グラフィックスエンジン。
  */
@@ -32,6 +46,10 @@ public:
 	{
 		return m_pd3dDeviceContext;
 	}
+	ShadowMap* GetShadowMap()
+	{
+		return m_shadowMap;
+	}
 	/*!
 	 *@brief	描画開始。
 	 */
@@ -45,6 +63,10 @@ public:
 	void Render();
 	void ForwardRender();
 	void PostRender();
+	/// <summary>
+	/// シャドウマップを生成
+	/// </summary>
+	void RenderToShadowMap();
 private:
 	D3D_FEATURE_LEVEL		m_featureLevel;				//Direct3D デバイスのターゲットとなる機能セット。
 	ID3D11Device*			m_pd3dDevice = NULL;		//D3D11デバイス。
@@ -62,6 +84,8 @@ private:
 	ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
 
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
+	CD3D11_VIEWPORT m_viewPort;
+	ShadowMap* m_shadowMap;
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

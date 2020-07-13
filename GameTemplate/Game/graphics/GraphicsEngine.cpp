@@ -2,6 +2,7 @@
 #include "RenderTarget.h"
 #include "GraphicsEngine.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "shadow\ShadowMap.h"
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -143,14 +144,14 @@ void GraphicsEngine::Init(HWND hWnd)
 	//ラスタライザとビューポートを初期化。
 	m_pd3dDevice->CreateRasterizerState(&desc, &m_rasterizerState);
 
-	D3D11_VIEWPORT viewport;
-	viewport.Width = FRAME_BUFFER_W;
-	viewport.Height = FRAME_BUFFER_H;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
+	
+	m_viewPort.Width = FRAME_BUFFER_W;
+	m_viewPort.Height = FRAME_BUFFER_H;
+	m_viewPort.TopLeftX = 0;
+	m_viewPort.TopLeftY = 0;
+	m_viewPort.MinDepth = 0.0f;
+	m_viewPort.MaxDepth = 1.0f;
+	m_pd3dDeviceContext->RSSetViewports(1, &m_viewPort);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
 
 	//メインとなるレンダリングターゲット
@@ -167,6 +168,8 @@ void GraphicsEngine::Init(HWND hWnd)
 		FRAME_BUFFER_W,
 		FRAME_BUFFER_H
 	);
+
+	m_shadowMap = new ShadowMap;
 }
 
 void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
@@ -192,10 +195,37 @@ void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, I
 	}
 }
 
+void GraphicsEngine::RenderToShadowMap()
+{
+	/*//フレームバッファのレンダリングターゲットをバックアップする。
+	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+	d3dDeviceContext->OMGetRenderTargets(
+		1,
+		&m_frameBufferRenderTargetView,
+		&m_frameBufferDepthStencilView
+	);*/
+
+	m_shadowMap->RenderToShadowMap();
+	//m_cascadeShadowMap->Update();
+	//m_cascadeShadowMap->RenderToShadowMap();
+
+
+	float ClearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f }; //red,green,blue,alpha
+												  //描き込み先をバックバッファにする。
+	m_pd3dDeviceContext->OMSetRenderTargets(1, &m_backBuffer, m_depthStencilView);
+	m_pd3dDeviceContext->RSSetViewports(1, &m_viewPort);
+	//バックバッファを灰色で塗りつぶす。
+	m_pd3dDeviceContext->ClearRenderTargetView(m_backBuffer, ClearColor);
+	m_pd3dDeviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+
 void GraphicsEngine::Render()
 {
 	//描画開始。
 	g_graphicsEngine->BegineRender();
+
+	RenderToShadowMap();
 
 	//フレームバッファのレンダリングターゲットをバックアップする。
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();

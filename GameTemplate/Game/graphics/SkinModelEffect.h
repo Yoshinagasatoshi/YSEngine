@@ -19,14 +19,17 @@ protected:
 	std::array<ID3D11ShaderResourceView*, 4> m_albedoTextureStack = { nullptr };
 	int m_albedoTextureStackPos = 0;
 	//レンダーモードは今はつけない
-	//bool m_renderMode = 0;
+	EnRenderMode m_renderMode = enRenderMode_Invalid;	//レンダリングモード。
 	ID3D11DepthStencilState* m_silhouetteDepthStensilState = nullptr;
+
+	Shader m_vsShadowMap;
+	Shader m_psShadowMap;
 public:
 	//改造予定.DirectX3_5
 	ModelEffect()
 	{
 		m_psShader.Load("Assets/shader/model.fx", "PSMain", Shader::EnType::PS);
-		
+		m_psShadowMap.Load("Assets/shader/model.fx", "PSMain_ShadowMap", Shader::EnType::PS);
 		m_pPSShader = &m_psShader;
 	}
 	virtual ~ModelEffect()
@@ -69,7 +72,10 @@ public:
 	{
 		return wcscmp(name, m_materialName.c_str()) == 0;
 	}
-	
+	void SetRenderMode(EnRenderMode renderMode)
+	{
+		m_renderMode = renderMode;
+	}
 };
 /*!
 *@brief
@@ -82,6 +88,9 @@ public:
 		m_vsShader.Load("Assets/shader/model.fx", "VSMain", Shader::EnType::VS);
 		m_pVSShader = &m_vsShader;
 		isSkining = false;
+
+		//スキン無しシャドウマップ
+		m_vsShadowMap.Load("Assets/shader/model.fx", "VSMain_ShadowMap", Shader::EnType::VS);
 	}
 };
 /*!
@@ -98,6 +107,9 @@ public:
 		
 		m_pVSShader = &m_vsShader;
 		isSkining = true;
+
+		//スキンありシャドウマップ
+		m_vsShadowMap.Load("Assets/shader/model.fx", "VSMainSkin_ShadowMap", Shader::EnType::VS);
 	}
 };
 

@@ -55,8 +55,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_physics.Update();
 
 		g_goMgr.Update();
-		g_goMgr.Render();
-		g_goMgr.Draw();
+
+		//g_graphicsEngine->RenderToShadowMap();
+
+		//g_goMgr.Render();
+		//g_goMgr.Draw();
 		//g_goMgr.DrawNoAlphaBlend();
 		g_graphicsEngine->Render();
 		Fade::Getinstance().Update();
