@@ -1,7 +1,7 @@
 #pragma once
 #include "graphics/Sprite.h"
 #include "gameObject/ysGameObject.h"
-//UIクラス。体力とか無双ゲージとかつくるぞ
+//UIクラス。体力バーとかの画像を張るぞ
 class Player;
 class UI : public IGameObject
 {
@@ -16,6 +16,8 @@ public:
 	}
 private:
 	Sprite m_lifeGauge;
+	Sprite m_lifeGaugeura;
+
 	Sprite m_face;
 
 	Sprite m_mapSprite;

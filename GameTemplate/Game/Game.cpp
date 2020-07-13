@@ -10,11 +10,11 @@
 #include "GameData.h"
 #include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "SoundDirector.h"
 #include "Fade.h"
 
 //緊急ではないけれど、ゲームループをするとき少しずつメモリが多くなっていく。
 //何かが消せていない。
-//一番怪しいのはtargetでnullptrにしたenemy。
 //ゲームとして完成してきたらここのバグを直そう。
 
 //倒された数の指標
@@ -42,8 +42,6 @@ Game::Game()
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-
-			//if (enemyCount < 5) {
 				enemyCount++;
 				if (wcscmp(objdata.name, L"asigaru") == 0) {
 					g_goMgr.EnemyCounting();
@@ -56,8 +54,7 @@ Game::Game()
 					//可変長配列に↑のインスタンスを追加
 					return true;
 				}
-			//}
-			//return true;
+
 			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 				//g_goMgr.EnemyCounting();
 				//インスタンスの作成

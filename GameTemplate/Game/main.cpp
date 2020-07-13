@@ -2,7 +2,8 @@
 #include "system/system.h"
 #include "level/Level.h"
 #include "Title.h"
-//#include "gameObject/ysGameObjectManager.h"
+#include "gameObject/ysGameObjectManager.h"
+#include "SoundDirector.h"
 #include "Fade.h"
 
 ///////////////////////////////////////////////////////////////////
@@ -36,6 +37,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	Title* title = g_goMgr.NewGameObject<Title>("Title");
 
+	SoundDirector* Dsound = g_goMgr.NewGameObject<SoundDirector>("SoundDirector");
+
 	CStopwatch sw;
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
@@ -59,6 +62,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		Fade::Getinstance().Update();
 		Fade::Getinstance().PostDraw();
 		
+		Dsound->Update();
+
 		//カメラの更新。
 		g_camera3D.Update();
 		g_camera2D.Update();

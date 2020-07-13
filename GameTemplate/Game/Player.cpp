@@ -8,6 +8,7 @@
 #include "Wepon_ghost.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+#include "SoundDirector.h"
 #include "GameOver.h"
 #include "Game.h"
 #include "Fade.h"
@@ -35,11 +36,9 @@ const float InterpolationTimeL = 0.5f;
 Player::Player()
 {
 	testID = rand();
-	//サウンドはゲームじゃ…
-	//サウンドエンジンを初期化
-	m_soundEngine.Init();
 	//音SE素材
-	//よく考えたらなんでこいつがBGMならしてるんだ…
+	m_sd = &SoundDirector::GetInstans();
+	m_sd->SoundInit();
 	m_bgm.Init(L"Assets/sound/Chanbara.wav");
 	m_bgm.Play(true);
 	//seチェックのために、大分下げる
@@ -81,6 +80,7 @@ Player::Player()
 	m_skelton = &m_playerModel.GetSkeleton();
 	//このコードはボーンの配列を確認するために書いているコード。直接ゲームには関わってない。
 	//とりあえず30個分入る配列を作成
+	//30なのはプレイヤーのボーンの数が30だからです。
 	const wchar_t* bonename[30];
 
 	for (int i = 0; i < 29; i++) {
@@ -114,7 +114,6 @@ Player::Player()
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 
-		//これは解決した気がします。
 		if (!m_se.IsPlaying()) {
 			m_se.Init(L"Assets/sound/swing.wav");
 			m_se.Play(false);
@@ -153,7 +152,6 @@ void Player::Update()
 	if (m_deadFrag) {
 		m_busyoState = BusyoDead;
 	}
-	m_soundEngine.Update();
 	if (m_busyoState != BusyoDead) {
 		//地面ついてる？
 		if (m_characon.IsOnGround()) {
@@ -174,6 +172,8 @@ void Player::Update()
 					m_moveSpeed.y += JumpPower;
 					m_Jumpfrag = true;
 					m_animStep = 0;
+					//攻撃モーション中にジャンプするとプレイヤーが動かなくなる時があったので追加
+					m_underAttack = false;
 				}
 			}
 			m_gravity_keisuu += 0.1f;
@@ -197,8 +197,8 @@ void Player::Update()
 		if (m_damagefrag)
 		{
 			m_damagefrag = false;
-			if (m_PL_HP != 0) {
-				m_PL_HP -= 24;
+			if (m_PL_HP != onebrock) {
+				m_PL_HP -= onebrock;
 			}
 			else {
 				m_deadFrag = true;
