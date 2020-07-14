@@ -221,6 +221,9 @@
     <ClCompile Include="graphics\shadow\ShadowMap.cpp">
       <Filter>graphics\shadow</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\shadow\CascadeShadowMap.cpp">
+      <Filter>graphics\shadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -396,6 +399,9 @@
     </ClInclude>
     <ClInclude Include="SoundDirector.h" />
     <ClInclude Include="graphics\shadow\ShadowMap.h">
+      <Filter>graphics\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shadow\CascadeShadowMap.h">
       <Filter>graphics\shadow</Filter>
     </ClInclude>
   </ItemGroup>

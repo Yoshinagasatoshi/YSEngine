@@ -2,6 +2,7 @@
 
 #include "SkinModelEffect.h"
 #include "Skeleton.h"
+#include "shadow\CascadeShadowMap.h"
 
 /*!
 *@brief	FBXの上方向。
@@ -166,6 +167,8 @@ private:
 		CMatrix mProj;
 		CMatrix mLightView;		//todo ライトビュー行列。
 		CMatrix mLightProj;		//todo ライトプロジェクション行列。
+		CMatrix mLightViewProj[CascadeShadowMap::SHADOWMAP_NUM];	//ライトビュープロジェクション行列
+		CVector4 mFarList[CascadeShadowMap::SHADOWMAP_NUM];
 		int isShadowReciever;	//todo シャドウレシーバーのフラグ。
 		//CMatrix mLightViewProj[CascadeShadowMap::SHADOWMAP_NUM];	//ライトビュープロジェクション行列
 		//CMatrix mLightViewInv[CascadeShadowMap::SHADOWMAP_NUM];		//ライトビューの逆行列

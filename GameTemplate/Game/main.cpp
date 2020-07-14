@@ -67,6 +67,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		Dsound->Update();
 
+		g_goMgr.Delete();
+
 		//カメラの更新。
 		g_camera3D.Update();
 		g_camera2D.Update();

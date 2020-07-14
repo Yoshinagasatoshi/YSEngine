@@ -154,7 +154,21 @@ public:
 	{
 		m_updateProjeMatrixFunc = func;
 	}
-
+	/// <summary>
+	/// 画角を取得。
+	/// </summary>
+	/// <returns>画角。単位ラジアン</returns>
+	float GetViewAngle() const
+	{
+		return m_viewAngle;
+	}
+	/// <summary>
+	/// アスペクト比を取得。
+	/// </summary>
+	float GetAspect() const
+	{
+		return 1280.0f / 720.0f;
+	}
 	//カメラ初期化
 	void InitCamera();
 private:

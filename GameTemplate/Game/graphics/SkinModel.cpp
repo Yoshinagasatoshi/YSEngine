@@ -3,6 +3,7 @@
 #include "SkinModelDataManager.h"
 #include "shadow\ShadowMap.h"
 
+
 SkinModel::SkinModel()
 {
 	
@@ -184,6 +185,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 
 	if (m_isShadowCaster) {
 		g_graphicsEngine->GetShadowMap()->RegistShadowCaster(this);
+		g_graphicsEngine->GetCascadeShadowMap()->RegistShadowCaster(this);
 	}
 }
 void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRenderMode)
@@ -192,19 +194,32 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRend
 
 	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 	auto shadowMap = g_graphicsEngine->GetShadowMap();
-
+	auto cascadeMap = g_graphicsEngine->GetCascadeShadowMap();
 
 	//定数バッファの内容を更新。
 	SVSConstantBuffer vsCb;
 	vsCb.mWorld = m_worldMatrix;
-	if (enRenderMode == enRenderMode_CreateShadowMap) {
+	if (enRenderMode == enRenderMode_Normal) {
+		vsCb.mProj = projMatrix;
+		vsCb.mView = viewMatrix;
+		for (int i = 0; i < CascadeShadowMap::SHADOWMAP_NUM; i++) {
+			vsCb.mLightViewProj[i] = cascadeMap->GetLightViewProjMatrix(i);
+			vsCb.mFarList[i] = { cascadeMap->GetFar(i),0.0f,0.0f,0.0f };
+			ID3D11ShaderResourceView* srvArray[]{
+				cascadeMap->GetRenderTarget(i)->GetRenderTargetSRV()
+			};
+			//引数がポインタのポインタ、t2なので引数を2、1にしてる
+			d3dDeviceContext->PSSetShaderResources(3 + i, 1, srvArray);
+		}
+	}
+	else if (enRenderMode == enRenderMode_CreateCascadeShadowMap) {
+		vsCb.mLightViewProj[0] = cascadeMap->GetLightViewProjMatrix();
+	}
+	else if (enRenderMode == enRenderMode_CreateShadowMap) {
 		vsCb.mView = shadowMap->GetLightViewMatrix();
 		vsCb.mProj = shadowMap->GetLightProjMatrix();
 	}
-	else if(enRenderMode == enRenderMode_Normal){
-		vsCb.mProj = projMatrix;
-		vsCb.mView = viewMatrix;
-	}
+
 
 	vsCb.mLightView = shadowMap->GetLightViewMatrix();
 	vsCb.mLightProj = shadowMap->GetLightProjMatrix();

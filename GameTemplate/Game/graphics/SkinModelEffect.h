@@ -24,6 +24,9 @@ protected:
 
 	Shader m_vsShadowMap;
 	Shader m_psShadowMap;
+
+	Shader m_vsCascadeShadowMap;			//カスケードシャドウマップ生成用の頂点シェーダー
+
 public:
 	//改造予定.DirectX3_5
 	ModelEffect()
@@ -91,6 +94,7 @@ public:
 
 		//スキン無しシャドウマップ
 		m_vsShadowMap.Load("Assets/shader/model.fx", "VSMain_ShadowMap", Shader::EnType::VS);
+		m_vsCascadeShadowMap.Load("Assets/shader/model.fx", "VSMain_CascadeShadowMap", Shader::EnType::VS);
 	}
 };
 /*!
@@ -110,6 +114,7 @@ public:
 
 		//スキンありシャドウマップ
 		m_vsShadowMap.Load("Assets/shader/model.fx", "VSMainSkin_ShadowMap", Shader::EnType::VS);
+		m_vsCascadeShadowMap.Load("Assets/shader/model.fx", "VSMainSkin_CascadeShadowMap", Shader::EnType::VS);
 	}
 };
 

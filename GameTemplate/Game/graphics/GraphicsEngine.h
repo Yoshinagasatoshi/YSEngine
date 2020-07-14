@@ -14,6 +14,7 @@ enum EnRenderMode {
 };
 
 class ShadowMap;
+class CascadeShadowMap;
 
 /*!
  *@brief	グラフィックスエンジン。
@@ -46,9 +47,21 @@ public:
 	{
 		return m_pd3dDeviceContext;
 	}
+	/// <summary>
+	/// シャドウマップを取得
+	/// </summary>
+	/// <returns></returns>
 	ShadowMap* GetShadowMap()
 	{
 		return m_shadowMap;
+	}
+	/// <summary>
+	/// カスケードシャドウマップを取得
+	/// </summary>
+	/// <returns></returns>
+	CascadeShadowMap* GetCascadeShadowMap()
+	{
+		return m_cascadeShadowMap;
 	}
 	/*!
 	 *@brief	描画開始。
@@ -85,7 +98,8 @@ private:
 
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 	CD3D11_VIEWPORT m_viewPort;
-	ShadowMap* m_shadowMap;
+	ShadowMap* m_shadowMap = nullptr;
+	CascadeShadowMap* m_cascadeShadowMap = nullptr;
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

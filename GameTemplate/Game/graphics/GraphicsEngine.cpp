@@ -3,6 +3,7 @@
 #include "GraphicsEngine.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "shadow\ShadowMap.h"
+#include "shadow\CascadeShadowMap.h"
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -170,6 +171,7 @@ void GraphicsEngine::Init(HWND hWnd)
 	);
 
 	m_shadowMap = new ShadowMap;
+	m_cascadeShadowMap = new CascadeShadowMap;
 }
 
 void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
@@ -205,9 +207,9 @@ void GraphicsEngine::RenderToShadowMap()
 		&m_frameBufferDepthStencilView
 	);*/
 
-	m_shadowMap->RenderToShadowMap();
-	//m_cascadeShadowMap->Update();
-	//m_cascadeShadowMap->RenderToShadowMap();
+	//m_shadowMap->RenderToShadowMap();
+	m_cascadeShadowMap->Update();
+	m_cascadeShadowMap->RenderToShadowMap();
 
 
 	float ClearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f }; //red,green,blue,alpha
