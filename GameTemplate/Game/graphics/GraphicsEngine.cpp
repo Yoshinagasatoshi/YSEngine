@@ -4,6 +4,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "shadow\ShadowMap.h"
 #include "shadow\CascadeShadowMap.h"
+#include "postEffect\PostEffect.h"
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -172,6 +173,18 @@ void GraphicsEngine::Init(HWND hWnd)
 
 	m_shadowMap = new ShadowMap;
 	m_cascadeShadowMap = new CascadeShadowMap;
+	m_postEffect = new PostEffect;
+	m_postEffect->InitFullScreenQuadPrimitive();
+}
+
+void GraphicsEngine::ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
+{
+	ChangeRenderTarget(
+		m_pd3dDeviceContext,
+		renderTarget->GetRenderTargetView(),
+		renderTarget->GetDepthStensilView(),
+		viewport
+	);
 }
 
 void GraphicsEngine::ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)
@@ -277,6 +290,8 @@ void GraphicsEngine::ForwardRender()
 
 void GraphicsEngine::PostRender()
 {
+	m_postEffect->Draw();
+
 	//レンダリングターゲットをフレームバッファに戻す。
 	auto d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
 
@@ -288,6 +303,8 @@ void GraphicsEngine::PostRender()
 	);
 	//ドロー
 	m_copyMainRtToFrameBufferSprite.DrawNoAlphaBlend();
+
+	g_goMgr.PostDraw();
 
 	m_frameBufferRenderTargetView->Release();
 	m_frameBufferDepthStencilView->Release();

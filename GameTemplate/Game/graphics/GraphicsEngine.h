@@ -15,6 +15,7 @@ enum EnRenderMode {
 
 class ShadowMap;
 class CascadeShadowMap;
+class PostEffect;
 
 /*!
  *@brief	グラフィックスエンジン。
@@ -63,6 +64,10 @@ public:
 	{
 		return m_cascadeShadowMap;
 	}
+	RenderTarget* GetMainRenderTarget()
+	{
+		return &m_renderTarget;
+	}
 	/*!
 	 *@brief	描画開始。
 	 */
@@ -73,6 +78,7 @@ public:
 	void EndRender();
 	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
 	void ChangeRenderTarget(ID3D11DeviceContext* d3dDeviceContext, ID3D11RenderTargetView* renderTarget, ID3D11DepthStencilView* depthStensil, D3D11_VIEWPORT* viewport);
+	void ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport);
 	void Render();
 	void ForwardRender();
 	void PostRender();
@@ -100,6 +106,7 @@ private:
 	CD3D11_VIEWPORT m_viewPort;
 	ShadowMap* m_shadowMap = nullptr;
 	CascadeShadowMap* m_cascadeShadowMap = nullptr;
+	PostEffect* m_postEffect = nullptr;
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

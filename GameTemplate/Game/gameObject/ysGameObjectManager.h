@@ -161,6 +161,12 @@
 		//2d‚à’Ç‰Á
 		void Render();
 		void Delete();
+		void PostDraw()
+		{
+			for (auto go : IGameObjectList) {
+				go->PostDraw();
+			}
+		}
 		//”z—ñ”‚ğæ‚è‚½‚¢‚ª‚½‚ß‚É‚µ‚½‚¯‚Ç•s•ÖA
 		std::list<IGameObject*> GetIGameObjectList()
 		{

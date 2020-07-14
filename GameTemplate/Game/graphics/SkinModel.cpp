@@ -107,17 +107,17 @@ void SkinModel::InitSamplerState()
 void SkinModel::InitDirectionLight()
 {
 	//とりあえず４本ディレクションライトを初期化
-	m_light.directionLight.direction[0] = { 1.0f,0.0f,0.0f,0.0f };
-	m_light.directionLight.color[0] = { 0.5f,0.5f,0.5f,1.0f };
+	m_light.directionLight.direction[0] = { 0.577f, -0.577f, 0.577f, 0.0f };
+	m_light.directionLight.color[0] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
-	m_light.directionLight.direction[1] = { 0.0f,0.707f,0.707f,0.0f };
-	m_light.directionLight.color[1] = { 0.5f,0.5f,0.5f,1.0f };
+	m_light.directionLight.direction[1] = { -0.707f, -0.707f, 0.0f, 0.0f };
+	m_light.directionLight.color[1] = { 0.3f, 0.3f, 0.3f, 1.0f };
 
-	m_light.directionLight.direction[2] = { 0.0f,0.707f,0.707f,0.0f };
-	m_light.directionLight.color[2] = { 0.0f,0.0f,0.0f,1.0f };
+	m_light.directionLight.direction[2] = { 0.0f, -0.707f, -0.707f, 0.0f };
+	m_light.directionLight.color[2] = { 0.3f, 0.3f, 0.3f, 1.0f };
 
-	m_light.directionLight.direction[3] = { 0.0f,0.707f,-0.707f,0.0f };
-	m_light.directionLight.color[3] = { 0.0f,0.0f,0.0f,1.0f };
+	m_light.directionLight.direction[3] = { 1.0f, 0.0f, -1.0f, 0.0f };
+	m_light.directionLight.color[3] = { 0.3f, 0.3f, 0.3f, 1.0f };
 
 	m_light.specPow = 10.0f;
 	m_light.AmbLight = { 0.8f,0.8f,0.8f };

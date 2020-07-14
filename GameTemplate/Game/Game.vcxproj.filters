@@ -58,6 +58,9 @@
     <Filter Include="graphics\shadow">
       <UniqueIdentifier>{89716739-f397-487c-b1ed-a2294673ad3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\postEffect">
+      <UniqueIdentifier>{4d4113a4-7419-486e-b7bd-a9d9d537793f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\Vector.cpp">
@@ -223,6 +226,15 @@
     </ClCompile>
     <ClCompile Include="graphics\shadow\CascadeShadowMap.cpp">
       <Filter>graphics\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\postEffect\Bloom.cpp">
+      <Filter>graphics\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\postEffect\GaussianBlur.cpp">
+      <Filter>graphics\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\postEffect\PostEffect.cpp">
+      <Filter>graphics\postEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +415,15 @@
     </ClInclude>
     <ClInclude Include="graphics\shadow\CascadeShadowMap.h">
       <Filter>graphics\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\postEffect\Bloom.h">
+      <Filter>graphics\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\postEffect\GaussianBlur.h">
+      <Filter>graphics\postEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\postEffect\PostEffect.h">
+      <Filter>graphics\postEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

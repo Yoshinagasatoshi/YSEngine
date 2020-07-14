@@ -53,6 +53,7 @@ ysGameObjectManager::EffectTool g_Effect;
 		for (auto go : IGameObjectList) {
 			go->Update();
 		}
+
 	}
 
 	void ysGameObjectManager::Draw()
@@ -60,9 +61,7 @@ ysGameObjectManager::EffectTool g_Effect;
 		for (auto go : IGameObjectList) {
 			go->Draw();
 		}
-		for (auto go : IGameObjectList) {
-			go->PostDraw();
-		}
+		
 	}
 
 	//void ysGameObjectManager::DrawNoAlphaBlend()

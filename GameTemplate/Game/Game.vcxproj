@@ -120,6 +120,9 @@
     <ClCompile Include="graphics\animation\AnimationPlayController.cpp" />
     <ClCompile Include="graphics\Camera.cpp" />
     <ClCompile Include="graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="graphics\postEffect\Bloom.cpp" />
+    <ClCompile Include="graphics\postEffect\GaussianBlur.cpp" />
+    <ClCompile Include="graphics\postEffect\PostEffect.cpp" />
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="graphics\Shader.cpp" />
     <ClCompile Include="graphics\ShaderResources.cpp" />
@@ -189,6 +192,9 @@
     <ClInclude Include="graphics\animation\AnimationPlayController.h" />
     <ClInclude Include="graphics\Camera.h" />
     <ClInclude Include="graphics\GraphicsEngine.h" />
+    <ClInclude Include="graphics\postEffect\Bloom.h" />
+    <ClInclude Include="graphics\postEffect\GaussianBlur.h" />
+    <ClInclude Include="graphics\postEffect\PostEffect.h" />
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="graphics\Shader.h" />
     <ClInclude Include="graphics\ShaderResources.h" />
