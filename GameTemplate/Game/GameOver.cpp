@@ -3,6 +3,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Title.h"
 #include "Fade.h"
+#include "SoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 GameOver::GameOver()
@@ -12,6 +13,8 @@ GameOver::GameOver()
 	m_bgm.Init(L"Assets/sound/GameOver.wav");
 	m_bgm.Play(true);
 	m_bgm.SetVolume(0.2f);
+	//SoundDirector::GetInstans().SoundInit();
+	//SoundDirector::GetInstans().GameOverBGM();
 
 	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
 	m_skinModelStage.Init(L"Assets/modelData/result_stage.cmo");

@@ -5,8 +5,9 @@
 #include "GameClear.h"
 #include "Game.h"
 #include "Fade.h"
+#include "SoundDirector.h"
 const float power = 250.0f;
-const float InitHP = 25;
+const float InitHP = 3;
 Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
@@ -105,6 +106,8 @@ void Enemy_Busyo::Update()
 	/// デバック用コマンド。後で消す。
 	/// </summary>
 	if (g_pad->IsTrigger(enButtonRight)) {
+		//ゲームオーバー
+		SoundDirector::GetInstans().UpdateOff();
 		//三人倒せばokという状態にしたい。今はゲームループのため仮実装
 		g_goMgr.NewGameObject<GameClear>("GameClear");
 		//消せてねえ？
@@ -300,6 +303,7 @@ void Enemy_Busyo::ThisDelete()
 			}
 			if (!Fade::Getinstance().IsFade()) {
 				g_goMgr.ResetCount();
+				SoundDirector::GetInstans().UpdateOff();
 				//倒せばokという状態に
 				g_goMgr.NewGameObject<GameClear>("GameClear");
 				//消せてねえ？

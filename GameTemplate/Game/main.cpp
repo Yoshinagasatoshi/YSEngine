@@ -35,9 +35,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//タイトル
 	Fade::Getinstance();
 
-	Title* title = g_goMgr.NewGameObject<Title>("Title");
+	g_goMgr.NewGameObject<Title>("Title");
 
-	SoundDirector* Dsound = g_goMgr.NewGameObject<SoundDirector>("SoundDirector");
+	SoundDirector::GetInstans();
+	SoundDirector::GetInstans().UpdateOn();
 
 	CStopwatch sw;
 	//ゲームループ。
@@ -58,14 +59,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		//g_graphicsEngine->RenderToShadowMap();
 
+		bool UpdateMode = SoundDirector::GetInstans().GetisUpdateMode();
+		if (UpdateMode) {
+			SoundDirector::GetInstans().Update();
+		}
+
 		//g_goMgr.Render();
 		//g_goMgr.Draw();
 		//g_goMgr.DrawNoAlphaBlend();
 		g_graphicsEngine->Render();
 		Fade::Getinstance().Update();
 		Fade::Getinstance().PostDraw();
-		
-		Dsound->Update();
+	
 
 		g_goMgr.Delete();
 

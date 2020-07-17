@@ -3,8 +3,9 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Title.h"
 #include "Fade.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
+//#include "sound/SoundEngine.h"
+//#include "sound/SoundSource.h"
+#include "SoundDirector.h"
 const float Spritewid = 320.0f;
 GameClear::GameClear()
 {
@@ -14,10 +15,11 @@ GameClear::GameClear()
 	m_bgm.Play(true);
 	m_bgm.SetVolume(0.5f);
 
+	//SoundDirector::GetInstans().TitleBGM();
+
 	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
 	m_skinModelStage.Init(L"Assets/modelData/result_stage.cmo");
 
-	//ゲームオーバーはゲームオーバーの処理だけ書くべき、本来は美しくない。
 	m_animClip[anim_Win].Load(L"Assets/animData/busyo_katidoki.tka");
 	m_animClip[anim_Win].SetLoopFlag(false);
 
@@ -68,6 +70,7 @@ void GameClear::Update()
 
 void GameClear::Draw()
 {
+	//ステージクリア用のモデル2つだけを映している
 	m_skinModel.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()

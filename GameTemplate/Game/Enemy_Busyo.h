@@ -73,7 +73,7 @@ private:
 	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
 
-	int m_HP = 15;					//仮体力
+	int m_HP = 0;					//仮体力
 	int m_gacha = -1;				//攻撃方法の抽選をする変数。最初だけ-1
 };
 

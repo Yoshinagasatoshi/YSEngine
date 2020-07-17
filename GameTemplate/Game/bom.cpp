@@ -2,7 +2,7 @@
 #include "bom.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "Fade.h"
-
+#include "SoundDirector.h"
 const float B_radius = 30.0f;			//ゴーストの当たり判定の大きさ用
 const float BOM_GRAVITY_ACC = -1000.0f;	//爆弾の重力加速度。
 const float BOM_VELOCITY_HORIZON = 200;	//爆弾の水平方向の移動速度。
@@ -33,6 +33,7 @@ void bom::Update()
 			//se->Init(L"Assets/sound/fuse.wav");
 			//se->Play(false);
 			//se->SetVolume(0.1f);
+			SoundDirector::GetInstans().RingSE_Fuse();
 		}
 		/// <summary>
 		/// プレイヤーアクセスクラスを通して伝令
@@ -134,6 +135,7 @@ void bom::HitThebom()
 		{
 			m_player->PlayerDamage();
 
+			SoundDirector::GetInstans().RingSE_Destruct();
 			//CSoundSource* se = new CSoundSource;
 			//se->Init(L"Assets/sound/destruction.wav");
 			//se->Play(false);

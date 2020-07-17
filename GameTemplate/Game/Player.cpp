@@ -37,13 +37,12 @@ const float InterpolationTimeL = 0.5f;
 Player::Player()
 {
 	testID = rand();
-	//音SE素材
-	m_sd = &SoundDirector::GetInstans();
-	m_sd->SoundInit();
-	m_bgm.Init(L"Assets/sound/Chanbara.wav");
-	m_bgm.Play(true);
-	//seチェックのために、大分下げる
-	m_bgm.SetVolume(1.0f);
+
+
+	//m_bgm.Init(L"Assets/sound/Chanbara.wav");
+	//m_bgm.Play(true);
+	////seチェックのために、大分下げる
+	//m_bgm.SetVolume(1.0f);
 	CharaconInit();
 	m_pl_target = g_goMgr.NewGameObject<Player_target>("PLT");
 	m_pl_target->SetPlayerInfo(this);
@@ -115,18 +114,21 @@ Player::Player()
 		m_pl_Wepon->SetPlayerInfo(this);
 		m_pl_Wepon->GhostInit();
 
-		if (!m_se.IsPlaying()) {
-			m_se.Init(L"Assets/sound/swing.wav");
-			m_se.Play(false);
-			m_se.SetVolume(3.0f);//試しにでかくしている。後で調整
-		}
-		else {
-			if (!m_se2.IsPlaying()) {
-				m_se2.Init(L"Assets/sound/swing.wav");
-				m_se2.Play(false);
-				m_se2.SetVolume(3.0f);//試しにでかくしている。後で調整
-			}
-		}
+		//一行でよくなった
+		SoundDirector::GetInstans().RingSE_Swing();
+
+		//if (!m_se.IsPlaying()) {
+		//	m_se.Init(L"Assets/sound/swing.wav");
+		//	m_se.Play(false);
+		//	m_se.SetVolume(3.0f);//試しにでかくしている。後で調整
+		//}
+		//else {
+		//	if (!m_se2.IsPlaying()) {
+		//		m_se2.Init(L"Assets/sound/swing.wav");
+		//		m_se2.Play(false);
+		//		m_se2.SetVolume(3.0f);//試しにでかくしている。後で調整
+		//	}
+		//}
 	}
 	);
 
@@ -202,6 +204,7 @@ void Player::Update()
 				m_PL_HP -= onebrock;
 			}
 			else {
+				m_PL_HP = 0;
 				m_deadFrag = true;
 			}
 			m_animState = animClip_SmallDamage;
@@ -250,6 +253,7 @@ void Player::Update()
 		}
 		if (!Fade::Getinstance().IsFade()) {
 			m_isDestroyed = true;
+			SoundDirector::GetInstans().UpdateOff();
 			g_goMgr.NewGameObject<GameOver>("GameOver");
 			m_game->GameDelete();
 		}

@@ -23,6 +23,9 @@
 Game::Game()
 {
 	g_goMgr.ResetCount();
+	//âπSEëfçﬁ
+	SoundDirector::GetInstans().SoundInit();
+	SoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
 	//ÉvÉåÉCÉÑÅ[
 	m_player = g_goMgr.NewGameObject<Player>("Player");

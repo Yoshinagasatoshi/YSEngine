@@ -3,7 +3,6 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
 #include "SoundDirector.h"
-#include "SoundDirector.h"
 #include "Wepon_ghost.h"
 #include "GameCamera.h"
 #include "math/Matrix.h"
@@ -132,8 +131,8 @@ void Enemy_asigaru::Update()
 
 		//音をロード。1回だけ鳴らす。
 		if (m_Deathtimer_f <= fastTime) {
-			//引数のDはdownのD
-			RingorStockSE('D');
+			//downの音
+			m_sd->RingSE_Down();
 		}
 		m_Deathtimer_f++;
 
@@ -169,7 +168,9 @@ void Enemy_asigaru::Update()
 			//enemy用にも
 			ThisDeath();
 			//音を鳴らす関数
-			RingorStockSE('S');
+			//BGM流せって言っているのに倒れる音がする
+			m_sd->RingSE_Slash();
+			//RingorStockSE('S');
 			//エフェクトも出す。
 			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 				g_Effect.m_sampleEffect,

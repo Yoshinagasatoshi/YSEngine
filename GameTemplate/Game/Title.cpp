@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Fade.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "SoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 Title::Title()
@@ -12,6 +13,9 @@ Title::Title()
 	m_bgm.Init(L"Assets/sound/Hokora.wav");
 	m_bgm.Play(true);
 	m_bgm.SetVolume(0.5f);
+
+	//SoundDirector::GetInstans().SoundInit();
+	//SoundDirector::GetInstans().TitleBGM();
 	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);
 	//
@@ -41,7 +45,8 @@ void Title::Update()
 		Fade::Getinstance().StartFadeIn();
 		if (!Fade::Getinstance().IsFade()) {
 			m_bgm.Stop();
-			Game* game = g_goMgr.NewGameObject<Game>("Game");
+			SoundDirector::GetInstans().UpdateOn();
+			/*Game* game = */g_goMgr.NewGameObject<Game>("Game");
 			g_goMgr.DeleteGOObject(this);
 		}
 	}

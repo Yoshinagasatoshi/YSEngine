@@ -24,15 +24,15 @@ class Player : public IGameObject
 public:
 	Player();
 	~Player();
-	//毎回の更新処理
+	//更新処理
 	void Update();
-	//毎度の描画処理
+	//描画処理
 	void Draw();
-	//恒例の移動処理
+	//移動処理
 	void Move();
-	//常設の回転処理
+	//回転処理
 	void Turn();
-	//最後の出力処理
+	//出力処理
 	void Execute();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
@@ -136,7 +136,7 @@ private:
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 480;									//今の体力
+	int m_PL_HP = 24;									//今の体力 24 デバック用の数字です
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る
