@@ -11,7 +11,7 @@
 /// </summary>
 class GameData;
 class Wepon_ghost;
-class SoundDirector;
+class InGameSoundDirector;
 class Enemy_asigaru : public Enemy
 {
 public:
@@ -144,8 +144,9 @@ private:
 	int m_seStockCount = 0;
 	//ñ¬ÇÁÇµÇƒÇ¢ÇÈÇÃÇ©Ç¢ÅH
 	bool isRingSE = false;
-	SoundDirector* m_sd = nullptr;
+	InGameSoundDirector* m_sd = nullptr;
 	float timer = 10.0f;
+	bool m_isFirstUpdate = true;
 
 }; 
 

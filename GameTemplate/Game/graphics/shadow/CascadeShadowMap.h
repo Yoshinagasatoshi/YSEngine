@@ -124,7 +124,7 @@ public:
 	{
 		return m_lightViewMatrixInv[number];
 	}
-	static const int SHADOWMAP_NUM = 4;
+	static const int SHADOWMAP_NUM = 3;
 private:
 	CVector3 m_lightCameraPosition = CVector3(300.0f, 300.0f, -300.0f);		//ライトカメラの座標	
 	CVector3 m_lightCamerataraget = CVector3(0.0f, 0.0f, 0.0f);		//ライトカメラの注視点
@@ -136,7 +136,7 @@ private:
 	CVector3 m_lightDir = CVector3(0.6396f,-0.6396f,0.4264f);
 	float m_lightHeight = 2000.0f;
 	int m_shadowMapNumber = 0;
-	float m_farList[SHADOWMAP_NUM] = {1.0f,1.0f,1.0f,1.0f};
+	float m_farList[SHADOWMAP_NUM] = {1.0f,1.0f,1.0f/*,1.0f*/};
 	CMatrix m_lightViewMatrixInv[SHADOWMAP_NUM];
 };
 

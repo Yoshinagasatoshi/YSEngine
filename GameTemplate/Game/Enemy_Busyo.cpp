@@ -4,8 +4,9 @@
 #include "Enemy_Busyo.h"
 #include "GameClear.h"
 #include "Game.h"
+#include "InGameSoundDirector.h"
 #include "Fade.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 const float power = 250.0f;
 const float InitHP = 3;
 Enemy_Busyo::Enemy_Busyo()
@@ -107,7 +108,7 @@ void Enemy_Busyo::Update()
 	/// </summary>
 	if (g_pad->IsTrigger(enButtonRight)) {
 		//ゲームオーバー
-		SoundDirector::GetInstans().UpdateOff();
+		InGameSoundDirector::GetInstans().UpdateOff();
 		//三人倒せばokという状態にしたい。今はゲームループのため仮実装
 		g_goMgr.NewGameObject<GameClear>("GameClear");
 		//消せてねえ？
@@ -187,6 +188,7 @@ void Enemy_Busyo::AttackMove()
 			m_enemy_BusyoAnime.Play(ATK, 0.2f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
+				InGameSoundDirector::GetInstans().RingSE_Slash();
 				m_frameTimer = 0;
 				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
 				m_isFight = false;
@@ -196,12 +198,14 @@ void Enemy_Busyo::AttackMove()
 			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.2f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
+				InGameSoundDirector::GetInstans().RingSE_Slash();
 				m_frameTimer = 0;
 				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
 				m_isFight = false;
 			}
 			break;
 		case 2:
+			InGameSoundDirector::GetInstans().RingSE_Slash();
 			m_enemy_BusyoAnime.Play(FIGHTING_LONG, 0.2f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
@@ -288,6 +292,7 @@ void Enemy_Busyo::ThisDelete()
 {
 	//体力はまだ残っているかどうか
 	if (m_HP != 0) {
+		InGameSoundDirector::GetInstans().RingSE_Slash();
 		m_HP--;
 		m_enemy_BusyoAnime.Play(DAMAGE, 0.2f);
 		m_isDeadfrag = false;
@@ -296,6 +301,11 @@ void Enemy_Busyo::ThisDelete()
 	else {
 		//enemy用にも
 		ThisDeath();
+		//プレイヤーに無敵をつける。
+		//プレイヤーがこいつを倒した後に死ぬと
+		//ゲームクリアとゲームオーバーが一緒に出てしまうため。
+		m_player->SetPlayerMuTeki();
+
 		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
 		if (!m_isDestroyed && !m_enemy_BusyoAnime.IsPlaying()) {
 			{
@@ -303,7 +313,7 @@ void Enemy_Busyo::ThisDelete()
 			}
 			if (!Fade::Getinstance().IsFade()) {
 				g_goMgr.ResetCount();
-				SoundDirector::GetInstans().UpdateOff();
+				InGameSoundDirector::GetInstans().UpdateOff();
 				//倒せばokという状態に
 				g_goMgr.NewGameObject<GameClear>("GameClear");
 				//消せてねえ？

@@ -8,7 +8,7 @@
 #include "Wepon_ghost.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "GameOver.h"
 #include "Game.h"
 #include "Fade.h"
@@ -37,7 +37,8 @@ const float InterpolationTimeL = 0.5f;
 Player::Player()
 {
 	testID = rand();
-
+	//ñ≥ìGèÛë‘Çâèú
+	m_muteki = false;
 
 	//m_bgm.Init(L"Assets/sound/Chanbara.wav");
 	//m_bgm.Play(true);
@@ -115,7 +116,7 @@ Player::Player()
 		m_pl_Wepon->GhostInit();
 
 		//àÍçsÇ≈ÇÊÇ≠Ç»Ç¡ÇΩ
-		SoundDirector::GetInstans().RingSE_Swing();
+		InGameSoundDirector::GetInstans().RingSE_Swing();
 
 		//if (!m_se.IsPlaying()) {
 		//	m_se.Init(L"Assets/sound/swing.wav");
@@ -199,13 +200,15 @@ void Player::Update()
 		//Ç±Ç±ÇÁï”ÇÃèàóùÇ≈ÇÕÇŸÇ©Ç…ä÷êîÇégÇ¡ÇΩï˚Ç™Ç¢Ç¢Ç©Ç‡
 		if (m_damagefrag)
 		{
-			m_damagefrag = false;
-			if (m_PL_HP != onebrock) {
-				m_PL_HP -= onebrock;
-			}
-			else {
-				m_PL_HP = 0;
-				m_deadFrag = true;
+			if (!m_muteki) {
+				m_damagefrag = false;
+				if (m_PL_HP != onebrock) {
+					m_PL_HP -= onebrock;
+				}
+				else {
+					m_PL_HP = 0;
+					m_deadFrag = true;
+				}
 			}
 			m_animState = animClip_SmallDamage;
 			m_busyoAnime.Play(animClip_SmallDamage,InterpolationTimeL);
@@ -253,7 +256,7 @@ void Player::Update()
 		}
 		if (!Fade::Getinstance().IsFade()) {
 			m_isDestroyed = true;
-			SoundDirector::GetInstans().UpdateOff();
+			InGameSoundDirector::GetInstans().UpdateOff();
 			g_goMgr.NewGameObject<GameOver>("GameOver");
 			m_game->GameDelete();
 		}
@@ -408,7 +411,7 @@ void Player::XAttackMove()
 	if (g_pad->IsTrigger(enButtonY)&&!m_underAttack) {
 		m_busyoState = BusyoAttack;
 		m_busyoAnime.Play(animClip_XATK, interTime);
-		m_blowOffPower = standardPower * 1.7f;
+		m_blowOffPower = standardPower * 3.4f;
 		m_underAttack = true;
 		m_XTrigger = true;
 	}

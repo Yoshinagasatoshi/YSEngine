@@ -10,7 +10,7 @@
 #include "GameData.h"
 #include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "Fade.h"
 
 //緊急ではないけれど、ゲームループをするとき少しずつメモリが多くなっていく。
@@ -24,8 +24,8 @@ Game::Game()
 {
 	g_goMgr.ResetCount();
 	//音SE素材
-	SoundDirector::GetInstans().SoundInit();
-	SoundDirector::GetInstans().InGameStartUpBGM();
+	InGameSoundDirector::GetInstans().SoundInit();
+	InGameSoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
 	//プレイヤー
 	m_player = g_goMgr.NewGameObject<Player>("Player");
@@ -45,7 +45,7 @@ Game::Game()
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-				enemyCount++;
+			enemyCount++;
 				if (wcscmp(objdata.name, L"asigaru") == 0) {
 					g_goMgr.EnemyCounting();
 					//インスタンスの作成
@@ -56,8 +56,7 @@ Game::Game()
 					m_enemy->SetGameCameraInfo(m_gameCamera);
 					//可変長配列に↑のインスタンスを追加
 					return true;
-				}
-
+			}
 			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 				//g_goMgr.EnemyCounting();
 				//インスタンスの作成

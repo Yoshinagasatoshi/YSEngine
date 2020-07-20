@@ -50,15 +50,24 @@ ysGameObjectManager::EffectTool g_Effect;
 
 	void ysGameObjectManager::Update()
 	{
-		for (auto go : IGameObjectList) {
+		for (auto& go : IGameObjectList) {
 			go->Update();
 		}
+
+		Effekseer::Matrix44 efCameraMat;
+		g_camera3D.GetViewMatrix().CopyTo(efCameraMat);
+		Effekseer::Matrix44 efProjMat;
+		g_camera3D.GetProjectionMatrix().CopyTo(efProjMat);
+		//カメラ行列とプロジェクション行列を設定。
+		g_Effect.m_effekseerRenderer->SetCameraMatrix(efCameraMat);
+		g_Effect.m_effekseerRenderer->SetProjectionMatrix(efProjMat);
+		g_Effect.m_effekseerManager->Update();
 
 	}
 
 	void ysGameObjectManager::Draw()
 	{
-		for (auto go : IGameObjectList) {
+		for (auto& go : IGameObjectList) {
 			go->Draw();
 		}
 		

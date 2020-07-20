@@ -2,7 +2,7 @@
 #include "Enemy_asigaru.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "GameData.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "Wepon_ghost.h"
 #include "GameCamera.h"
 #include "math/Matrix.h"
@@ -13,7 +13,7 @@ const float DeleteTime = 10.0f;
 const float drawNearSpeed = 110.0f;
 const float ViewLenght = 0.25f;						//視野角範囲
 const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
-const int	MAX_RING_SE = 1;						//seを鳴らす上限数			
+const int MAX_RING_SE = 1;
 
 /// <summary>
 /// boid
@@ -24,7 +24,7 @@ Enemy_asigaru::Enemy_asigaru()
 {
 	gamedata = &GameData::GetInstans();
 	m_scale = CVector3::One();
-	m_sd = &SoundDirector::GetInstans();
+	m_sd = &InGameSoundDirector::GetInstans();
 	//m_sd = g_goMgr.NewGameObject<SoundDirector>("SoundDirector");
 
 	//asigaruのモデルをロードする。
@@ -100,6 +100,16 @@ void Enemy_asigaru::CharaconInit()
 
 void Enemy_asigaru::Update()
 {
+	if (!m_isFirstUpdate) {
+		//最初のアップデートではない。
+		//カメラとの距離を計算する。
+		CVector3 toCamera = m_position - g_camera3D.GetPosition();
+		if (toCamera.LengthSq() > 4000.0f * 4000.0f) {
+			return;
+		}
+	}
+	m_isFirstUpdate = false;
+	
 	if (isRingSE) {
 		timer -= 60.0f * GameTime().GetFrameDeltaTime();
 		//タイマーが0未満になるとリセット。音が出せるようになる
@@ -190,22 +200,21 @@ void Enemy_asigaru::Update()
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	m_model_Row.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	
 	//Effekseerカメラ行列を設定。
 	//まずはEffeseerの行列型の変数に、カメラ行列とプロジェクション行列をコピー。
-	Effekseer::Matrix44 efCameraMat;
-	g_camera3D.GetViewMatrix().CopyTo(efCameraMat);
-	Effekseer::Matrix44 efProjMat;
-	g_camera3D.GetProjectionMatrix().CopyTo(efProjMat);
-	//カメラ行列とプロジェクション行列を設定。
-	g_Effect.m_effekseerRenderer->SetCameraMatrix(efCameraMat);
-	g_Effect.m_effekseerRenderer->SetProjectionMatrix(efProjMat);
 	//m_ghostObject.SetPosition(m_position);
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
-	g_Effect.m_effekseerManager->Update();
 }
 void Enemy_asigaru::Draw()
 {
+	//最初のアップデートではない。
+	//カメラとの距離を計算する。
+	CVector3 toCamera = m_position - g_camera3D.GetPosition();
+	if (toCamera.LengthSq() > 8000.0f * 8000.0f) {
+		return;
+	}
+
 
 	CVector3 cameraPos = m_gameCamera->GetCameraPos();
 	CVector3 Lenght = cameraPos - m_position;

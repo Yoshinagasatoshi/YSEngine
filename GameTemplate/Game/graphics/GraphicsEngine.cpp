@@ -28,7 +28,7 @@ void GraphicsEngine::BegineRender()
 void GraphicsEngine::EndRender()
 {
 	//バックバッファとフロントバッファを入れ替える。
-	m_pSwapChain->Present(2, 0);
+	m_pSwapChain->Present(1, 0);
 }
 void GraphicsEngine::Release()
 {

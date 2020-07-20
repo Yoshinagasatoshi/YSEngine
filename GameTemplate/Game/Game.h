@@ -12,7 +12,7 @@ class Player;
 class Enemy;
 class BackGround;
 class GameCamera;
-class SoundDirector;
+class InGameSoundDirector;
 class Game : public IGameObject
 {
 public:
@@ -59,5 +59,5 @@ private:
 	Fade* m_fade;
 	CSoundEngine m_soundEngine;
 	CSoundSource m_bgm;
-	SoundDirector* m_sd;
+	InGameSoundDirector* m_sd;
 };

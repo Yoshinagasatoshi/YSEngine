@@ -5,7 +5,7 @@
 #include "Fade.h"
 //#include "sound/SoundEngine.h"
 //#include "sound/SoundSource.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 const float Spritewid = 320.0f;
 GameClear::GameClear()
 {

@@ -3,7 +3,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Title.h"
 #include "Fade.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 GameOver::GameOver()

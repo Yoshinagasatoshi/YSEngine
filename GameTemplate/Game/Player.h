@@ -15,7 +15,7 @@ class Enemy;
 //class Skeleton;
 class Wepon_ghost;
 class Player_target;
-class SoundDirector;
+class InGameSoundDirector;
 //プレイヤークラス、無双武将にあたるクラス
 class Player : public IGameObject
 {
@@ -74,6 +74,12 @@ public:
 	int GetPlayerHP()
 	{
 		return m_PL_HP;
+	}
+
+	//プレイヤーが無敵になる
+	void SetPlayerMuTeki()
+	{
+		m_muteki = true;
 	}
 
 	//武将の状態を格納
@@ -136,7 +142,7 @@ private:
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 24;									//今の体力 24 デバック用の数字です
+	int m_PL_HP = 48;									//今の体力 24 デバック用の数字です
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る
@@ -165,6 +171,7 @@ private:
 	bool m_isDestroyed = false;							//1度のみゲームオーバーを呼ぶ
 	bool m_plWeponSwhich = true;
 	bool m_XTrigger = false;
+	bool m_muteki = false;								//無敵スイッチ、ダメージを食らわなくなる。
 	
 	CSoundSource m_bgm;
 	CSoundSource m_se;									//効果音
@@ -173,7 +180,7 @@ private:
 
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
-	Player_target* m_pl_target = nullptr;				//はあ
-	SoundDirector* m_sd;						//鳴らす
+	Player_target* m_pl_target = nullptr;				//プレイヤーターゲット
+	InGameSoundDirector* m_sd;						//鳴らす
 };
 

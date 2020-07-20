@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Fade.h"
 #include "gameObject/ysGameObjectManager.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 Title::Title()
@@ -45,7 +45,7 @@ void Title::Update()
 		Fade::Getinstance().StartFadeIn();
 		if (!Fade::Getinstance().IsFade()) {
 			m_bgm.Stop();
-			SoundDirector::GetInstans().UpdateOn();
+			InGameSoundDirector::GetInstans().UpdateOn();
 			/*Game* game = */g_goMgr.NewGameObject<Game>("Game");
 			g_goMgr.DeleteGOObject(this);
 		}

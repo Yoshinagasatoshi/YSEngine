@@ -220,7 +220,6 @@
     <ClCompile Include="Player_target.cpp">
       <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="SoundDirector.cpp" />
     <ClCompile Include="graphics\shadow\ShadowMap.cpp">
       <Filter>graphics\shadow</Filter>
     </ClCompile>
@@ -236,6 +235,7 @@
     <ClCompile Include="graphics\postEffect\PostEffect.cpp">
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
+    <ClCompile Include="InGameSoundDirector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -409,7 +409,6 @@
     <ClInclude Include="Player_target.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="SoundDirector.h" />
     <ClInclude Include="graphics\shadow\ShadowMap.h">
       <Filter>graphics\shadow</Filter>
     </ClInclude>
@@ -425,6 +424,7 @@
     <ClInclude Include="graphics\postEffect\PostEffect.h">
       <Filter>graphics\postEffect</Filter>
     </ClInclude>
+    <ClInclude Include="InGameSoundDirector.h" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\fade.png" />

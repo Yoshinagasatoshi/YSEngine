@@ -155,7 +155,7 @@
     <ClCompile Include="physics\SphereCollider.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_target.cpp" />
-    <ClCompile Include="SoundDirector.cpp" />
+    <ClCompile Include="InGameSoundDirector.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
@@ -229,7 +229,7 @@
     <ClInclude Include="physics\SphereCollider.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Player_target.h" />
-    <ClInclude Include="SoundDirector.h" />
+    <ClInclude Include="InGameSoundDirector.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />

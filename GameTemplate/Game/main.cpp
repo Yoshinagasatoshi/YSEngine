@@ -3,7 +3,7 @@
 #include "level/Level.h"
 #include "Title.h"
 #include "gameObject/ysGameObjectManager.h"
-#include "SoundDirector.h"
+#include "InGameSoundDirector.h"
 #include "Fade.h"
 
 ///////////////////////////////////////////////////////////////////
@@ -37,8 +37,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_goMgr.NewGameObject<Title>("Title");
 
-	SoundDirector::GetInstans();
-	SoundDirector::GetInstans().UpdateOn();
+	InGameSoundDirector::GetInstans();
+	InGameSoundDirector::GetInstans().UpdateOn();
 
 	CStopwatch sw;
 	//ゲームループ。
@@ -59,9 +59,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		//g_graphicsEngine->RenderToShadowMap();
 
-		bool UpdateMode = SoundDirector::GetInstans().GetisUpdateMode();
+		bool UpdateMode = InGameSoundDirector::GetInstans().GetisUpdateMode();
 		if (UpdateMode) {
-			SoundDirector::GetInstans().Update();
+			InGameSoundDirector::GetInstans().Update();
 		}
 
 		//g_goMgr.Render();
@@ -81,6 +81,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_graphicsEngine->EndRender();
 		//1フレームの時間計測終了。
 		sw.Stop();
+	
 		//1フレームの時間を記憶しておく。
 		GameTime().PushFrameDeltaTime(sw.GetElapsed());
 	}

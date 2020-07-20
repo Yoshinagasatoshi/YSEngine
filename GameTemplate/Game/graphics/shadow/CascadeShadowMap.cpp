@@ -9,7 +9,7 @@ CascadeShadowMap::CascadeShadowMap()
 		{4096, 4096},
 		{2048, 2048},
 		{1024, 1024},
-		{512, 512},
+	//	{512, 512},
 	};
 	for (int i = 0; i < SHADOWMAP_NUM; i++) {
 		m_shadowMapRT[i].Create(
