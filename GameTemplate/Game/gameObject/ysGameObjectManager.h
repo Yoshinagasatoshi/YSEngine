@@ -25,6 +25,7 @@
 		void InitEffekseer();
 		//アップデート
 		void Update();
+		void XorY(int X);
 		/// <summary>
 		/// ゲームオブジェクトの名前キーを作成
 		/// </summary>
@@ -154,9 +155,10 @@
 		}
 
 		//呼ばれたらヒットストップをオンに
-		void HitStopOn()
+		void HitStopOn(int i)
 		{
 			m_isHitStopFrag = true;
+			m_HitStopCount = i;
 		}
 
 		//呼ばれたらヒットストップをオフに
@@ -212,9 +214,13 @@
 		//ゲームオーバー通知
 		bool isGameOver = false;
 		//ヒットストップをかけるかどうか、これがtrueになるとUpdate()が止まるように。
-		bool m_isHitStopFrag = false;		
+		bool m_isHitStopFrag = false;
+		//Xにあたった時のヒットストップ書けるのか
+		bool m_isHitXStopFrag = false;
 		//ヒットストップタイマー;
 		int HitStopTimer = 0;
+		//ヒットストップのカウント
+		int m_HitStopCount = 0;
 	private:
 		//授業版格納庫
 		std::list<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト

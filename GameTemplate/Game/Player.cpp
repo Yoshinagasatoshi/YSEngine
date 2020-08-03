@@ -216,7 +216,7 @@ void Player::Update()
 				m_damagefrag = false;
 				if (m_PL_HP != onebrock) {
 					m_PL_HP -= onebrock;
-					g_goMgr.HitStopOn();
+					//g_goMgr.HitStopOn();
 				}
 				else {
 					m_PL_HP = 0;
@@ -335,7 +335,7 @@ void Player::Turn()
 
 void Player::AttackMove()
 {
-	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>3.0f) {
+	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>0.1f) {
 		
 	//m_busyoState = BusyoAttack;
 		if (!m_underAttack)
@@ -379,22 +379,17 @@ void Player::AttackMove()
 	}
 	XAttackMove();
 
-	m_playTimer++;
+	m_playTimer+= GameTime().GetFrameDeltaTime();
 
 	if (m_animStep != 0) {
 		if (m_animStep != m_oldAnimStep) {
 			m_playTimer = Timer_ZERO;
 			m_oldAnimStep = m_animStep;
 		}
-		//最後まで行くと隙をさらす時間を増やす
-		if (m_animStep == animClip_ATK5) {
-			//増やす処理
-			m_TimerRelease = 15;
-		}
-		if (m_playTimer >= m_TimerRelease) {
+		const float RELEASE_TIME = 0.4f;
+		if (m_playTimer >= RELEASE_TIME) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
 			m_busyoState = BusyoNormal;
-			m_TimerRelease = 15;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = Timer_ZERO;

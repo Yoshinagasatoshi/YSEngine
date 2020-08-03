@@ -58,7 +58,7 @@ ysGameObjectManager::EffectTool g_Effect;
 		if (m_isHitStopFrag) {
 			HitStopTimer++;
 			//‰¼‚È‚Ì‚Å”’l‚â‘«‚·‚Ì‚Í“K“–B‚¤‚Ü‚­‚¢‚¯‚Î‚¿‚á‚ñ‚Æ‚µ‚½‚à‚Ì‚É‚·‚é
-			if (HitStopTimer > 1) {
+			if (HitStopTimer > m_HitStopCount) {
 				m_isHitStopFrag = false;
 				HitStopTimer = 0;
 			}

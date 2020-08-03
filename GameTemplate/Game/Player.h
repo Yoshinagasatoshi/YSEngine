@@ -135,6 +135,11 @@ public:
 	{
 		enemy = en;
 	}
+
+	bool IsXTrigger()
+	{
+		return m_XTrigger;
+	}
 private:
 	//囲いの数
 	static const int DestinationNum = 5;
@@ -144,7 +149,7 @@ private:
 	void ThisDamage();									//ダメージを受けたときの処理
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
-	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
+	float m_playTimer = 0.0f;							//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
 	int m_PL_HP = 480;									//今の体力 24 デバック用の数字です
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
