@@ -3,6 +3,7 @@
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 const float MinBGMVol = 0.5f;
+
 InGameSoundDirector::InGameSoundDirector()
 {
 	
@@ -14,16 +15,18 @@ InGameSoundDirector::~InGameSoundDirector()
 
 void InGameSoundDirector::Update()
 {
-		if (m_bgm.IsPlaying()) {
-			float a = m_seRingCount * 0.1f;
-			float BGM_finalVol = BGM_NormalVol - a;
-			//BGMが小さくなりすぎないようにする
-			if (BGM_finalVol < MinBGMVol)
-			{
-				BGM_finalVol = MinBGMVol;
-			}
-			m_bgm.SetVolume(BGM_finalVol);
+	if (m_bgm.IsPlaying()) {
+		//BGMが鳴らされているなら以下の処理をする
+
+		float subtraction = m_seRingCount * 0.1f;	//m_seRingCount…addringnum()が呼ばれた数だけ数値が増える変数
+		float BGM_finalVol = BGM_NormalVol - subtraction;
+		//BGMが小さくなりすぎないようにする
+		if (BGM_finalVol < MinBGMVol)
+		{
+			BGM_finalVol = MinBGMVol;//MinBGMは0.5が入っており、これ以下にはならない
 		}
+		m_bgm.SetVolume(BGM_finalVol);//最終的な音量のBGMを流す。
+	}
 
 		if (m_seRingCount >= 0) {
 			if (!m_Slash.IsPlaying()) {

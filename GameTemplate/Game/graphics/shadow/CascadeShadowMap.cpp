@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CascadeShadowMap.h"
 #include <limits>
-
+#include "gameObject/ysGameObjectManager.h"
 
 CascadeShadowMap::CascadeShadowMap()
 {
@@ -268,6 +268,8 @@ void CascadeShadowMap::RenderToShadowMap()
 			}
 		}
 	}
-
-	m_shadowCaters.clear();
+	//キャスターをクリア。
+	if (!g_goMgr.IsHitStop()) {
+		m_shadowCaters.clear();
+	}
 }

@@ -50,10 +50,20 @@ ysGameObjectManager::EffectTool g_Effect;
 
 	void ysGameObjectManager::Update()
 	{
-		for (auto& go : IGameObjectList) {
-			go->Update();
+		if (!m_isHitStopFrag) {
+			for (auto& go : IGameObjectList) {
+				go->Update();
+			}
 		}
-
+		if (m_isHitStopFrag) {
+			HitStopTimer++;
+			//‰¼‚È‚Ì‚Å”’l‚â‘«‚·‚Ì‚Í“K“–B‚¤‚Ü‚­‚¢‚¯‚Î‚¿‚á‚ñ‚Æ‚µ‚½‚à‚Ì‚É‚·‚é
+			if (HitStopTimer > 1) {
+				m_isHitStopFrag = false;
+				HitStopTimer = 0;
+			}
+		}
+		
 		Effekseer::Matrix44 efCameraMat;
 		g_camera3D.GetViewMatrix().CopyTo(efCameraMat);
 		Effekseer::Matrix44 efProjMat;
@@ -62,7 +72,6 @@ ysGameObjectManager::EffectTool g_Effect;
 		g_Effect.m_effekseerRenderer->SetCameraMatrix(efCameraMat);
 		g_Effect.m_effekseerRenderer->SetProjectionMatrix(efProjMat);
 		g_Effect.m_effekseerManager->Update();
-
 	}
 
 	void ysGameObjectManager::Draw()

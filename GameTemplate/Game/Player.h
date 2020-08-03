@@ -86,6 +86,7 @@ public:
 	enum busyoState {
 		BusyoNormal = 0,//通常の武将
 		BusyoAttack,	//攻撃状態の武将
+		BusyoAttack_Y,	//ジャンプ中にYを押したときのステート
 		BusyoDamage,	//攻撃を食らっている時の武将
 		BusyoDead		//死亡した武将
 	};
@@ -105,6 +106,8 @@ public:
 		animClip_ATK5,
 		animClip_XATK,
 		animClip_JUMP_ATK,
+		animClip_JUMP_X_ATK1,
+		animClip_JUMP_X_ATK2,
 		animClip_SmallDamage,
 		animClip_busyo_dead,
 		animClip_num
@@ -138,11 +141,12 @@ private:
 	void AttackMove();									//無双の攻撃の処理を書く
 	void XAttackMove();									//Xボタンが押されたときの処理
 	void JumpAttackMove();								//ジャンプアタックの処理。
+	void ThisDamage();									//ダメージを受けたときの処理
 	int m_animStep = 0;									//アニメーションがどの段階か
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	int m_playTimer = 0;								//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 48;									//今の体力 24 デバック用の数字です
+	int m_PL_HP = 480;									//今の体力 24 デバック用の数字です
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る

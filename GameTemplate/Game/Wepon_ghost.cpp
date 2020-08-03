@@ -1,12 +1,11 @@
 /// <summary>
-/// このクラス、名前間違えた感がすごい
-/// 敵兵orプレイヤーの武器判定をつけているクラス
+/// 敵兵orプレイヤーの攻撃判定をつけているクラス
 /// </summary>
 #include "stdafx.h"
 #include "Wepon_ghost.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "Player.h"
-const float m_ghostscale = 150.0f;
+const float m_ghostscale = 200.0f;
 
 Wepon_ghost::Wepon_ghost()
 {
@@ -25,12 +24,11 @@ Wepon_ghost::~Wepon_ghost()
 
 void Wepon_ghost::Update()
 {
-	//バグあり。後で直す
-	//多分デリートしたghostにアクセスした疑い
-	if (!m_hanteifin) {
-		GhostInit();
-	}
-	else{
+	m_ghostTimer += 30.0f * GameTime().GetFrameDeltaTime();
+	//表示されている時間が2.0ｆ以上なら消える
+	if (m_ghostTimer > 2.0f)
+	{
+		m_ghostTimer = 0.0f;
 		DeleteGO(this);
 	}
 }
@@ -38,12 +36,13 @@ void Wepon_ghost::Update()
 void Wepon_ghost::GhostInit()
 {
 	//nullptrなら
-	if (m_player != nullptr) {
+	//if (m_player != nullptr) {
+	if(m_playerCall){
 		if (!m_hanteifin) {
 			m_ghostObject.CreateBox(
 				m_player->GetPosition(),
 				m_rotation,
-				m_scale * m_ghostscale * 2.0f//1.2f//プレイヤーだけひいきします。いまだけちいさくします
+				m_scale * m_ghostscale// *1.5f//1.2f//プレイヤーだけ当たり判定を大きく
 			);
 		}
 		m_hanteifin = true;
@@ -53,9 +52,10 @@ void Wepon_ghost::GhostInit()
 			m_ghostObject.CreateBox(
 				m_position,
 				m_rotation,
-				m_scale * m_ghostscale
+				m_scale * m_ghostscale * 5.5f
 			);
 		}
 		m_hanteifin = true;
+
 	}
 }

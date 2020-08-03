@@ -152,6 +152,25 @@
 		{
 			m_enemyCount;
 		}
+
+		//呼ばれたらヒットストップをオンに
+		void HitStopOn()
+		{
+			m_isHitStopFrag = true;
+		}
+
+		//呼ばれたらヒットストップをオフに
+	/*	void HitStopOff()
+		{
+			m_isHitStopFrag = false;
+		}*/
+
+		//現在のヒットストップの状態は
+		bool IsHitStop()
+		{
+			return m_isHitStopFrag;
+		}
+
 		//実行。ExecuteからDrawとUpdateに分離
 		void Execute();
 		//void Update();
@@ -192,6 +211,10 @@
 		bool isCrear = false;
 		//ゲームオーバー通知
 		bool isGameOver = false;
+		//ヒットストップをかけるかどうか、これがtrueになるとUpdate()が止まるように。
+		bool m_isHitStopFrag = false;		
+		//ヒットストップタイマー;
+		int HitStopTimer = 0;
 	private:
 		//授業版格納庫
 		std::list<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト

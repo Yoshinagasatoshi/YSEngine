@@ -8,12 +8,10 @@
 #include "Fade.h"
 #include "InGameSoundDirector.h"
 const float power = 250.0f;
-const float InitHP = 3;
+const float InitHP = 250;
 Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
-	//モデルがぶっ壊れる？
-	//とりあえず仮の箱、後で差し替える。。
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
@@ -23,7 +21,7 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
 	m_animClip[FIGHTING].Load(L"Assets/animData/enemy_Busyo_Fighting_Pose.tka");
-	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemy_Busyo_kick.tka");
+	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemyBusyo_newKick.tka");
 	m_animClip[FIGHTING_LONG].Load(L"Assets/animData/enemy_Busyo_LongAttack.tka");
 
 	m_enemy_BusyoAnime.Init(
@@ -58,7 +56,6 @@ Enemy_Busyo::~Enemy_Busyo()
 
 void Enemy_Busyo::Update()
 {
-	
 	//キャラコンが入っていなかったら入れる。
 	if (!m_charaConUse) {
 		CharaconInit();
@@ -102,19 +99,7 @@ void Enemy_Busyo::Update()
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//m_enemy_BusyoAnime.Update(1/30.0f);
-		/// <summary>
-	/// デバック用コマンド。後で消す。
-	/// </summary>
-	if (g_pad->IsTrigger(enButtonRight)) {
-		//ゲームオーバー
-		InGameSoundDirector::GetInstans().UpdateOff();
-		//三人倒せばokという状態にしたい。今はゲームループのため仮実装
-		g_goMgr.NewGameObject<GameClear>("GameClear");
-		//消せてねえ？
-		m_game->GameDelete();
-		m_isDestroyed = true;
-	}
+
 }
 
 void Enemy_Busyo::CharaconInit()
@@ -178,7 +163,7 @@ void Enemy_Busyo::AttackMove()
 	{
 		if (!m_isFight) {
 			//攻撃方法の抽選
-			m_gacha = rand() % 3;
+			m_gacha = 1;//rand() % 3;
 			m_isFight = true;
 		}
 		//多分長くなるから関数にすっぞ
@@ -195,6 +180,8 @@ void Enemy_Busyo::AttackMove()
 			}
 		break;
 		case 1:
+			//アニメーションイベントがある
+			//アニメーションが流れたらダメージを食らうはず
 			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.2f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
@@ -220,6 +207,7 @@ void Enemy_Busyo::AttackMove()
 	if (!m_isFight) {
 		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);
 	}
+
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
 
@@ -295,14 +283,19 @@ void Enemy_Busyo::ThisDelete()
 		InGameSoundDirector::GetInstans().RingSE_Slash();
 		m_HP--;
 		m_enemy_BusyoAnime.Play(DAMAGE, 0.2f);
-		m_isDeadfrag = false;
+		if (!m_enemy_BusyoAnime.IsPlaying()) {
+			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+			m_isDeadfrag = false;
+
+		}
 	}
 	//なくなっていたらこちらを通る
 	else {
+		m_moveSpeed = CVector3::Zero();
 		//enemy用にも
 		ThisDeath();
 		//プレイヤーに無敵をつける。
-		//プレイヤーがこいつを倒した後に死ぬと
+		//プレイヤーがボスを倒した後に死ぬと
 		//ゲームクリアとゲームオーバーが一緒に出てしまうため。
 		m_player->SetPlayerMuTeki();
 

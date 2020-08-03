@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ShadowMap.h"
+#include "gameObject/ysGameObjectManager.h"
 
 ShadowMap::ShadowMap()
 {
@@ -92,5 +93,7 @@ void ShadowMap::RenderToShadowMap()
 	}
 
 	//キャスターをクリア。
-	m_shadowCasters.clear();
+	if (!g_goMgr.IsHitStop()) {
+		m_shadowCasters.clear();
+	}
 }

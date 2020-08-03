@@ -13,10 +13,6 @@
 #include "InGameSoundDirector.h"
 #include "Fade.h"
 
-//緊急ではないけれど、ゲームループをするとき少しずつメモリが多くなっていく。
-//何かが消せていない。
-//ゲームとして完成してきたらここのバグを直そう。
-
 //倒された数の指標
 //const int knockDownNum = 50;
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
@@ -56,7 +52,7 @@ Game::Game()
 					m_enemy->SetGameCameraInfo(m_gameCamera);
 					//可変長配列に↑のインスタンスを追加
 					return true;
-			}
+				}
 			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 				//g_goMgr.EnemyCounting();
 				//インスタンスの作成
@@ -66,16 +62,18 @@ Game::Game()
 				m_enemy->SetGameinfo(this);
 				return true;
 			}
-			if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
-				//インスタンスの作成
-				//g_goMgr.EnemyCounting();
-				isHoge = false;
-				m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
-				m_enemy->SetPos(objdata.position);
-				m_enemy->SetPlayerInfo(m_player);
-				m_enemy->SetGameinfo(this);
-				return true;
-			}
+			//if (enemyCount < 1) {
+				if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
+					//インスタンスの作成
+					//g_goMgr.EnemyCounting();
+					isHoge = false;
+					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
+					m_enemy->SetPos(objdata.position);
+					m_enemy->SetPlayerInfo(m_player);
+					m_enemy->SetGameinfo(this);
+					return true;
+				}
+			//}
 			return true;
 		});
 	Fade::Getinstance().StartFadeOut();

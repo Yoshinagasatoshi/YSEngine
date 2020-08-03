@@ -13,7 +13,7 @@ const float DeleteTime = 10.0f;
 const float drawNearSpeed = 110.0f;
 const float ViewLenght = 0.25f;						//視野角範囲
 const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
-const int MAX_RING_SE = 1;
+const int MAX_RING_SE = 10;
 
 /// <summary>
 /// boid
@@ -167,31 +167,32 @@ void Enemy_asigaru::Update()
 		StateJudge();
 	}
 
-
-	//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
-	QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
-		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
-		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
-		if (ghostobject->IsSelf(contactObject) == true) {
-			//通っているのは確認完了
-			m_isDeadfrag = true;
-			//enemy用にも
-			ThisDeath();
-			//音を鳴らす関数
-			//BGM流せって言っているのに倒れる音がする
-			m_sd->RingSE_Slash();
-			//RingorStockSE('S');
-			//エフェクトも出す。
-			g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
-				g_Effect.m_sampleEffect,
-				m_position.x,
-				m_position.y + 100.0f, //少し上に出す
-				m_position.z
-			);
-		}
-		});
-		return true;
-	});
+	if (!m_isDeadfrag) {
+		//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
+		//攻撃判定内ならもう一回呼ばれる可能性があるから、最初に呼ばれたら絶対これを呼ばない
+		QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
+			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
+			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
+				if (ghostobject->IsSelf(contactObject) == true) {
+					g_goMgr.HitStopOn();
+					//通っているのは確認完了
+					m_isDeadfrag = true;
+					//enemy用にも
+					ThisDeath();
+					//斬撃音を鳴らす関数
+					m_sd->RingSE_Slash();
+					//エフェクトも出す。
+					g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
+						g_Effect.m_sampleEffect,
+						m_position.x,
+						m_position.y + 100.0f, //少し上に出す
+						m_position.z
+					);
+				}
+				});
+			return true;
+			});
+	}
 
 	//ワールド座標の更新
 	m_moveSpeed.y = ySpeed + grabity;
@@ -219,20 +220,11 @@ void Enemy_asigaru::Draw()
 	CVector3 cameraPos = m_gameCamera->GetCameraPos();
 	CVector3 Lenght = cameraPos - m_position;
 	Lenght.y = 0.0f;
-	//カメラとの距離を測って、距離が遠すぎたらローポリに切り替えるようにする
-	//if (Lenght.LengthSq() <2500.0f * 2500.0f) {
-		//モデルの描画
-		m_model.Draw(
-			g_camera3D.GetViewMatrix(),
-			g_camera3D.GetProjectionMatrix()
-		);
-	//}
-	//else {
-	//	m_model_Row.Draw(
-	//		g_camera3D.GetViewMatrix(),
-	//		g_camera3D.GetProjectionMatrix()
-	//	);
-	//}
+	//モデルの描画
+	m_model.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix()
+	);
 }
 
 //ここが　取り巻く処理を書いている場所
@@ -261,23 +253,8 @@ void Enemy_asigaru::Move()
 	return;
 	}
 	else {
+		//取り巻きフラグオフ
 		m_torimaki = false;
-		CVector3 kaiten = m_playerPos - m_position;
-		m_moveSpeed = kaiten;
-		Turn();
-		CVector3 lain = kaiten;
-		if (kaiten.Length() < 50.0f) {
-			lain * -1;
-			lain.Normalize();
-			m_moveSpeed = lain * 1.5f;
-		}
-		else if (kaiten.Length() < 120.0f) {
-			lain.Normalize();
-			m_moveSpeed = kaiten * 1.5f;
-		}
-		else {
-			m_moveSpeed = CVector3::Zero();
-		}
 	}
 }
 
@@ -366,11 +343,6 @@ void Enemy_asigaru::StateJudge()
 			m_frameTimer = Timer_ZERO;
 			AttackframeNum();
 
-			////距離判定が近かったら殴られたときにダメージ
-			//CVector3 distans = m_position - m_player->GetPosition();
-			//if (distans.LengthSq() < 100.0f * 100.0f) {
-			//	m_player->PlayerDamage();
-			//}
 			m_asigaruState = Asigaru_attack;
 		}
 		Move();
@@ -434,41 +406,4 @@ void Enemy_asigaru::DeadMove()
 	m_asigaruAnime.Play(Asigaru_dead,0.1f);
 	//死んだアニメーションは早く再生する
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
-}
-
-//呼ばれたら音を出してくれる関数。
-//ただし、鳴らしていい上限数を超える数分を鳴らすことはしない。
-void Enemy_asigaru::RingorStockSE(char Alf)
-{
-	//効果音を鳴らしていい上限数未満であるならば
-	if (m_sd->GetReturnRingNum() < MAX_RING_SE) {
-		m_sd->addringnum();
-		CSoundSource* se = new CSoundSource;
-		//m_seRingCount++;
-		if (Alf == 'S') {
-			se->Init(L"Assets/sound/slash1.wav");
-		}
-		else if(Alf == 'D') {
-			se->Init(L"Assets/sound/falldown2.wav");
-		}
-		se->Play(false);
-		se->SetVolume(1.5f);//調整
-		isRingSE = true;
-	}
-	else {
-		m_seStockCount++;
-	}
-	//if (!se->IsPlaying()) {
-	//	//SEが再生し終えたのならカウントを減らす。
-	//	m_seRingCount--;
-	//	//カウントを減らしたとき、ストックがあるのなら
-	//	if (m_seRingCount < MAX_RING_SE
-	//		&& m_seStockCount > 0) {
-	//		m_seStockCount--;
-	//		m_seRingCount++;
-	//		se->Init(L"Assets/sound/slash1.wav");
-	//		se->Play(false);
-	//		se->SetVolume(0.55f);//調整
-	//	}
-	//}
 }

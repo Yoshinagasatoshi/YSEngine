@@ -13,10 +13,6 @@ public:
 	{
 		m_position = pos;
 	}
-	//eventNameはちゃんと読み込まれているが、
-	//文字列型を判断にするのが難しいので
-	//int型とかにした方がいいかもしれない
-	//とりあえず保留のコメントアウト。
 	//void eventName(char* eventname)
 	//{
 	//	eventName = eventname;
@@ -24,6 +20,10 @@ public:
 	void SetPlayerInfo(Player* pl)
 	{
 		m_player = pl;
+	}
+	void Playercall()
+	{
+		m_playerCall = true;
 	}
 	PhysicsGhostObject* GetGhostObject() {
 		return &m_ghostObject;
@@ -39,5 +39,7 @@ private:
 	bool m_hanteifin = false;
 	Player* m_player;
 	bool m_PLSLASH = false;
+	float m_ghostTimer = 0;	//ゴーストが出る時間
+	bool m_playerCall = false;
 };
 

@@ -64,6 +64,9 @@ Player::Player()
 	m_busyoAnimeClip[animClip_ATK5].Load(L"Assets/animData/busyo_kougeki5.tka");
 	m_busyoAnimeClip[animClip_XATK].Load(L"Assets/animData/busyo_kaitengiri.tka");
 	m_busyoAnimeClip[animClip_JUMP_ATK].Load(L"Assets/animData/busyo_jump_kougeki.tka");
+	m_busyoAnimeClip[animClip_JUMP_X_ATK1].Load(L"Assets/animData/busyo_jump_X.tka");
+	m_busyoAnimeClip[animClip_JUMP_X_ATK2].Load(L"Assets/animData/busyo_jump_X2.tka");
+
 	//ダメージロード
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
 	m_busyoAnimeClip[animClip_busyo_dead].Load(L"Assets/animData/busyo_dead.tka");
@@ -113,6 +116,7 @@ Player::Player()
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(m_calcPos);
 		m_pl_Wepon->SetPlayerInfo(this);
+		m_pl_Wepon->Playercall();
 		m_pl_Wepon->GhostInit();
 
 		//一行でよくなった
@@ -157,6 +161,8 @@ void Player::Update()
 		m_busyoState = BusyoDead;
 	}
 	if (m_busyoState != BusyoDead) {
+		//ゴースト当たってる？
+		ThisDamage();
 		//地面ついてる？
 		if (m_characon.IsOnGround()) {
 			//攻撃するときのモーション
@@ -167,6 +173,12 @@ void Player::Update()
 			if (m_Jumpfrag) {
 				m_Jumpfrag = false;
 				m_jumpAttackfrag = false;
+				//更に空中でYボタン押してた？
+				if (m_busyoState == BusyoAttack_Y)
+				{
+					//着地時にダメージ判定を行うアニメーションを流す
+					m_busyoAnime.Play(animClip_JUMP_X_ATK1, InterpolationTimeS);
+				}
 			}
 		}
 		//ステートごとにの処理に後でする。
@@ -204,6 +216,7 @@ void Player::Update()
 				m_damagefrag = false;
 				if (m_PL_HP != onebrock) {
 					m_PL_HP -= onebrock;
+					g_goMgr.HitStopOn();
 				}
 				else {
 					m_PL_HP = 0;
@@ -231,20 +244,7 @@ void Player::Update()
 		//haha
 		//回転処理
 		Turn();
-		
-		//敵武器のゴーストが当たったらダメージを受ける。
-		QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
-			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
-			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
-				if (ghostobject->IsSelf(contactObject) == true) {
 
-					PlayerDamage();
-
-					g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
-				}
-				});
-			return true;
-			});
 	}
 	else {
 		//プレイヤーが死んでいる時の処理
@@ -265,9 +265,9 @@ void Player::Update()
 	/// <summary>
 	/// デバック用コマンド。後で消す。
 	/// </summary>
-	if (g_pad->IsTrigger(enButtonLeft)) {
-		m_busyoState = BusyoDead;
-	}
+	//if (g_pad->IsTrigger(enButtonLeft)) {
+	//	m_busyoState = BusyoDead;
+	//}
 
 	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(m_position + CVector3::One() * 300.0f,m_position);
 }
@@ -314,7 +314,6 @@ void Player::Draw()
 void Player::Turn()
 {
 	if(m_busyoState != BusyoAttack) {
-
 		if (fabsf(m_moveSpeed.x) <= 0.001f    //fabsfは絶対値。m_movespeed.x&m_movespeedzが
 			&& fabsf(m_moveSpeed.z) <= 0.001f) {//0.001以下の時には何もしない。
 			return;
@@ -325,6 +324,7 @@ void Player::Turn()
 		}
 	}
 	else {
+		//攻撃補正をかける処理
 		if (m_pl_target->GetHosei()) {
 			CVector3 kaiten = m_pl_target->GetDistans();
 			float angle = atan2(-kaiten.x, -kaiten.z);
@@ -487,15 +487,42 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	return -1;
 }
 
+//空中攻撃用の動きを処理する関数
 void Player::JumpAttackMove() {
 	if (m_Jumpfrag && !m_jumpAttackfrag) {
+		//
 		if (g_pad->IsTrigger(enButtonX)) {
 			m_jumpAttackfrag = true;
 			m_busyoAnime.Play(animClip_JUMP_ATK, InterpolationTimeS);
 			m_blowOffPower = JumpATKPower;
 		}
+		else if(g_pad->IsTrigger(enButtonY)) {
+			m_jumpAttackfrag = true;
+			m_busyoAnime.Play(animClip_JUMP_X_ATK1, InterpolationTimeS);
+			m_blowOffPower = JumpATKPower;
+			m_busyoState = BusyoAttack_Y;
+		}
 	}
 	if (!m_jumpAttackfrag) {
 		m_busyoAnime.Play(animClip_jump, InterpolationTimeM);
 	}
+}
+
+void Player::ThisDamage()
+{
+	//敵武器のゴーストが当たったらダメージを受ける。
+	//ここの処理は大丈夫
+	QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
+		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
+		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
+			if (ghostobject->IsSelf(contactObject) == true) {
+
+				PlayerDamage();
+
+				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
+			}
+			});
+		return true;
+		}
+	);
 }

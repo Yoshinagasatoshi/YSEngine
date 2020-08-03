@@ -33,9 +33,6 @@ public:
 	//ゴーストのInit
 	//void ghostInit();
 
-	//処理を自分がわかりやすくするために関数にした
-	void RingorStockSE(char Alf);
-
 	//ふっとばし量を受け取る。
 	void SetDamage(float recive)
 	{

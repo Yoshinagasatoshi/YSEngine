@@ -3,7 +3,7 @@
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 //今、SEが何個なっているかを計測して、それを流すかどうかを決めるクラ
-//BGMの音とかもこいつに担当してもらうことにしよう
+//BGMの音とかもこいつに担当してもらうことに
 class InGameSoundDirector: public IGameObject
 {
 public:
@@ -15,7 +15,7 @@ public:
 	//コンストラクタにしてもいいけど関数にした。
 	void SoundInit()
 	{
-		//サウンドエンジンを初期化。やってることは遠回し
+		//サウンドエンジンを初期化。
 		g_soundEngine->Init();
 	}
 
@@ -27,7 +27,7 @@ public:
 		//音SE素材
 		m_bgm.Init(L"Assets/sound/Chanbara.wav");
 		m_bgm.Play(true);
-		//seチェックのために、大分下げる
+		//seボリュームを引数にセット
 		m_bgm.SetVolume(BGM_NormalVol);
 	}
 
@@ -75,49 +75,59 @@ public:
 	//SE_素振り音
 	void RingSE_Swing()
 	{
-		if (m_Swing.IsPlaying()) {
-			m_Swing2.Init(L"Assets/sound/swing.wav");
-			m_Swing2.Play(false);
-			m_Swing2.SetVolume(3.0f);//試しにでかくしている。後で調整
+		if (m_seRingCount< Max_RingNum) {
+			if (m_Swing.IsPlaying()) {
+				m_Swing2.Init(L"Assets/sound/swing.wav");
+				m_Swing2.Play(false);
+				m_Swing2.SetVolume(3.0f);//試しにでかくしている。後で調整
+			}
+			else {
+				m_Swing.Init(L"Assets/sound/swing.wav");
+				m_Swing.Play(false);
+				m_Swing.SetVolume(3.0f);//試しにでかくしている。後で調整
+			}
+			addringnum();
 		}
-		else {
-			m_Swing.Init(L"Assets/sound/swing.wav");
-			m_Swing.Play(false);
-			m_Swing.SetVolume(3.0f);//試しにでかくしている。後で調整
-		}
-		addringnum();
 	}
 	//SE_斬撃音
 	void RingSE_Slash()
 	{
-		m_Slash.Init(L"Assets/sound/slash1.wav");
-		m_Slash.Play(false);
-		m_Slash.SetVolume(3.0f);//試しにでかくしている。後で調整
-		addringnum();
+		if (m_seRingCount < Max_RingNum) {
+			m_Slash.Init(L"Assets/sound/slash1.wav");//鳴らす音のデータの初期化
+			m_Slash.Play(false);//再生。falseは一度だけ再生する。
+			m_Slash.SetVolume(3.0f);//効果音の音の量。
+			addringnum();//効果音が鳴っている数を+1する。
+		}
 	}
 	//SE_倒れる音
 	void RingSE_Down() 
 	{
-		m_Down.Init(L"Assets/sound/falldown2.wav");
-		m_Down.Play(false);
-		m_Down.SetVolume(1.5f);
-		addringnum();
+		if (m_seRingCount < Max_RingNum) {
+			m_Down.Init(L"Assets/sound/falldown2.wav");
+			m_Down.Play(false);
+			m_Down.SetVolume(1.5f);
+			addringnum();
+		}
 	}
 	//SE_導火線の音
 	void RingSE_Fuse()
 	{
-		m_fuse.Init(L"Assets/sound/fuse.wav");
-		m_fuse.Play(false);
-		m_fuse.SetVolume(1.5f);
-		addringnum();
+		if (m_seRingCount < Max_RingNum) {
+			m_fuse.Init(L"Assets/sound/fuse.wav");
+			m_fuse.Play(false);
+			m_fuse.SetVolume(1.5f);
+			addringnum();
+		}
 	}
 	//SE_爆発の音
 	void RingSE_Destruct()
 	{
-		m_Destruct.Init(L"Assets/sound/destruction.wav");
-		m_Destruct.Play(false);
-		m_Destruct.SetVolume(3.0f);
-		addringnum();
+		if (m_seRingCount < Max_RingNum) {
+			m_Destruct.Init(L"Assets/sound/destruction.wav");
+			m_Destruct.Play(false);
+			m_Destruct.SetVolume(3.0f);
+			addringnum();
+		}
 	}
 	//Updateをオンにする
 	void UpdateOn()
@@ -140,6 +150,8 @@ private:
 	int m_seRingCount = 0;
 	//待機待ちのseがどれだけあるかをカウントする。
 	int m_seStockCount = 0;
+	//ならせる効果音の上限数
+	const int Max_RingNum = 2;
 
 	//SoundDirectorクラスでゲーム内の音楽を全部管理することにした。
 	CSoundSource m_bgm;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
@@ -150,10 +162,10 @@ private:
 	CSoundSource m_Swing;//剣を振る音
 	CSoundSource m_Swing2;//剣を振る音2
 	CSoundSource m_Slash;//斬る音
-	CSoundSource m_Down;//倒れる
+	CSoundSource m_Down;//倒れる音
 	CSoundSource m_fuse;//導火線の音
-	CSoundSource m_Destruct;//爆発だぜの音
+	CSoundSource m_Destruct;//爆発の音
 
-	bool m_isUpdate = false;//アプデ関数呼ぶかどうか
+	bool m_isUpdate = false;//アプデ関数呼ぶかどうか。
 };
 
