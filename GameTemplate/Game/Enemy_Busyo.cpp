@@ -8,7 +8,7 @@
 #include "Fade.h"
 #include "InGameSoundDirector.h"
 const float power = 250.0f;
-const float InitHP = 250;
+const float InitHP = 2;
 Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
@@ -293,6 +293,7 @@ void Enemy_Busyo::ThisDelete()
 	}
 	//なくなっていたらこちらを通る
 	else {
+		m_state = DAMAGE;
 		m_moveSpeed = CVector3::Zero();
 		//enemy用にも
 		ThisDeath();
@@ -326,8 +327,10 @@ void Enemy_Busyo::DamageAfter()
 	if (!m_enemy_BusyoAnime.IsPlaying()) {
 		//切り替え
 		m_state = IDL;
-		m_enemy_BusyoAnime.Play(IDL, 0.2f);
-		//ダメージが入るようにもする
-		m_isDeadfrag = false;
+		//m_enemy_BusyoAnime.Play(IDL, 0.2f);
+		//体力がゼロじゃなければダメージが入るようにもする、
+		if (m_HP != 0) {
+			m_isDeadfrag = false;
+		}
 	}
 }
