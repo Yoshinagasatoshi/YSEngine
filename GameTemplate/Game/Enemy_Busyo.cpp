@@ -78,6 +78,8 @@ void Enemy_Busyo::Update()
 		break;
 	case DAMAGE:
 		ThisDelete();
+	case DAMAGE_AFTER:
+		DamageAfter();
 	}
 	//だめーｚしょり
 	ThisDamage();
@@ -127,19 +129,23 @@ void Enemy_Busyo::StateJudge()
 	/// プレイヤーとの距離で呼ぶ関数を変えている処理
 	/// </summary>
 	distance = m_player->GetPosition() - m_position;
-	if (distance.LengthSq() < BattleRange) {
-		m_state = ATK;
-	}
-	if (distance.LengthSq() > BattleRange
-		&& distance.LengthSq() < VigilanceRange) {
-		m_state = MOVE;
-	}
-	if (distance.LengthSq() > VigilanceRange) {
-		m_state = IDL;
-	}
-	//ダメージを受けている時は他ののステートよりも優先
-	if (m_isDeadfrag) {
-		m_state = DAMAGE;
+
+	//ダメージを受けた後でなければ
+	if (m_state != DAMAGE_AFTER) {
+		if (distance.LengthSq() > BattleRange
+			&& distance.LengthSq() < VigilanceRange) {
+			m_state = MOVE;
+		}
+		if (distance.LengthSq() > VigilanceRange) {
+			m_state = IDL;
+		}
+		if (distance.LengthSq() < BattleRange) {
+			m_state = ATK;
+		}
+		//ダメージを受けている時は他ののステートよりも優先
+		if (m_isDeadfrag) {
+			m_state = DAMAGE;
+		}
 	}
 }
 
@@ -256,7 +262,7 @@ void Enemy_Busyo::IdleMove()
 
 void Enemy_Busyo::ThisDamage()
 {
-	//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
+	//武器のゴーストが自分たちに当たったら、ダメージを食らったと知らせるようにする
 	QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
 		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
@@ -283,11 +289,7 @@ void Enemy_Busyo::ThisDelete()
 		InGameSoundDirector::GetInstans().RingSE_Slash();
 		m_HP--;
 		m_enemy_BusyoAnime.Play(DAMAGE, 0.2f);
-		if (!m_enemy_BusyoAnime.IsPlaying()) {
-			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-			m_isDeadfrag = false;
-
-		}
+		m_state = DAMAGE_AFTER;
 	}
 	//なくなっていたらこちらを通る
 	else {
@@ -315,5 +317,17 @@ void Enemy_Busyo::ThisDelete()
 			}
 		}
 
+	}
+}
+
+void Enemy_Busyo::DamageAfter()
+{
+	//アニメーションが流し終わったらIDLに切り替える。
+	if (!m_enemy_BusyoAnime.IsPlaying()) {
+		//切り替え
+		m_state = IDL;
+		m_enemy_BusyoAnime.Play(IDL, 0.2f);
+		//ダメージが入るようにもする
+		m_isDeadfrag = false;
 	}
 }

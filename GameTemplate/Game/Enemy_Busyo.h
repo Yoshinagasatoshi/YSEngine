@@ -34,6 +34,8 @@ public:
 	void StateJudge();
 	//ダメージ食らった時の処理
 	void ThisDamage();
+	//ダメージを食らった後の処理
+	void DamageAfter();
 	//死ぬ処理
 	void ThisDelete();
 private:
@@ -44,12 +46,13 @@ private:
 		m_attackFrameNum = 150.0f + rand() % 200;
 		return m_attackFrameNum;
 	}
-	enum State
+	enum AnimState
 	{
 		IDL = 0,
 		ATK,
 		MOVE,
 		DAMAGE,
+		DAMAGE_AFTER,
 		DEATH,
 		FIGHTING,
 		FIGHTING_KICK,
@@ -59,7 +62,7 @@ private:
 	Animation m_enemy_BusyoAnime;
 	AnimationClip m_animClip[AnimationClip_Num];
 	CVector3 distance;			//そのまま！距離です。
-	State m_state;				//そのまま
+	AnimState m_state;				//そのまま
 	SkinModel m_model;			//スキンモデル。
 	CharacterController m_characon;//キャラコン
 	CVector3 m_moveSpeed = CVector3::Zero();//移動量を入れる変数。
