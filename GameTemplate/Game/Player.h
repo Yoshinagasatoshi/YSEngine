@@ -135,7 +135,7 @@ public:
 	{
 		enemy = en;
 	}
-
+	//Xƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è
 	bool IsXTrigger()
 	{
 		return m_XTrigger;

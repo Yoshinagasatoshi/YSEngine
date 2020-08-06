@@ -53,16 +53,16 @@ Game::Game()
 					//可変長配列に↑のインスタンスを追加
 					return true;
 				}
-			if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
-				//g_goMgr.EnemyCounting();
-				//インスタンスの作成
-				m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
-				m_enemy->SetPos(objdata.position);
-				m_enemy->SetPlayerInfo(m_player);
-				m_enemy->SetGameinfo(this);
-				return true;
-			}
-			//if (enemyCount < 1) {
+				if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
+					//g_goMgr.EnemyCounting();
+					//インスタンスの作成
+					m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
+					m_enemy->SetPos(objdata.position);
+					m_enemy->SetPlayerInfo(m_player);
+					m_enemy->SetGameinfo(this);
+					return true;
+				}
+				//if (enemyCount < 1) {
 				if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
 					//インスタンスの作成
 					//g_goMgr.EnemyCounting();

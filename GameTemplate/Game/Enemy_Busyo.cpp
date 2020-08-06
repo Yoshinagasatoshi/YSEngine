@@ -8,7 +8,7 @@
 #include "Fade.h"
 #include "InGameSoundDirector.h"
 const float power = 250.0f;
-const float InitHP = 2;
+const float InitHP = 1;
 Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
@@ -16,7 +16,7 @@ Enemy_Busyo::Enemy_Busyo()
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
 	m_animClip[ATK].Load(L"Assets/animData/enemy_Busyo_Attack.tka");
-	m_animClip[IDL].Load(L"Assets/animData/enemy_Busyo_Idle.tka");
+	m_animClip[IDL].Load(L"Assets/animData/enemy_Busyo_Leftstep.tka");
 	m_animClip[MOVE].Load(L"Assets/animData/enemy_Busyo_Inflate.tka");
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
