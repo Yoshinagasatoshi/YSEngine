@@ -15,6 +15,7 @@ Texture2D<float4> cascadeShadowMap1 : register(t3);		//todo カスケードシャドウマ
 Texture2D<float4> cascadeShadowMap2 : register(t4);		//todo カスケードシャドウマップ。
 Texture2D<float4> cascadeShadowMap3 : register(t5);		//todo カスケードシャドウマップ。
 Texture2D<float4> cascadeShadowMap4 : register(t6);		//todo カスケードシャドウマップ。
+Texture2D<float4> NormalMap : register(t7);		//法線マップ
 /////////////////////////////////////////////////////////////
 // SamplerState
 /////////////////////////////////////////////////////////////
@@ -37,6 +38,7 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mLightViewProj[NUM_CASCADES];    //ライトビュープロジェクション行列
 	float4 mFarList[NUM_CASCADES];
 	int isShadowReciever;	//シャドウレシーバーフラグ。
+	int isHasNormalMap;		//法線マップ、ある？
 };
 /// <summary>
 /// ライトの数
@@ -213,6 +215,23 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 //--------------------------------------------------------------------------------------
 float4 PSMain(PSInput In) : SV_Target0
 {
+	//法線マップ
+float3 normal = 0;
+if (isHasNormalMap == 1) {
+	//法線マップがある時の処理。
+	//法線と説ベクトルの外積を計算して、従ベクトルを計算する。
+	float3 biNormal = cross(In.Normal, In.Tangent);
+	//0.0 ~ 1.0の範囲になっているタンジェントスペース法線を
+	//-1.0 ~ 1.0 の範囲に変更
+	normal = (normal * 2.0f) - 1.0f;
+	//法線をタンジェントスペースから、ワールドスペースに変換する
+	normal = In.Tangent * normal.x + biNormal * normal.y + In.Normal * normal.z;
+}
+else {
+	//ない時の処理。。
+	normal = In.Normal;
+}
+
 	/// <summary>
 	/// ライトのコード
 	/// </summary>

@@ -78,5 +78,6 @@ private:
 
 	int m_HP = 0;					//‰¼‘Ì—Í
 	int m_gacha = -1;				//UŒ‚•û–@‚Ì’Š‘I‚ğ‚·‚é•Ï”BÅ‰‚¾‚¯-1
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
 };
 

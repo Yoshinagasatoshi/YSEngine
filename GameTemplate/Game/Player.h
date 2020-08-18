@@ -191,5 +191,6 @@ private:
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 	Player_target* m_pl_target = nullptr;				//プレイヤーターゲット
 	InGameSoundDirector* m_sd;						//鳴らす
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
 };
 

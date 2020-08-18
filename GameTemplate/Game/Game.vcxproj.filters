@@ -461,44 +461,20 @@
     <None Include="Assets\sprite\Green.png">
       <Filter>Assets\sprite</Filter>
     </None>
-    <None Include="Assets\modelData\unityChan.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\result_stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\protoenemy_busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\musou_stage.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\enemy_busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\kunai.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\busyo.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\bom.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\asigaru_taicho.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\asigaru_Rowpori.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\asigaru_kunai.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
-    <None Include="Assets\modelData\asigaru.fbx">
-      <Filter>Assets\modelData</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\asigaru_kunai.fbx" />
+    <MeshContentTask Include="Assets\modelData\asigaru_taicho.fbx" />
+    <MeshContentTask Include="Assets\modelData\bom.fbx" />
+    <MeshContentTask Include="Assets\modelData\enemy_busyo.fbx" />
+    <MeshContentTask Include="Assets\modelData\kunai.fbx" />
+    <MeshContentTask Include="Assets\modelData\musou_stage.fbx" />
+    <MeshContentTask Include="Assets\modelData\protoenemy_busyo.fbx" />
+    <MeshContentTask Include="Assets\modelData\result_stage.fbx" />
+    <MeshContentTask Include="Assets\modelData\unityChan.fbx" />
+    <MeshContentTask Include="Assets\modelData\asigaru.fbx" />
+    <MeshContentTask Include="Assets\modelData\asigaru_Rowpori.fbx" />
+    <MeshContentTask Include="Assets\modelData\busyo.fbx" />
+    <MeshContentTask Include="Assets\modelData\stage.fbx" />
   </ItemGroup>
 </Project>

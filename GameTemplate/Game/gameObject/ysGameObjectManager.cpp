@@ -50,15 +50,18 @@ ysGameObjectManager::EffectTool g_Effect;
 
 	void ysGameObjectManager::Update()
 	{
+		//ヒットストップしていなければ毎回アップデート
 		if (!m_isHitStopFrag) {
 			for (auto& go : IGameObjectList) {
 				go->Update();
 			}
 		}
+		//ヒットストップをしていたらUpdateは回さない
 		if (m_isHitStopFrag) {
 			HitStopTimer++;
 			//仮なので数値や足すのは適当。うまくいけばちゃんとしたものにする
 			if (HitStopTimer > m_HitStopCount) {
+				//Updateできるように
 				m_isHitStopFrag = false;
 				HitStopTimer = 0;
 			}

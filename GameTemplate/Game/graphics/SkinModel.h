@@ -134,6 +134,13 @@ public:
 		enSkinModelSRVReg_DiffuseTexture = 0,		//!<ディフューズテクスチャ。
 		enSkinModelSRVReg_BoneMatrix,				//!<ボーン行列。
 	};
+	/// <summary>
+	/// 法線マップを設定する
+	/// </summary>
+	void SetNormalMap(ID3D11ShaderResourceView* srv) 
+	{
+		m_normalMapSRV = srv;
+	}
 private:
 	/*!
 	*@brief	サンプラステートの初期化。
@@ -170,10 +177,10 @@ private:
 		CMatrix mLightViewProj[CascadeShadowMap::SHADOWMAP_NUM];	//ライトビュープロジェクション行列
 		CVector4 mFarList[CascadeShadowMap::SHADOWMAP_NUM];
 		int isShadowReciever;	//todo シャドウレシーバーのフラグ。
+		int isHasNormalMap;		//法線マップを保持しているのか？
 		//CMatrix mLightViewProj[CascadeShadowMap::SHADOWMAP_NUM];	//ライトビュープロジェクション行列
 		//CMatrix mLightViewInv[CascadeShadowMap::SHADOWMAP_NUM];		//ライトビューの逆行列
 		//CVector4 mFar[CascadeShadowMap::SHADOWMAP_NUM];
-	
 	};
 	//ディレクションライトの定数バッファ
 	struct SDirectionLight {
@@ -197,6 +204,7 @@ private:
 	DirectX::Model*		m_modelDx;					   	   //!<DirectXTKが提供するモデルクラス。
 	ID3D11SamplerState* m_samplerState = nullptr;		   //!<サンプラステート。
 	ID3D11ShaderResourceView* m_albedoTextureSRV = nullptr;//!<アルベドテクスチャ。
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
 	const int Lightnumber = 4;
 	bool m_isShadowReciever = true;
 	bool m_isShadowCaster = true;

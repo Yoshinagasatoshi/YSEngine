@@ -13,6 +13,17 @@ Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
+	DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(),
+		L"Assets/modelData/_Users_GC1831_Desktop_YSEngine_YSEngine_GameTemplate_Game_Assets_modelData_BUSYO__HUKU.png.dds",		//ロードするテクスチャのパス
+		0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE,
+		0,
+		0,
+		false,
+		nullptr,
+		&m_normalMapSRV	//作成されたSRVのアドレスの格納先
+	);
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
 	m_animClip[ATK].Load(L"Assets/animData/enemy_Busyo_Attack.tka");
