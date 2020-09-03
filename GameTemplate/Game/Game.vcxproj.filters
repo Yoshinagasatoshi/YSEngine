@@ -476,5 +476,8 @@
     <MeshContentTask Include="Assets\modelData\asigaru_Rowpori.fbx" />
     <MeshContentTask Include="Assets\modelData\busyo.fbx" />
     <MeshContentTask Include="Assets\modelData\stage.fbx" />
+    <MeshContentTask Include="Assets\modelData\sotowakutukiStage.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
   </ItemGroup>
 </Project>

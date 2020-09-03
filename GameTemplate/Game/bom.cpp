@@ -33,7 +33,8 @@ void bom::Update()
 			//se->Init(L"Assets/sound/fuse.wav");
 			//se->Play(false);
 			//se->SetVolume(0.1f);
-			InGameSoundDirector::GetInstans().RingSE_Fuse();
+
+			//InGameSoundDirector::GetInstans().RingSE_Fuse();
 		}
 		/// <summary>
 		/// プレイヤーアクセスクラスを通して伝令
@@ -135,7 +136,8 @@ void bom::HitThebom()
 		{
 			m_player->PlayerDamage();
 
-			InGameSoundDirector::GetInstans().RingSE_Destruct();
+			//InGameSoundDirector::GetInstans().RingSE_Destruct();
+
 			//CSoundSource* se = new CSoundSource;
 			//se->Init(L"Assets/sound/destruction.wav");
 			//se->Play(false);

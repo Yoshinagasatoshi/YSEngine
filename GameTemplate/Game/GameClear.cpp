@@ -11,9 +11,9 @@ GameClear::GameClear()
 {
 	m_soundEngine.Init();
 	//âπSEëfçﬁ
-	m_bgm.Init(L"Assets/sound/StageClear.wav");
-	m_bgm.Play(true);
-	m_bgm.SetVolume(0.5f);
+	//m_bgm.Init(L"Assets/sound/StageClear.wav");
+	//m_bgm.Play(true);
+	//m_bgm.SetVolume(0.5f);
 
 	//SoundDirector::GetInstans().TitleBGM();
 

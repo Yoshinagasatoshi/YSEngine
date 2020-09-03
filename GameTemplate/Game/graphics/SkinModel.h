@@ -63,6 +63,17 @@ public:
 	*/
 	void Draw( CMatrix viewMatrix, CMatrix projMatrix ,EnRenderMode enRenderMode = enRenderMode_Normal);
 
+	/*!
+	*@brief	モデルマテリアルの検索。
+	*@param[in]	findEffect		マテリアルを見つけた時に呼ばれるコールバック関数
+	*/
+	void FindMaterial(std::function<void(SkinModelEffect*)> findMaterial) const
+	{
+		FindMesh([&](auto& mesh) {
+			SkinModelEffect* effect = reinterpret_cast<SkinModelEffect*>(mesh->effect.get());
+			findMaterial(effect);
+			});
+	}
 	/// <summary>
 	// マテリアルに対してクエリを行う
 	/// </summary>
@@ -141,6 +152,13 @@ public:
 	{
 		m_normalMapSRV = srv;
 	}
+	/// <summary>
+	/// スペキュラマップを設定する
+	/// </summary>
+	void SetSpecularMap(ID3D11ShaderResourceView* srv)
+	{
+		m_specularMapSRV = srv;
+	}
 private:
 	/*!
 	*@brief	サンプラステートの初期化。
@@ -159,6 +177,7 @@ private:
 	/// ディレクションライトの初期化。
 	/// </summary>
 	void InitDirectionLight();
+
 	/*!
 	*@brief	スケルトンの初期化。
 	*@param[in]	filePath		ロードするcmoファイルのファイルパス。
@@ -205,6 +224,8 @@ private:
 	ID3D11SamplerState* m_samplerState = nullptr;		   //!<サンプラステート。
 	ID3D11ShaderResourceView* m_albedoTextureSRV = nullptr;//!<アルベドテクスチャ。
 	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
+	ID3D11ShaderResourceView* m_specularMapSRV = nullptr;		//スぺキュラマップのSRV
+
 	const int Lightnumber = 4;
 	bool m_isShadowReciever = true;
 	bool m_isShadowCaster = true;

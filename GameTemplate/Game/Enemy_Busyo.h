@@ -57,19 +57,29 @@ private:
 		FIGHTING,
 		FIGHTING_KICK,
 		FIGHTING_LONG,
+		LEFT_STEP,
 		AnimationClip_Num
 	};
 	Animation m_enemy_BusyoAnime;
+	Animation m_enemy_BusyoAnime2;
+	Animation m_enemy_BusyoAnime3;
+
+
 	AnimationClip m_animClip[AnimationClip_Num];
 	CVector3 distance;			//そのまま！距離です。
 	AnimState m_state;				//そのまま
 	SkinModel m_model;			//スキンモデル。
+	SkinModel m_model2;			//スキンモデル。
+	SkinModel m_model3;			//スキンモデル。
+
+
 	CharacterController m_characon;//キャラコン
 	CVector3 m_moveSpeed = CVector3::Zero();//移動量を入れる変数。
 	bool m_charaConUse = false;//キャラコンが入っているか確認する変数。
 	bool m_isDeadfrag = false;
 	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
 	bool m_isDestroyed = false;
+	bool m_isATKMode = false;			//攻撃態勢
 
 	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
 	float m_frameTimer = 0.0f;		//時間を図るため
@@ -79,5 +89,7 @@ private:
 	int m_HP = 0;					//仮体力
 	int m_gacha = -1;				//攻撃方法の抽選をする変数。最初だけ-1
 	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
+	ID3D11ShaderResourceView* m_specMapSRV = nullptr;
+
 };
 

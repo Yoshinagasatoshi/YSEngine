@@ -14,5 +14,9 @@ private:
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 m_scale = CVector3::One(); //背景の大きさ
 	PhysicsStaticObject m_physicsStaticObject;
+	ID3D11ShaderResourceView* m_earthNormalMapSRV;		//!<土法線マップのSRV。
+	ID3D11ShaderResourceView* m_eatthSpecularMapSRV;		//!<土スペキュラマップのSRV。
+	ID3D11ShaderResourceView* m_grassNormalMapSRV;		//!<草法線マップのSRV。
+	ID3D11ShaderResourceView* m_grassSpecularMapSRV;		//!<草スペキュラマップのSRV。
 };
 

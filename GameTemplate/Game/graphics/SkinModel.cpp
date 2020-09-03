@@ -229,13 +229,7 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRend
 	else {
 		vsCb.isShadowReciever = 0;
 	}
-	//法線マップを使用するかのフラグを立てる
-	if (m_normalMapSRV != nullptr) {
-		vsCb.isHasNormalMap = 1;
-	}
-	else {
-		vsCb.isHasNormalMap = 0;
-	}
+
 	ID3D11ShaderResourceView* srvArray[]{
 		shadowMap->GetShadowMapSRV()
 	};
@@ -263,10 +257,7 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRend
 		auto modelMaterial = reinterpret_cast<ModelEffect*>(material);
 		modelMaterial->SetRenderMode(enRenderMode);
 	});
-	if (m_normalMapSRV != nullptr) {
-		//法線マップが設定されていたらレジストに追加する
-		d3dDeviceContext->PSSetShaderResources(7, 1, &m_normalMapSRV);
-	}
+
 	//描画。
 	m_modelDx->Draw(
 		d3dDeviceContext,

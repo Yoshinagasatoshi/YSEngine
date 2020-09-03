@@ -10,9 +10,9 @@ Title::Title()
 {
 	m_soundEngine.Init();
 	//âπSEëfçﬁ
-	m_bgm.Init(L"Assets/sound/Hokora.wav");
-	m_bgm.Play(true);
-	m_bgm.SetVolume(0.5f);
+	//m_bgm.Init(L"Assets/sound/Hokora.wav");
+	//m_bgm.Play(true);
+	//m_bgm.SetVolume(0.5f);
 
 	//SoundDirector::GetInstans().SoundInit();
 	//SoundDirector::GetInstans().TitleBGM();
@@ -44,7 +44,7 @@ void Title::Update()
 	if (m_isWaitFadeOut) {
 		Fade::Getinstance().StartFadeIn();
 		if (!Fade::Getinstance().IsFade()) {
-			m_bgm.Stop();
+			//m_bgm.Stop();
 			InGameSoundDirector::GetInstans().UpdateOn();
 			/*Game* game = */g_goMgr.NewGameObject<Game>("Game");
 			g_goMgr.DeleteGOObject(this);

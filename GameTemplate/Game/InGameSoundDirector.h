@@ -2,7 +2,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-//今、SEが何個なっているかを計測して、それを流すかどうかを決めるクラ
+//今、SEが何個なっているかを計測して、それを流すかどうかを決めるクラス
 //BGMの音とかもこいつに担当してもらうことに
 class InGameSoundDirector: public IGameObject
 {
@@ -129,6 +129,24 @@ public:
 			addringnum();
 		}
 	}
+	
+	//SE_けり音
+	void RingSE_Kick()
+	{
+		if (m_seRingCount < Max_RingNum) {
+			if (m_Swing.IsPlaying()) {
+				m_Swing2.Init(L"Assets/sound/RotaryKick.wav");
+				m_Swing2.Play(false);
+				m_Swing2.SetVolume(3.0f);//試しにでかくしている。後で調整
+			}
+			else {
+				m_Kick1.Init(L"Assets/sound/RoundHouseKick.wav");
+				m_Kick1.Play(false);
+				m_Kick1.SetVolume(3.0f);//試しにでかくしている。後で調整
+			}
+			addringnum();
+		}
+	}
 	//Updateをオンにする
 	void UpdateOn()
 	{
@@ -151,7 +169,7 @@ private:
 	//待機待ちのseがどれだけあるかをカウントする。
 	int m_seStockCount = 0;
 	//ならせる効果音の上限数
-	const int Max_RingNum = 2;
+	const int Max_RingNum = 3;
 
 	//SoundDirectorクラスでゲーム内の音楽を全部管理することにした。
 	CSoundSource m_bgm;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
@@ -165,6 +183,8 @@ private:
 	CSoundSource m_Down;//倒れる音
 	CSoundSource m_fuse;//導火線の音
 	CSoundSource m_Destruct;//爆発の音
+	CSoundSource m_Kick1;//けり音1
+	CSoundSource m_Kick2;//けり音2
 
 	bool m_isUpdate = false;//アプデ関数呼ぶかどうか。
 };

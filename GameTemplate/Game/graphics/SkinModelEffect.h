@@ -25,6 +25,10 @@ protected:
 	Shader m_vsShadowMap;
 	Shader m_psShadowMap;
 
+	
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
+	ID3D11ShaderResourceView* m_specularMapSRV = nullptr;		//スぺキュラマップのSRV
+
 	Shader m_vsCascadeShadowMap;			//カスケードシャドウマップ生成用の頂点シェーダー
 
 public:
@@ -78,6 +82,20 @@ public:
 	void SetRenderMode(EnRenderMode renderMode)
 	{
 		m_renderMode = renderMode;
+	}
+	/// <summary>
+/// 法線マップを設定する
+/// </summary>
+	void SetNormalMap(ID3D11ShaderResourceView* srv)
+	{
+		m_normalMapSRV = srv;
+	}
+	/// <summary>
+	/// スペキュラマップを設定する
+	/// </summary>
+	void SetSpecularMap(ID3D11ShaderResourceView* srv)
+	{
+		m_specularMapSRV = srv;
 	}
 };
 /*!

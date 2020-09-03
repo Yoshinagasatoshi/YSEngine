@@ -13,9 +13,14 @@ Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
+	//てすと
+	m_model2.Init(L"Assets/modelData/enemy_busyo.cmo");
+	m_model3.Init(L"Assets/modelData/enemy_busyo.cmo");
+
+	//normalmap
 	DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(),
-		L"Assets/modelData/_Users_GC1831_Desktop_YSEngine_YSEngine_GameTemplate_Game_Assets_modelData_BUSYO__HUKU.png.dds",		//ロードするテクスチャのパス
+		L"Assets/modelData/Ch24_1001_Normal.dds",		//ロードするテクスチャのパス
 		0,
 		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE,
 		0,
@@ -24,23 +29,55 @@ Enemy_Busyo::Enemy_Busyo()
 		nullptr,
 		&m_normalMapSRV	//作成されたSRVのアドレスの格納先
 	);
+
+	//specmap
+	DirectX::CreateDDSTextureFromFileEx(
+		g_graphicsEngine->GetD3DDevice(),
+		L"Assets/modelData/Ch24_1001_Specular.dds", 
+		0,
+		D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE,
+		0, 
+		0,
+		false,
+		nullptr,
+		&m_specMapSRV
+	);
+
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
-	m_animClip[ATK].Load(L"Assets/animData/enemy_Busyo_Attack.tka");
-	m_animClip[IDL].Load(L"Assets/animData/enemy_Busyo_Leftstep.tka");
+	//m_animClip[ATK].Load(L"Assets/animData/enemy_Busyo_Attack.tka");
+	m_animClip[ATK].Load(L"Assets/animData/atodekesuKick.tka");
+	m_animClip[IDL].Load(L"Assets/animData/enemy_Busyo_Idle.tka");
 	m_animClip[MOVE].Load(L"Assets/animData/enemy_Busyo_Inflate.tka");
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
 	m_animClip[FIGHTING].Load(L"Assets/animData/enemy_Busyo_Fighting_Pose.tka");
 	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemyBusyo_newKick.tka");
 	m_animClip[FIGHTING_LONG].Load(L"Assets/animData/enemy_Busyo_LongAttack.tka");
+	m_animClip[LEFT_STEP].Load(L"Assets/animData/enemy_Busyo_Leftstep.tka");
+	m_model.SetNormalMap(m_normalMapSRV);
+	//てすと
+	m_model2.SetNormalMap(m_normalMapSRV);
+
+	m_model.SetSpecularMap(m_specMapSRV);
+	m_model2.SetSpecularMap(m_specMapSRV);
 
 	m_enemy_BusyoAnime.Init(
 		m_model,
 		m_animClip,
 		AnimationClip_Num
 	);
-
+	//てすと
+	m_enemy_BusyoAnime2.Init(
+		m_model2,
+		m_animClip,
+		AnimationClip_Num
+	);
+	m_enemy_BusyoAnime3.Init(
+		m_model3,
+		m_animClip,
+		AnimationClip_Num
+	);
 	m_animClip[ATK].SetLoopFlag(false);
 	m_animClip[MOVE].SetLoopFlag(false);
 	m_animClip[IDL].SetLoopFlag(true);
@@ -49,6 +86,7 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[FIGHTING].SetLoopFlag(true);
 	m_animClip[FIGHTING_KICK].SetLoopFlag(false);
 	m_animClip[FIGHTING_LONG].SetLoopFlag(false);
+	m_animClip[LEFT_STEP].SetLoopFlag(false);
 
 	m_enemy_BusyoAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
@@ -56,6 +94,8 @@ Enemy_Busyo::Enemy_Busyo()
 		m_en_Wepon->SetPosition(m_position);
 		m_en_Wepon->SetPlayerInfo(m_player);
 		m_en_Wepon->GhostInit();
+
+		InGameSoundDirector::GetInstans().RingSE_Kick();
 		}
 	);
 }
@@ -95,6 +135,10 @@ void Enemy_Busyo::Update()
 	//だめーｚしょり
 	ThisDamage();
 
+	//てすと
+	m_enemy_BusyoAnime2.Update(1.0f / 30.0f);
+	m_enemy_BusyoAnime3.Update(1.0f / 30.0f);
+
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
 	auto footStep = m_enemy_BusyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 	//if (m_busyoState == BusyoAttack) {
@@ -112,7 +156,11 @@ void Enemy_Busyo::Update()
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+	//てすと
+	m_model2.UpdateWorldMatrix(CVector3{0.0f,-330.0f,0.0f}, m_rotation, m_scale);
+	m_model3.UpdateWorldMatrix(CVector3{0.0f,-330.0f,-50.0f }, m_rotation, m_scale);
 
+	//4398,-278,-6405
 }
 
 void Enemy_Busyo::CharaconInit()
@@ -128,6 +176,15 @@ void Enemy_Busyo::CharaconInit()
 void Enemy_Busyo::Draw()
 {
 	m_model.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix()
+	);
+	//てすと
+	m_model2.Draw(
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix()
+	);	
+	m_model3.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
@@ -180,17 +237,17 @@ void Enemy_Busyo::AttackMove()
 	{
 		if (!m_isFight) {
 			//攻撃方法の抽選
-			m_gacha = 1;//rand() % 3;
+			m_gacha = rand() % 2;
 			m_isFight = true;
 		}
 		//多分長くなるから関数にすっぞ
 		switch (m_gacha)
 		{
+			m_isATKMode = true;
 		case 0:
 			m_enemy_BusyoAnime.Play(ATK, 0.2f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
-				InGameSoundDirector::GetInstans().RingSE_Slash();
 				m_frameTimer = 0;
 				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
 				m_isFight = false;
@@ -199,25 +256,25 @@ void Enemy_Busyo::AttackMove()
 		case 1:
 			//アニメーションイベントがある
 			//アニメーションが流れたらダメージを食らうはず
-			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.2f);
+			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.5f);
 			if (!m_enemy_BusyoAnime.IsPlaying())
 			{
-				InGameSoundDirector::GetInstans().RingSE_Slash();
+				//InGameSoundDirector::GetInstans().RingSE_Slash();
 				m_frameTimer = 0;
 				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
 				m_isFight = false;
 			}
 			break;
-		case 2:
-			InGameSoundDirector::GetInstans().RingSE_Slash();
-			m_enemy_BusyoAnime.Play(FIGHTING_LONG, 0.2f);
-			if (!m_enemy_BusyoAnime.IsPlaying())
-			{
-				m_frameTimer = 0;
-				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-				m_isFight = false;
-			}
-			break;
+		//case 2:
+		//	m_enemy_BusyoAnime.Play(FIGHTING_LONG, 0.2f);
+		//	if (!m_enemy_BusyoAnime.IsPlaying())
+		//	{
+		//		InGameSoundDirector::GetInstans().RingSE_Slash();
+		//		m_frameTimer = 0;
+		//		m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+		//		m_isFight = false;
+		//	}
+		//	break;
 		}
 
 	}
@@ -304,10 +361,11 @@ void Enemy_Busyo::ThisDelete()
 	}
 	//なくなっていたらこちらを通る
 	else {
-		m_state = DAMAGE;
-		m_moveSpeed = CVector3::Zero();
 		//enemy用にも
 		ThisDeath();
+		m_state = DAMAGE;
+		m_moveSpeed = CVector3::Zero();
+		
 		//プレイヤーに無敵をつける。
 		//プレイヤーがボスを倒した後に死ぬと
 		//ゲームクリアとゲームオーバーが一緒に出てしまうため。

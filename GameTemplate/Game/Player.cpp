@@ -20,7 +20,7 @@ const float PLAYER_COLLIDER_RADIUS = 60.0f;		//ƒvƒŒƒCƒ„[‚ÌƒJƒvƒZƒ‹ƒRƒ‰ƒCƒ_[‚Ì”
 
 const float SpeedAmount = 1500.0f;				//•½–Ê‚ÌˆÚ“®—Ê
 const float gravity = 200.0f;					//d—Í
-const float JumpPower = 800.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
+const float JumpPower = 1600.0f;//800.0f;				//ƒvƒŒƒCƒ„[‚Ì”ò‚Ô—Í
 const float JumpATKPower = 350.0f;				//ƒWƒƒƒ“ƒv‹`—‚Ì‹­‚³
 const float standardPower = 200.0f;				//ƒvƒŒƒCƒ„[‚Ì“G‚«”ò‚Î‚µ—Í
 const float limit = 2.0f;						//d—ÍŒW”‚ÌãŒÀ

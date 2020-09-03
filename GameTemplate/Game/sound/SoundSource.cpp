@@ -76,6 +76,8 @@ void CSoundSource::Release()
 	}
 	if (m_sourceVoice != nullptr) {
 		m_sourceVoice->DestroyVoice();
+		//m_sourceVoice->Stop();
+
 		m_sourceVoice = nullptr;
 	}
 	g_soundEngine->RemoveSoundSource(this);
