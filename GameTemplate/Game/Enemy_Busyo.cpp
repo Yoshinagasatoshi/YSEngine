@@ -8,14 +8,12 @@
 #include "Fade.h"
 #include "InGameSoundDirector.h"
 const float power = 250.0f;
-const float InitHP = 1;
+//ボスの体力。ここで設定する。
+const float InitHP = 6;
 Enemy_Busyo::Enemy_Busyo()
 {
 	m_HP = InitHP;
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
-	//てすと
-	m_model2.Init(L"Assets/modelData/enemy_busyo.cmo");
-	m_model3.Init(L"Assets/modelData/enemy_busyo.cmo");
 
 	//normalmap
 	DirectX::CreateDDSTextureFromFileEx(
@@ -46,6 +44,7 @@ Enemy_Busyo::Enemy_Busyo()
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
 	//m_animClip[ATK].Load(L"Assets/animData/enemy_Busyo_Attack.tka");
+	//アニメーションデータをロード
 	m_animClip[ATK].Load(L"Assets/animData/atodekesuKick.tka");
 	m_animClip[IDL].Load(L"Assets/animData/enemy_Busyo_Idle.tka");
 	m_animClip[MOVE].Load(L"Assets/animData/enemy_Busyo_Inflate.tka");
@@ -55,29 +54,19 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemyBusyo_newKick.tka");
 	m_animClip[FIGHTING_LONG].Load(L"Assets/animData/enemy_Busyo_LongAttack.tka");
 	m_animClip[LEFT_STEP].Load(L"Assets/animData/enemy_Busyo_Leftstep.tka");
+
+	//モデルにノーマルマップとスペキュラを適用
 	m_model.SetNormalMap(m_normalMapSRV);
-	//てすと
-	m_model2.SetNormalMap(m_normalMapSRV);
 
 	m_model.SetSpecularMap(m_specMapSRV);
-	m_model2.SetSpecularMap(m_specMapSRV);
 
+	//アニメーションするモデルとアニメーションデータを紐づける
 	m_enemy_BusyoAnime.Init(
 		m_model,
 		m_animClip,
 		AnimationClip_Num
 	);
-	//てすと
-	m_enemy_BusyoAnime2.Init(
-		m_model2,
-		m_animClip,
-		AnimationClip_Num
-	);
-	m_enemy_BusyoAnime3.Init(
-		m_model3,
-		m_animClip,
-		AnimationClip_Num
-	);
+	//アニメーションがループするかのフラグを設定
 	m_animClip[ATK].SetLoopFlag(false);
 	m_animClip[MOVE].SetLoopFlag(false);
 	m_animClip[IDL].SetLoopFlag(true);
@@ -88,13 +77,15 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[FIGHTING_LONG].SetLoopFlag(false);
 	m_animClip[LEFT_STEP].SetLoopFlag(false);
 
+	//アニメーションイベントが呼ばれたときの処理
+	//攻撃判定を出すようにしている。
 	m_enemy_BusyoAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
 		m_en_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("EN_Wepon");
 		m_en_Wepon->SetPosition(m_position);
 		m_en_Wepon->SetPlayerInfo(m_player);
 		m_en_Wepon->GhostInit();
-
+		//音を出す。
 		InGameSoundDirector::GetInstans().RingSE_Kick();
 		}
 	);
@@ -135,10 +126,6 @@ void Enemy_Busyo::Update()
 	//だめーｚしょり
 	ThisDamage();
 
-	//てすと
-	m_enemy_BusyoAnime2.Update(1.0f / 30.0f);
-	m_enemy_BusyoAnime3.Update(1.0f / 30.0f);
-
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
 	auto footStep = m_enemy_BusyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
 	//if (m_busyoState == BusyoAttack) {
@@ -156,11 +143,6 @@ void Enemy_Busyo::Update()
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	//てすと
-	m_model2.UpdateWorldMatrix(CVector3{0.0f,-330.0f,0.0f}, m_rotation, m_scale);
-	m_model3.UpdateWorldMatrix(CVector3{0.0f,-330.0f,-50.0f }, m_rotation, m_scale);
-
-	//4398,-278,-6405
 }
 
 void Enemy_Busyo::CharaconInit()
@@ -176,15 +158,6 @@ void Enemy_Busyo::CharaconInit()
 void Enemy_Busyo::Draw()
 {
 	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
-	);
-	//てすと
-	m_model2.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
-	);	
-	m_model3.Draw(
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
@@ -379,6 +352,8 @@ void Enemy_Busyo::ThisDelete()
 			if (!Fade::Getinstance().IsFade()) {
 				g_goMgr.ResetCount();
 				InGameSoundDirector::GetInstans().UpdateOff();
+				InGameSoundDirector::GetInstans().SoundRelease();
+
 				//倒せばokという状態に
 				g_goMgr.NewGameObject<GameClear>("GameClear");
 				//消せてねえ？

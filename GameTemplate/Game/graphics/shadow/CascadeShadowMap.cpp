@@ -228,10 +228,10 @@ void CascadeShadowMap::Update()
 			vectorMax.z
 		);
 
-		//ライトビュープロジェクション行列を求めていくぅ～
+		//ライトビュープロジェクション行列を求めていく
 		m_lightVieProjMatrix[i].Mul(lightViewMatrix ,projMatrix);
 
-		m_farList[i] = farClip * 0.95;
+		m_farList[i] = farClip * 0.45;//0.95;
 
 		m_lightViewMatrixInv[i].Inverse(lightViewMatrix);
 

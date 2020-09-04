@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "gameObject/ysGameObjectManager.h"
+
 GameCamera::GameCamera()
 {
 	

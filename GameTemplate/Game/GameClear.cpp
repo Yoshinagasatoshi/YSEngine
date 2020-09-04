@@ -11,11 +11,9 @@ GameClear::GameClear()
 {
 	m_soundEngine.Init();
 	//âπSEëfçﬁ
-	//m_bgm.Init(L"Assets/sound/StageClear.wav");
-	//m_bgm.Play(true);
-	//m_bgm.SetVolume(0.5f);
-
-	//SoundDirector::GetInstans().TitleBGM();
+	m_bgm.Init(L"Assets/sound/StageClear.wav");
+	m_bgm.Play(true);
+	m_bgm.SetVolume(0.5f);
 
 	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
 	m_skinModelStage.Init(L"Assets/modelData/result_stage.cmo");

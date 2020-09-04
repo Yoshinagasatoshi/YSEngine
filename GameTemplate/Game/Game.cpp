@@ -21,7 +21,7 @@ Game::Game()
 	g_goMgr.ResetCount();
 	//音SE素材
 	InGameSoundDirector::GetInstans().SoundInit();
-	//InGameSoundDirector::GetInstans().InGameStartUpBGM();
+	InGameSoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
 	//プレイヤー
 	m_player = g_goMgr.NewGameObject<Player>("Player");
@@ -41,8 +41,6 @@ Game::Game()
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-			enemyCount++;
-			if (enemyCount < 1) {
 				if (wcscmp(objdata.name, L"asigaru") == 0) {
 					g_goMgr.EnemyCounting();
 					//インスタンスの作成
@@ -54,7 +52,7 @@ Game::Game()
 					//可変長配列に↑のインスタンスを追加
 					return true;
 				}
-			}
+				//敵武将
 				if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
 					//g_goMgr.EnemyCounting();
 					//インスタンスの作成
@@ -64,7 +62,7 @@ Game::Game()
 					m_enemy->SetGameinfo(this);
 					return true;
 				}
-				if (enemyCount < 1) {
+				//隊長兵(爆発兵)
 				if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
 					//インスタンスの作成
 					//g_goMgr.EnemyCounting();
@@ -75,7 +73,6 @@ Game::Game()
 					m_enemy->SetGameinfo(this);
 					return true;
 				}
-			}
 			return true;
 		});
 	Fade::Getinstance().StartFadeOut();

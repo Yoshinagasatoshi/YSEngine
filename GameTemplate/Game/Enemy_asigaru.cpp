@@ -174,14 +174,14 @@ void Enemy_asigaru::Update()
 			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
-					if (m_player->IsXTrigger()) {
-						//X‚ÆY‚Å“n‚·ˆø”‚ğ•Ï‚¦‚é
-						g_goMgr.HitStopOn(8);
-					}
-					else {
-						//X‚È‚Ì‚Å­‚È‚ß‚É
-						g_goMgr.HitStopOn(4);
-					}
+					//if (m_player->IsXTrigger()) {
+					//	//X‚ÆY‚Å“n‚·ˆø”‚ğ•Ï‚¦‚é
+					//	g_goMgr.HitStopOn(8);
+					//}
+					//else {
+					//	//X‚È‚Ì‚Å­‚È‚ß‚É
+					//	g_goMgr.HitStopOn(4);
+					//}
 					//’Ê‚Á‚Ä‚¢‚é‚Ì‚ÍŠm”FŠ®—¹
 					m_isDeadfrag = true;
 					//enemy—p‚É‚à

@@ -3,7 +3,7 @@
 
 DebugWireframe::DebugWireframe()
 {
-
+	int i = 0;
 }
 
 DebugWireframe::~DebugWireframe()
@@ -57,7 +57,7 @@ void DebugWireframe::Context()
 }
 
 //1フレーム内にdrawLineは線の数だけ行う
-//つまり処理が超絶重い
+//つまり処理が重い
 void DebugWireframe::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	//まずはデバイスコンテキストを取得

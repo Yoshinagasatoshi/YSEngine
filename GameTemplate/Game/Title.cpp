@@ -10,9 +10,9 @@ Title::Title()
 {
 	m_soundEngine.Init();
 	//âπSEëfçﬁ
-	//m_bgm.Init(L"Assets/sound/Hokora.wav");
-	//m_bgm.Play(true);
-	//m_bgm.SetVolume(0.5f);
+	m_bgm.Init(L"Assets/sound/Hokora.wav");
+	m_bgm.Play(true);
+	m_bgm.SetVolume(0.5f);
 
 	//SoundDirector::GetInstans().SoundInit();
 	//SoundDirector::GetInstans().TitleBGM();

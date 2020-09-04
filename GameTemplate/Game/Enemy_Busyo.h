@@ -61,16 +61,11 @@ private:
 		AnimationClip_Num
 	};
 	Animation m_enemy_BusyoAnime;
-	Animation m_enemy_BusyoAnime2;
-	Animation m_enemy_BusyoAnime3;
-
 
 	AnimationClip m_animClip[AnimationClip_Num];
 	CVector3 distance;			//そのまま！距離です。
 	AnimState m_state;				//そのまま
 	SkinModel m_model;			//スキンモデル。
-	SkinModel m_model2;			//スキンモデル。
-	SkinModel m_model3;			//スキンモデル。
 
 
 	CharacterController m_characon;//キャラコン

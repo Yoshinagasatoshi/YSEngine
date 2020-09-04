@@ -68,15 +68,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//g_goMgr.Draw();
 		//g_goMgr.DrawNoAlphaBlend();
 		g_graphicsEngine->Render();
+		//カメラの更新。
+		g_camera3D.Update();
+		g_camera2D.Update();
 		Fade::Getinstance().Update();
 		Fade::Getinstance().PostDraw();
 	
 
 		g_goMgr.Delete();
 
-		//カメラの更新。
-		g_camera3D.Update();
-		g_camera2D.Update();
+
 		//描画終了。
 		g_graphicsEngine->EndRender();
 		//1フレームの時間計測終了。

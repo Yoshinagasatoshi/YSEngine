@@ -18,6 +18,11 @@ public:
 		//サウンドエンジンを初期化。
 		g_soundEngine->Init();
 	}
+	//サウンドエンジンの開放処理をしたいときに呼ぶ。
+	void SoundRelease()
+	{
+		g_soundEngine->Release();
+	}
 
 	void Update();
 
@@ -173,18 +178,16 @@ private:
 
 	//SoundDirectorクラスでゲーム内の音楽を全部管理することにした。
 	CSoundSource m_bgm;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
-	CSoundSource m_bgm2;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
-	CSoundSource m_bgm3;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
 
 	const float BGM_NormalVol = 1.0f;//通常時のBGM音
 	CSoundSource m_Swing;//剣を振る音
-	CSoundSource m_Swing2;//剣を振る音2
+	CSoundSource m_Swing2;//剣を振る音2 m_Swing1つでは足りなかったため追加
 	CSoundSource m_Slash;//斬る音
 	CSoundSource m_Down;//倒れる音
 	CSoundSource m_fuse;//導火線の音
 	CSoundSource m_Destruct;//爆発の音
 	CSoundSource m_Kick1;//けり音1
-	CSoundSource m_Kick2;//けり音2
+	CSoundSource m_Kick2;//けり音2 m_Swing2と同じ
 
 	bool m_isUpdate = false;//アプデ関数呼ぶかどうか。
 };

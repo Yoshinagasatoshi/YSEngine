@@ -73,8 +73,8 @@ void CSoundSource::Release()
 {
 	if (m_isStreaming) {
 		m_waveFile->Release();
-	}
-	if (m_sourceVoice != nullptr) {
+	}	
+	else if (m_sourceVoice != nullptr) {
 		m_sourceVoice->DestroyVoice();
 		//m_sourceVoice->Stop();
 
