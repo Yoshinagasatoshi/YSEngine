@@ -331,6 +331,7 @@ void Enemy_Busyo::ThisDelete()
 		m_HP--;
 		m_enemy_BusyoAnime.Play(DAMAGE, 0.2f);
 		m_state = DAMAGE_AFTER;
+		m_moveSpeed = CVector3::Zero();
 	}
 	//‚È‚­‚È‚Á‚Ä‚¢‚½‚ç‚±‚¿‚ç‚ð’Ê‚é
 	else {

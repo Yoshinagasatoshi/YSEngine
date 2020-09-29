@@ -9,7 +9,7 @@ BackGround::BackGround()
 	//m_model.Init(L"Assets/modelData/musou_stage.cmo");
 
 	//法線マップとスペキュラをロード。
-		//normalmap
+	//normalmap
 	DirectX::CreateDDSTextureFromFileEx(
 		g_graphicsEngine->GetD3DDevice(),
 		L"Assets/modelData/Earth_Normals.dds",		//ロードするテクスチャのパス
@@ -42,7 +42,7 @@ BackGround::BackGround()
 			material->SetNormalMap(m_grassNormalMapSRV);
 		}
 	});
-//	m_model.SetNormalMap(m_earthNormalMapSRV);
+	m_model.SetNormalMap(m_earthNormalMapSRV);
 
 	//m_model.SetShadowCaster(false);
 	//m_physicsStaticObject.CreateCommon(m_position, m_rotation);

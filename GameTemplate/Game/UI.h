@@ -22,6 +22,8 @@ private:
 
 	Sprite m_mapSprite;
 
+	Sprite m_playerPointer;
+
 	//sprite1 体力ゲージのデータ
 	CVector3 m_position = CVector3{0.0f,-280.0f,0.0f};
 	CQuaternion m_rotation = CQuaternion::Identity();
@@ -35,10 +37,14 @@ private:
 	CVector2 m_pivot2 = { 0.5f,0.5f };
 
 	//マップ
-	CVector3 m_position3 = CVector3{ 300.0f,280.0f,0.0f };
+	CVector3 m_position3 = CVector3{ 380.0f,240.0f,0.0f };
 	CQuaternion m_rotation3 = CQuaternion::Identity();
 	CVector3 m_scale3 = CVector3::One();
 	CVector2 m_pivot3 = { 0.5f,0.5f };
+
+	//プレイヤーポインタ
+	CVector3 m_position4 = CVector3{ 390.0f,192.0f,0.0f };
+	CVector3 m_scale4 = CVector3::One() * 10.0f;
 
 	Player* m_player;
 	//プレイヤーのHPを保存

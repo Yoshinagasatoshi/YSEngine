@@ -104,6 +104,18 @@ public:
 			addringnum();//効果音が鳴っている数を+1する。
 		}
 	}
+	//SE_走る音
+	void RingSE_Run()
+	{
+		if (m_seRingCount < Max_RingNum) {
+			if (!m_zoriRun.IsPlaying()) {
+				m_zoriRun.Init(L"Assets/sound/Zori_run.wav");//鳴らす音のデータの初期化
+				m_zoriRun.Play(false);//再生。falseは一度だけ再生する。
+				m_zoriRun.SetVolume(1.0f);//効果音の音の量。
+				addringnum();//効果音が鳴っている数を+1する。
+			}
+		}
+	}
 	//SE_倒れる音
 	void RingSE_Down() 
 	{
@@ -179,7 +191,7 @@ private:
 	//SoundDirectorクラスでゲーム内の音楽を全部管理することにした。
 	CSoundSource m_bgm;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
 
-	const float BGM_NormalVol = 1.0f;//通常時のBGM音
+	const float BGM_NormalVol = 0.8f;//通常時のBGM音
 	CSoundSource m_Swing;//剣を振る音
 	CSoundSource m_Swing2;//剣を振る音2 m_Swing1つでは足りなかったため追加
 	CSoundSource m_Slash;//斬る音
@@ -188,6 +200,8 @@ private:
 	CSoundSource m_Destruct;//爆発の音
 	CSoundSource m_Kick1;//けり音1
 	CSoundSource m_Kick2;//けり音2 m_Swing2と同じ
+	CSoundSource m_zoriRun;//草履で走る音。プレイヤーだけ呼ぶ
+
 
 	bool m_isUpdate = false;//アプデ関数呼ぶかどうか。
 };

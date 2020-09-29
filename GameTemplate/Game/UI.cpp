@@ -12,7 +12,8 @@ UI::UI()
 	//m_sprite.SetRotation(m_rotation);
 	//m_sprite.SetScale(m_scale);
 	m_face.Init(L"Assets/sprite/new_Busyo_icon.dds", 80.0f, 80.0f);
-	//m_mapSprite.Init(L"Assets/sprite/minimap.dds",160.0f, 160.0f);
+	m_mapSprite.Init(L"Assets/sprite/minimap.dds",160.0f, 160.0f);
+	m_playerPointer.Init(L"Assets/sprite/PlayerPointer.dds", 8.0f, 8.0f);
 }
 
 UI::~UI()
@@ -43,12 +44,21 @@ void UI::Update()
 	}
 	m_oldPlayerHP = m_playerHP;
 
+	CVector3 PlayerPos = m_player->GetPosition();
+	PlayerPos /= 55.0f;
+	PlayerPos.x *= -1.0f;
+	PlayerPos.y = PlayerPos.z * -1.0f;
+	PlayerPos.z = 0.0f;
+
+
+	//プレイヤーポインタ
+	m_playerPointer.Update(m_position4 + PlayerPos,m_rotation,m_scale,m_pivot2);
 	
 	m_lifeGauge.Update(m_position, m_rotation, m_scale, m_pivot);
 	m_lifeGaugeura.Update(m_position, m_rotation, m_scale, m_pivot);
 
 	m_face.Update(m_position2,m_rotation2,m_scale2,m_pivot2);
-	//m_mapSprite.Update(m_position3,m_rotation3,m_scale3,m_pivot3);
+	m_mapSprite.Update(m_position3,m_rotation3,m_scale3,m_pivot3);
 }
 
 void UI::PostDraw()
@@ -56,5 +66,6 @@ void UI::PostDraw()
 	m_lifeGaugeura.Draw();
 	m_lifeGauge.Draw();
 	m_face.Draw();
-	//m_mapSprite.Draw();
+	m_mapSprite.Draw();
+	m_playerPointer.Draw();
 }

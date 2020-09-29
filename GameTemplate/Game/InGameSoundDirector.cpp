@@ -2,7 +2,7 @@
 #include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-const float MinBGMVol = 0.5f;
+const float MinBGMVol = 0.4f;
 
 InGameSoundDirector::InGameSoundDirector()
 {
@@ -33,19 +33,19 @@ void InGameSoundDirector::Update()
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}
-			if (!m_Slash.IsPlaying()) {
+			else if (!m_Slash.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}
-			if (!m_Slash.IsPlaying()) {
+			else if (!m_Slash.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}
-			if (!m_fuse.IsPlaying()) {
+			else if (!m_fuse.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}
-			if (!m_Destruct.IsPlaying()) {
+			else if (!m_Destruct.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}

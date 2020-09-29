@@ -41,7 +41,7 @@ cbuffer VSPSCb : register(b0){
 	float4 mFarList[NUM_CASCADES];
 	int isShadowReciever;	//シャドウレシーバーフラグ。
 	int isHasNormalMap;		//法線マップ、ある？
-	int isHasSpecularMap;	//法線マップ、ある？
+	int isHasSpecularMap;	//スペキュラマップ、ある？
 
 };
 /// <summary>
@@ -152,7 +152,7 @@ float3 CalcSpecularLight(float3 normal, float3 worldPos, float2 uv)
 			//スペキュラマップがある。
 			specPower = SpecularMap.Sample(Sampler, uv).r;
 		}
-		float3 specLig = pow(t, 2.0f) * directionLight.Direction[i] * specPower *  7.0f;
+		float3 specLig = pow(t, 2.0f) * directionLight.Color[i] * specPower *  7.0f;
 		//⑤ スペキュラ反射が求まったら、ligに加算する。
 		//鏡面反射を反射光に加算する。
 		lig += specLig;
@@ -251,6 +251,7 @@ float4 PSMain(PSInput In) : SV_Target0
 {
 	//法線マップ
 float3 normal = 0;
+//通ってない…通ってたらめちゃ光る。
 if (isHasNormalMap == 1) {
 	//法線マップがある時の処理。
 	//法線と説ベクトルの外積を計算して、従ベクトルを計算する。
@@ -258,8 +259,6 @@ if (isHasNormalMap == 1) {
 	float3 tangentSpaceNormal = NormalMap.Sample(Sampler, In.TexCoord);
 	//0.0 ~ 1.0の範囲になっているタンジェントスペース法線を
 	//-1.0 ~ 1.0 の範囲に変更
-	biNormal = (biNormal * 2.0f) - 1.0f;
-
 	tangentSpaceNormal = (tangentSpaceNormal * 2.0f) - 1.0f;
 	//法線をタンジェントスペースから、ワールドスペースに変換する
 	normal = In.Tangent * tangentSpaceNormal.x + biNormal * tangentSpaceNormal.y + In.Normal * tangentSpaceNormal.z;
@@ -277,7 +276,7 @@ else {
 	float4 albedoColor = albedoTexture.Sample(Sampler, In.TexCoord);
 	float3 lig = 0.0f;
     for (int i = 0; i < Light_number; i++) {
-		float t = max( dot(normal * -1.0f, directionLight.Direction[i].rgb), 0.0f );
+		float t = max(0.0f, dot(normal * -1.0f, directionLight.Direction[i]) * directionLight.Color[i]);
 		if (t < 0.2f) {
 			lig += directionLight.Color[i] * 0.5f;
 		}

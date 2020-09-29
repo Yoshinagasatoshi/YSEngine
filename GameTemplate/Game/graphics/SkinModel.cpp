@@ -149,12 +149,6 @@ void SkinModel::Update()
 	for (int i = 0; i < Lightnumber; i++) {
 		qRot.Multiply(m_light.directionLight.direction[i]);
 	}
-	/*if (g_pad[0].IsPress(enButtonLeft)) {
-		m_light.specPow = max(0.0f, m_light.specPow - 0.5f);
-	}
-	if (g_pad[0].IsPress(enButtonRight)) {
-		m_light.specPow = min(100.0f, m_light.specPow + 0.5f);
-	}*/
 }
 
 void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVector3 scale)
@@ -235,7 +229,6 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRend
 	};
 	//引数がポインタのポインタ、t2なので引数を2、1にしてる
 	d3dDeviceContext->PSSetShaderResources(2, 1, srvArray);
-
 	d3dDeviceContext->UpdateSubresource(m_cb, 0, nullptr, &vsCb, 0, 0);
 	//視点を更新
 	m_light.eyePos = g_camera3D.GetPosition();
@@ -248,7 +241,7 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRend
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//アルベドテクスチャを設定する。
-	//d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
+	d3dDeviceContext->PSSetShaderResources(0, 1, &m_albedoTextureSRV);
 	//ボーン行列をGPUに転送。
 	m_skeleton.SendBoneMatrixArrayToGPU();
 

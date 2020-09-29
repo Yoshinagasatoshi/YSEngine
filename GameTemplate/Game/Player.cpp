@@ -309,6 +309,10 @@ void Player::Move()
 			m_moveSpeed += m_CameraRight * WideMoveL * SpeedAmount;
 		}
 	}
+	if (m_moveSpeed.Length() > 1.0f
+		&&!m_Jumpfrag) {
+		InGameSoundDirector::GetInstans().RingSE_Run();
+	}
 	m_moveSpeed.y -= gravity * m_gravity_keisuu;
 }
 
@@ -391,7 +395,10 @@ void Player::AttackMove()
 	XAttackMove();
 
 	m_playTimer+= GameTime().GetFrameDeltaTime();
-
+	if (m_playTimer > 0.5f)
+	{
+		m_playTimer = 0.5;
+	}
 	if (m_animStep != 0) {
 		if (m_animStep != m_oldAnimStep) {
 			m_playTimer = Timer_ZERO;

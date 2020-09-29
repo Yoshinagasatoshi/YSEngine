@@ -480,4 +480,7 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\PlayerPointer.png" />
+  </ItemGroup>
 </Project>

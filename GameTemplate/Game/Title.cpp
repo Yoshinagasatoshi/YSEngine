@@ -14,8 +14,6 @@ Title::Title()
 	m_bgm.Play(true);
 	m_bgm.SetVolume(0.5f);
 
-	//SoundDirector::GetInstans().SoundInit();
-	//SoundDirector::GetInstans().TitleBGM();
 	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);
 

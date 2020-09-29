@@ -86,6 +86,7 @@ Enemy_asigaru::~Enemy_asigaru()
 	//敵を倒した数を計測
 	g_goMgr.Counting();
 	g_goMgr.DeleteGOObject(this);
+	g_goMgr.EnemyNumSubtract();
 }
 
 void Enemy_asigaru::CharaconInit()
@@ -114,14 +115,15 @@ void Enemy_asigaru::Update()
 		timer -= 60.0f * GameTime().GetFrameDeltaTime();
 		//タイマーが0未満になるとリセット。音が出せるようになる
 		if (timer < 0.0f) {
-			//なっている効果音が0じゃなかったら減らす
-			if (!m_sd->GetReturnRingNum() == 0) {
-				m_sd->mainasuRingnum();
-			}
 			if (m_sd->GetReturnRingNum() <= 0) {
 				isRingSE = false;
 				timer = 10.0f;
 			}
+			////なっている効果音が0じゃなかったら減らす
+			//else if (!m_sd->GetReturnRingNum() == 0) {
+			//	m_sd->mainasuRingnum();
+			//}
+
 		}
 	}
 	//Y成分の移動速度をバックアップしておく。
@@ -133,41 +135,8 @@ void Enemy_asigaru::Update()
 		CharaconInit();
 	}
 
-	//打ちあがって着地したときに動いてしまうので
-	//無理やり動きを固定する
-	if (m_isDeadfrag
-		&&m_characon.IsOnGround()){
-		m_moveSpeed = CVector3::Zero();
-
-		//音をロード。1回だけ鳴らす。
-		if (m_Deathtimer_f <= fastTime) {
-			//downの音
-			m_sd->RingSE_Down();
-		}
-		m_Deathtimer_f++;
-
-		//死んだ後に少したってモデルが消える
-		if (m_Deathtimer_f > DeleteTime) {
-			//m_characon.RemoveRigidBoby();
-			g_goMgr.EnemyNumSubtract();
-			DeleteGO(this);
-		}
-	}
-
-	//死んでいるかどうかで行う処理が変わる
-	if (m_isDeadfrag
-		&&!m_deadMoveStopper) {
-		m_deadMoveStopper = true;
-		DeadMove();
-		ySpeed = m_moveSpeed.y;
-	}
-	else if(!m_isDeadfrag){
-		//回転処理。プレイヤーの方に向くだけ
-		Turn();
-		StateJudge();
-	}
-
 	if (!m_isDeadfrag) {
+		PlayertoDistans();
 		//武器のゴーストが自分たちに当たったら、死んだという信号を立てる
 		//攻撃判定内ならもう一回呼ばれる可能性があるから、最初に呼ばれたら絶対これを呼ばない
 		QueryGOs<Wepon_ghost>("PL_Wepon", [&](Wepon_ghost* wepon) {
@@ -201,17 +170,50 @@ void Enemy_asigaru::Update()
 			});
 	}
 
+	//打ちあがって着地したときに動いてしまうので
+//無理やり動きを固定する
+	if (m_isDeadfrag
+		&&m_characon.IsOnGround()) {
+		m_moveSpeed = CVector3::Zero();
+
+		//音をロード。1回だけ鳴らす。
+		if (m_Deathtimer_f <= fastTime) {
+			//downの音
+			m_sd->RingSE_Down();
+		}
+		m_Deathtimer_f++;
+
+		//死んだ後に少したってモデルが消える
+		if (m_Deathtimer_f > DeleteTime) {
+			//m_characon.RemoveRigidBoby();
+			g_goMgr.EnemyNumSubtract();
+			//g_goMgr.DeleteGOObject(this);
+		}
+	}
+
+	//死んでいるかどうかで行う処理が変わる
+	if (m_isDeadfrag
+		&& !m_deadMoveStopper) {
+		m_deadMoveStopper = true;
+		DeadMove();
+		ySpeed = m_moveSpeed.y;
+	}
+	else if (!m_isDeadfrag) {
+		//回転処理。プレイヤーの方に向くだけ
+		Turn();
+		StateJudge();
+	}
+
 	//ワールド座標の更新
 	m_moveSpeed.y = ySpeed + grabity;
 
-	PlayertoDistans();
+	
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 	
 	//Effekseerカメラ行列を設定。
 	//まずはEffeseerの行列型の変数に、カメラ行列とプロジェクション行列をコピー。
-	//m_ghostObject.SetPosition(m_position);
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
 }
 void Enemy_asigaru::Draw()
@@ -222,7 +224,6 @@ void Enemy_asigaru::Draw()
 	if (toCamera.LengthSq() > 8000.0f * 8000.0f) {
 		return;
 	}
-
 
 	CVector3 cameraPos = m_gameCamera->GetCameraPos();
 	CVector3 Lenght = cameraPos - m_position;
@@ -300,11 +301,11 @@ void Enemy_asigaru::idlePosInit()
 		aho *= 300.0f;
 	}
 	//問題は6対名港
-	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター(レッド)
-	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣1(ブルー)
-	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1(イエロー)
-	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);	//端っこ2(グリーン)
-	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);	//奥にいるやつの隣2(ピンク)
+	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター
+	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣
+	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1
+	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);	//端っこ2
+	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);	//奥にいるやつの隣2
 
 }
 
