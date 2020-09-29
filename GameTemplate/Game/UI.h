@@ -23,6 +23,8 @@ private:
 	Sprite m_mapSprite;
 
 	Sprite m_playerPointer;
+	Sprite m_playerPointer_yazirushi;
+
 
 	//sprite1 体力ゲージのデータ
 	CVector3 m_position = CVector3{0.0f,-280.0f,0.0f};

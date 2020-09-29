@@ -325,7 +325,7 @@ void Enemy_Busyo::ThisDamage()
 
 void Enemy_Busyo::ThisDelete()
 {
-	//‘Ì—Í‚Í‚Ü‚¾Žc‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//‘Ì—Í‚Í‚Ü‚¾Žc‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©j
 	if (m_HP != 0) {
 		InGameSoundDirector::GetInstans().RingSE_Slash();
 		m_HP--;

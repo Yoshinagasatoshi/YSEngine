@@ -14,6 +14,8 @@ UI::UI()
 	m_face.Init(L"Assets/sprite/new_Busyo_icon.dds", 80.0f, 80.0f);
 	m_mapSprite.Init(L"Assets/sprite/minimap.dds",160.0f, 160.0f);
 	m_playerPointer.Init(L"Assets/sprite/PlayerPointer.dds", 8.0f, 8.0f);
+	//m_playerPointer_yazirushi.Init(L"Assets/sprite/PlayerPointer_yazirusi.dds", 16.0f, 16.0f);
+
 }
 
 UI::~UI()
@@ -50,10 +52,11 @@ void UI::Update()
 	PlayerPos.y = PlayerPos.z * -1.0f;
 	PlayerPos.z = 0.0f;
 
-
+	CQuaternion PlayerRot = m_player->GetRotation();
 	//プレイヤーポインタ
-	m_playerPointer.Update(m_position4 + PlayerPos,m_rotation,m_scale,m_pivot2);
-	
+	m_playerPointer.Update(m_position4 + PlayerPos, m_rotation,m_scale,m_pivot2);
+	//m_playerPointer_yazirushi.Update(m_position4 + PlayerPos, m_rotation, m_scale, m_pivot2);
+
 	m_lifeGauge.Update(m_position, m_rotation, m_scale, m_pivot);
 	m_lifeGaugeura.Update(m_position, m_rotation, m_scale, m_pivot);
 
@@ -68,4 +71,5 @@ void UI::PostDraw()
 	m_face.Draw();
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
+	//m_playerPointer_yazirushi.Draw();
 }

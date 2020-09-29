@@ -429,6 +429,9 @@
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\fade.png" />
     <ImageContentTask Include="Assets\sprite\Win.png" />
+    <ImageContentTask Include="Assets\sprite\minimap.png" />
+    <ImageContentTask Include="Assets\sprite\PlayerPointer.png" />
+    <ImageContentTask Include="Assets\sprite\PlayerPointer_yazirusi.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\sprite\Win2.png">
@@ -444,9 +447,6 @@
       <Filter>Assets\sprite</Filter>
     </None>
     <None Include="Assets\sprite\Lose2.png">
-      <Filter>Assets\sprite</Filter>
-    </None>
-    <None Include="Assets\sprite\minimap.png">
       <Filter>Assets\sprite</Filter>
     </None>
     <None Include="Assets\sprite\Lose1.png">
@@ -479,8 +479,5 @@
     <MeshContentTask Include="Assets\modelData\sotowakutukiStage.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\PlayerPointer.png" />
   </ItemGroup>
 </Project>
