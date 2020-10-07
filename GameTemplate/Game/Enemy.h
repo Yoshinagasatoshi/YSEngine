@@ -19,11 +19,11 @@ public:
 	//virtual void Update();
 	//virtual void Draw();
 	//virtual void Move() = 0;
-	CVector3 SetPos(const CVector3 position)
+	const CVector3& SetPos(const CVector3& position)
 	{
 		return m_position = position;
 	}
-	CVector3 GetPos()
+	const CVector3& GetPos()const
 	{
 		return m_position;
 	}
@@ -50,7 +50,7 @@ public:
 	{
 		m_PtDistans = m_player->GetPosition() - m_position;
 	}
-	CVector3 GetPlayertoDistans()
+	const CVector3& GetPlayertoDistans()const
 	{
 		return m_PtDistans;
 	}

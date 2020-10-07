@@ -52,8 +52,13 @@ void Wepon_ghost::GhostInit()
 			m_ghostObject.CreateBox(
 				m_position,
 				m_rotation,
-				m_scale * m_ghostscale * 5.5f
+				m_scale * m_ghostscale
 			);
+			//通っている。つまり、作られてはいるはず
+			//???
+			//これが呼ばれるときはちゃんとゴーストが作られているが
+			//これが呼ばれないときは作られていない。
+			m_player->PlayerDamage();
 		}
 		m_hanteifin = true;
 

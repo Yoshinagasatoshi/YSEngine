@@ -10,6 +10,7 @@ const float BOM_VELOCITY_HORIZON = 200;	//”š’e‚Ì…•½•ûŒü‚ÌˆÚ“®‘¬“xB
 bom::bom()
 {
 	m_skinModel.Init(L"Assets/modelData/bom.cmo");
+	m_skinModel.SetShadowCaster(false);
 	m_ghostObject.CreateSphere(
 		m_position,
 		m_rotation,

@@ -266,7 +266,9 @@ void CascadeShadowMap::RenderToShadowMap()
 					enRenderMode_CreateCascadeShadowMap
 				);
 			}
+			siken = m_shadowCaters.size();
 		}
+		
 	}
 	//キャスターをクリア。
 	if (!g_goMgr.IsHitStop()) {

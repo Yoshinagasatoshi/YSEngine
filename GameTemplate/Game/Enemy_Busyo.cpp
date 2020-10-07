@@ -9,9 +9,10 @@
 #include "InGameSoundDirector.h"
 const float power = 250.0f;
 //ボスの体力。ここで設定する。
-const float InitHP = 6;
+const float InitHP = 1;
 Enemy_Busyo::Enemy_Busyo()
 {
+	//HPを設定
 	m_HP = InitHP;
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
 
@@ -51,7 +52,8 @@ Enemy_Busyo::Enemy_Busyo()
 	m_animClip[DAMAGE].Load(L"Assets/animData/enemy_Busyo_Damage.tka");
 	m_animClip[DEATH].Load(L"Assets/animData/enemy_Busyo_Death.tka");
 	m_animClip[FIGHTING].Load(L"Assets/animData/enemy_Busyo_Fighting_Pose.tka");
-	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemyBusyo_newKick.tka");
+	m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemy_Busyo_kkkick.tka");
+	//m_animClip[FIGHTING_KICK].Load(L"Assets/animData/enemyBusyo_newKick.tka");
 	m_animClip[FIGHTING_LONG].Load(L"Assets/animData/enemy_Busyo_LongAttack.tka");
 	m_animClip[LEFT_STEP].Load(L"Assets/animData/enemy_Busyo_Leftstep.tka");
 
@@ -98,6 +100,8 @@ Enemy_Busyo::~Enemy_Busyo()
 
 void Enemy_Busyo::Update()
 {
+	//1フレーム前の位置を更新
+	m_lastPosition = m_position;
 	//キャラコンが入っていなかったら入れる。
 	if (!m_charaConUse) {
 		CharaconInit();
@@ -173,16 +177,19 @@ void Enemy_Busyo::StateJudge()
 
 	//ダメージを受けた後でなければ
 	if (m_state != DAMAGE_AFTER) {
-		if (distance.LengthSq() > BattleRange
-			&& distance.LengthSq() < VigilanceRange) {
-			m_state = MOVE;
+		//特殊な攻撃の「飛び蹴り中」でなければ
+		if (!m_isFightingKick) {
+			if (distance.LengthSq() > BattleRange
+				&& distance.LengthSq() < VigilanceRange) {
+				m_state = MOVE;
+			}
+			if (distance.LengthSq() > VigilanceRange) {
+				m_state = IDL;
+			}
 		}
-		if (distance.LengthSq() > VigilanceRange) {
-			m_state = IDL;
-		}
-		if (distance.LengthSq() < BattleRange) {
-			m_state = ATK;
-		}
+			if (distance.LengthSq() < BattleRange) {
+				m_state = ATK;
+			}
 		//ダメージを受けている時は他ののステートよりも優先
 		if (m_isDeadfrag) {
 			m_state = DAMAGE;
@@ -206,51 +213,46 @@ void Enemy_Busyo::AttackMove()
 	}
 	//攻撃の感覚を決める
 	AttackframeNum();
-	if (m_frameTimer > m_attackFrameNum)
-	{
+	/// <summary>
+	/// 事前に動いていた距離の量により
+	/// すぐに回転蹴りするか、立ち止まり
+	/// 待って攻撃するかを変えている
+	/// 2000が今の走行距離条件分岐です。
+	/// </summary>
+	if (m_mileage > 200.0f) {
 		if (!m_isFight) {
-			//攻撃方法の抽選
-			m_gacha = rand() % 2;
 			m_isFight = true;
 		}
-		//多分長くなるから関数にすっぞ
-		switch (m_gacha)
+		//アニメーションイベントがある
+		//アニメーションが流れたらダメージを食らうはず
+		//Fightng_Kickはかなり特殊。プレイヤーを吹き飛ばしてえ
+		m_isFightingKick = true;
+		m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.5f);
+		if (!m_enemy_BusyoAnime.IsPlaying())
 		{
-			m_isATKMode = true;
-		case 0:
-			m_enemy_BusyoAnime.Play(ATK, 0.2f);
-			if (!m_enemy_BusyoAnime.IsPlaying())
-			{
-				m_frameTimer = 0;
-				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-				m_isFight = false;
-			}
-		break;
-		case 1:
-			//アニメーションイベントがある
-			//アニメーションが流れたらダメージを食らうはず
-			m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.5f);
-			if (!m_enemy_BusyoAnime.IsPlaying())
-			{
-				//InGameSoundDirector::GetInstans().RingSE_Slash();
-				m_frameTimer = 0;
-				m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-				m_isFight = false;
-			}
-			break;
-		//case 2:
-		//	m_enemy_BusyoAnime.Play(FIGHTING_LONG, 0.2f);
-		//	if (!m_enemy_BusyoAnime.IsPlaying())
-		//	{
-		//		InGameSoundDirector::GetInstans().RingSE_Slash();
-		//		m_frameTimer = 0;
-		//		m_enemy_BusyoAnime.Play(MOVE, 0.2f);
-		//		m_isFight = false;
-		//	}
-		//	break;
+			m_frameTimer = 0;
+			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+			m_isFight = false;
+			m_isFightingKick = false;
+			m_mileage = 0.0f;
 		}
-
 	}
+	if (m_frameTimer > m_attackFrameNum)
+	{
+
+			m_isATKMode = true;
+			if (m_mileage < 200.0f) {
+				m_enemy_BusyoAnime.Play(ATK, 0.2f);
+				if (!m_enemy_BusyoAnime.IsPlaying())
+				{
+					m_frameTimer = 0;
+					m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+					m_isFight = false;
+					m_mileage = 0.0f;
+				}
+			}
+	}
+
 	if (!m_isFight) {
 		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);
 	}
@@ -285,6 +287,9 @@ void Enemy_Busyo::NormalMove()
 		m_enemy_BusyoAnime.Play(IDL, 0.1f);
 	}
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
+	//ここで計算を入れる
+	CVector3 vec = m_position - m_lastPosition;
+	m_mileage += vec.Length();
 }
 
 //距離が遠すぎたらここに入る。

@@ -14,6 +14,7 @@ Enemy_Bomber::Enemy_Bomber()
 	//ボム敵のモデルはasigaruのモデルに槍を取っ払ったものなので
 	//倒れる時とかのアニメはasigaruのアニメを流用します。
 	m_model.Init(L"Assets/modelData/asigaru_taicho.cmo");
+	m_model.SetShadowCaster(false);
 	m_rotation = CQuaternion::Identity();
 	m_scale = CVector3::One();
 	m_bomAnimeClip[Asigaru_attack].Load(L"Assets/animData/asigaru_nage.tka");
@@ -46,10 +47,10 @@ Enemy_Bomber::Enemy_Bomber()
 
 Enemy_Bomber::~Enemy_Bomber()
 {
-	if (m_bom != nullptr) {
-		m_bom = nullptr;
-		DeleteGO(m_bom);
-	}
+	//if (m_bom != nullptr) {
+	//	m_bom = nullptr;
+	//	DeleteGO(m_bom);
+	//}
 	g_goMgr.DeleteGOObject(this);
 }
 

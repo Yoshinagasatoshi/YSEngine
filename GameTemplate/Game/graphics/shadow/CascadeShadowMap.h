@@ -53,6 +53,13 @@ public:
 	{
 		m_shadowCaters.push_back(shadowCaster);
 	}
+	/// <summary>
+	/// シャドウキャスターを排除
+	/// </summary>
+	void popShadowCaster()
+	{
+		m_shadowCaters.pop_back();
+	}
 
 	/// <summary>
 	/// レンダリングターゲットを取得
@@ -138,6 +145,7 @@ private:
 	int m_shadowMapNumber = 0;
 	float m_farList[SHADOWMAP_NUM] = {1.0f,1.0f,1.0f/*,1.0f*/};
 	CMatrix m_lightViewMatrixInv[SHADOWMAP_NUM];
+	int siken = 0;
 };
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "graphics/Sprite.h"
 #include "character/CharacterController.h"
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
@@ -10,11 +11,11 @@ public:
 	Enemy_Busyo();
 	~Enemy_Busyo();
 
-	void SetPosition(CVector3 pos)
+	void SetPosition(const CVector3& pos)
 	{
 		m_position = pos;
 	}
-	CVector3 Getposition()
+	const CVector3& Getposition()const
 	{
 		return m_position;
 	}
@@ -70,11 +71,14 @@ private:
 
 	CharacterController m_characon;//キャラコン
 	CVector3 m_moveSpeed = CVector3::Zero();//移動量を入れる変数。
+	CVector3 m_lastPosition;				//直前までいた武将の位置
+	float m_mileage = 0;					//移動した量の受け皿。一定値を超えると処理が変わる仕様
 	bool m_charaConUse = false;//キャラコンが入っているか確認する変数。
 	bool m_isDeadfrag = false;
 	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
 	bool m_isDestroyed = false;
 	bool m_isATKMode = false;			//攻撃態勢
+	bool m_isFightingKick = false;		//飛び蹴りの時の特殊な奴
 
 	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
 	float m_frameTimer = 0.0f;		//時間を図るため

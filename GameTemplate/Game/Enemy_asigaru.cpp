@@ -29,7 +29,7 @@ Enemy_asigaru::Enemy_asigaru()
 
 	//asigaruのモデルをロードする。
 	m_model.Init(L"Assets/modelData/asigaru.cmo");
-	m_model_Row.Init(L"Assets/modelData/asigaru_Rowpori.cmo");
+	//m_model_Row.Init(L"Assets/modelData/asigaru_Rowpori.cmo");
 	m_rotation = CQuaternion::Identity();
 	//アニメーションを格納だ
 	m_asigaruAnimeClip[Asigaru_totugeki].Load(L"Assets/animData/asigaru_totugeki.tka");
@@ -85,8 +85,8 @@ Enemy_asigaru::~Enemy_asigaru()
 {
 	//敵を倒した数を計測
 	g_goMgr.Counting();
-	g_goMgr.DeleteGOObject(this);
 	g_goMgr.EnemyNumSubtract();
+	g_goMgr.DeleteGOObject(this);
 }
 
 void Enemy_asigaru::CharaconInit()
@@ -105,7 +105,7 @@ void Enemy_asigaru::Update()
 		//最初のアップデートではない。
 		//カメラとの距離を計算する。
 		CVector3 toCamera = m_position - g_camera3D.GetPosition();
-		if (toCamera.LengthSq() > 4000.0f * 4000.0f) {
+		if (toCamera.LengthSq() > 8000.0f * 8000.0f) {
 			return;
 		}
 	}
@@ -143,14 +143,14 @@ void Enemy_asigaru::Update()
 			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
-					//if (m_player->IsXTrigger()) {
-					//	//XとYで渡す引数を変える
-					//	g_goMgr.HitStopOn(8);
-					//}
-					//else {
-					//	//Xなので少なめに
-					//	g_goMgr.HitStopOn(4);
-					//}
+					if (m_player->IsXTrigger()) {
+						//XとYで渡す引数を変える
+						g_goMgr.HitStopOn(8);
+					}
+					else {
+						//Xなので少なめに
+						g_goMgr.HitStopOn(4);
+					}
 					//通っているのは確認完了
 					m_isDeadfrag = true;
 					//enemy用にも
@@ -185,9 +185,11 @@ void Enemy_asigaru::Update()
 
 		//死んだ後に少したってモデルが消える
 		if (m_Deathtimer_f > DeleteTime) {
-			//m_characon.RemoveRigidBoby();
 			g_goMgr.EnemyNumSubtract();
-			//g_goMgr.DeleteGOObject(this);
+			m_model.SetShadowCaster(false);
+			CCount = true;
+			DeleteGO(this);
+			return;
 		}
 	}
 
@@ -210,29 +212,35 @@ void Enemy_asigaru::Update()
 	
 	//m_position += m_moveSpeed;
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
+
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
-	
 	//Effekseerカメラ行列を設定。
 	//まずはEffeseerの行列型の変数に、カメラ行列とプロジェクション行列をコピー。
 	m_asigaruAnime.Update(GameTime().GetFrameDeltaTime());
+
+
 }
 void Enemy_asigaru::Draw()
 {
-	//最初のアップデートではない。
-	//カメラとの距離を計算する。
-	CVector3 toCamera = m_position - g_camera3D.GetPosition();
-	if (toCamera.LengthSq() > 8000.0f * 8000.0f) {
-		return;
-	}
-
-	CVector3 cameraPos = m_gameCamera->GetCameraPos();
-	CVector3 Lenght = cameraPos - m_position;
-	Lenght.y = 0.0f;
 	//モデルの描画
-	m_model.Draw(
-		g_camera3D.GetViewMatrix(),
-		g_camera3D.GetProjectionMatrix()
-	);
+	//消えるときは呼ばない
+	if (m_Deathtimer_f < DeleteTime) {
+		//最初のアップデートではない。
+		//カメラとの距離を計算する。
+		CVector3 toCamera = m_position - g_camera3D.GetPosition();
+		if (toCamera.LengthSq() > 8000.0f * 8000.0f) {
+			return;
+		}
+
+		CVector3 cameraPos = m_gameCamera->GetCameraPos();
+		CVector3 Lenght = cameraPos - m_position;
+		Lenght.y = 0.0f;
+
+		m_model.Draw(
+			g_camera3D.GetViewMatrix(),
+			g_camera3D.GetProjectionMatrix()
+		);
+	}
 }
 
 //ここが　取り巻く処理を書いている場所

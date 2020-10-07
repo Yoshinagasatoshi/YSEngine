@@ -47,7 +47,7 @@ void UI::Update()
 	m_oldPlayerHP = m_playerHP;
 
 	CVector3 PlayerPos = m_player->GetPosition();
-	PlayerPos /= 55.0f;
+	PlayerPos /= 62.0f;
 	PlayerPos.x *= -1.0f;
 	PlayerPos.y = PlayerPos.z * -1.0f;
 	PlayerPos.z = 0.0f;

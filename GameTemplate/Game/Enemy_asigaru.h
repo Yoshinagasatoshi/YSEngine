@@ -144,6 +144,6 @@ private:
 	InGameSoundDirector* m_sd = nullptr;
 	float timer = 10.0f;
 	bool m_isFirstUpdate = true;
-
+	bool CCount = false;
 }; 
 

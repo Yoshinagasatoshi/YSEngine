@@ -82,6 +82,7 @@ Game::Game()
 
 Game::~Game()
 {
+	//InGameSoundDirector::GetInstans().InGameBGMRelease();
 	g_goMgr.DeleteGOObject(m_player);
 	g_goMgr.DeleteGOObject(m_backGround);
 	g_goMgr.DeleteGOObject(m_ui);

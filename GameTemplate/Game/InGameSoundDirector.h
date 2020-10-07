@@ -36,6 +36,11 @@ public:
 		m_bgm.SetVolume(BGM_NormalVol);
 	}
 
+	void InGameBGMRelease()
+	{
+		m_bgm.Release();
+	}
+
 	static InGameSoundDirector& GetInstans()
 	{
 		static InGameSoundDirector SDdata;

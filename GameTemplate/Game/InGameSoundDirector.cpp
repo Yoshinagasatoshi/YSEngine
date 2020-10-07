@@ -10,15 +10,15 @@ InGameSoundDirector::InGameSoundDirector()
 }
 InGameSoundDirector::~InGameSoundDirector()
 {
-	/*m_Swing;
-	m_Swing2;
-	m_Slash;
-	m_Down;
-	m_fuse;;
-	m_Destruct;
-	m_Kick1;
-	m_Kick2;
-	m_zoriRun;*/
+	//m_Swing;
+	//m_Swing2;
+	//m_Slash;
+	//m_Down;
+	//m_fuse;;
+	//m_Destruct;
+	//m_Kick1;
+	//m_Kick2;
+	//m_zoriRun;
 }
 
 void InGameSoundDirector::Update()

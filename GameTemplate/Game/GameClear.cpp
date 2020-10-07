@@ -35,6 +35,7 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
+	m_bgm.Release();
 	g_goMgr.DeleteGOObject(this);
 }
 

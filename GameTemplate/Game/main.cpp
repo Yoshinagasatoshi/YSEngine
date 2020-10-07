@@ -16,7 +16,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	//サウンドはゲームじゃ…
 	//サウンドエンジンを初期化
-	
 	g_goMgr.InitEffekseer();
 	
 	//カメラを初期化。
@@ -46,7 +45,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		//1フレームの時間計測を開始。
 		sw.Start();
-		
+
+
 		//ゲームパッドの更新。	
 		for (auto& pad : g_pad) {
 			pad.Update();
@@ -58,6 +58,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_goMgr.Update();
 
 		//g_graphicsEngine->RenderToShadowMap();
+		g_graphicsEngine->Render();
 
 		bool UpdateMode = InGameSoundDirector::GetInstans().GetisUpdateMode();
 		if (UpdateMode) {
@@ -67,7 +68,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//g_goMgr.Render();
 		//g_goMgr.Draw();
 		//g_goMgr.DrawNoAlphaBlend();
-		g_graphicsEngine->Render();
+		
 		//カメラの更新。
 		g_camera3D.Update();
 		g_camera2D.Update();

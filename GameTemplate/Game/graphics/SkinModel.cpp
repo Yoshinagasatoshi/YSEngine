@@ -177,6 +177,7 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 
+	//
 	if (m_isShadowCaster) {
 		g_graphicsEngine->GetCascadeShadowMap()->RegistShadowCaster(this);
 	}

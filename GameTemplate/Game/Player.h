@@ -37,12 +37,12 @@ public:
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
 	//プレイヤーの位置を返す関数
-	CVector3& GetPosition()
+	const CVector3& GetPosition() const
 	{
 		return m_position;
 	}
 	//プレイヤーの回転
-	CQuaternion& GetRotation()
+	const CQuaternion& GetRotation() const
 	{
 		return m_rotation;
 	}
@@ -52,12 +52,12 @@ public:
 		m_damagefrag = true;
 	}
 	//プレイヤーは死んでいる状態かどうかを取得する
-	bool GetPlayerDead()
+	const bool& GetPlayerDead()const
 	{
 		return m_deadFrag;
 	}
 	//プレイヤーの吹き飛ばし力を取得
-	float GetBlowOffPower()
+	const float& GetBlowOffPower()const
 	{
 		return m_blowOffPower;
 	}
@@ -66,12 +66,12 @@ public:
 		(void)clipName;
 		MessageBox(NULL, "attack", "attack", MB_OK);
 	}
-	CVector3 GetCalcPos()
+	const CVector3& GetCalcPos() const
 	{
 		return m_calcPos;
 	}
 	//プレイヤーのHPを受け取る
-	int GetPlayerHP()
+	const int& GetPlayerHP() const
 	{
 		return m_PL_HP;
 	}
@@ -136,7 +136,7 @@ public:
 		enemy = en;
 	}
 	//Xボタンが押されているかの判定
-	bool IsXTrigger()
+	const bool IsXTrigger()const
 	{
 		return m_XTrigger;
 	}
@@ -192,5 +192,7 @@ private:
 	Player_target* m_pl_target = nullptr;				//プレイヤーターゲット
 	InGameSoundDirector* m_sd;						//鳴らす
 	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
+
+
 };
 
