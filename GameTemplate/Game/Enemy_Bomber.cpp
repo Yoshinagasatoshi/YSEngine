@@ -6,8 +6,8 @@
 const float InterpolationTime = 0.2f;			//アニメーションの補間時間
 const float bomberSpeed = 5.0f;
 const float harfrenge = 1400.0f;
-const float socialdistance = 700.0f;			//密です。嘘です。プレイヤーとの間合いです。
-const float escapeSpeed = 200.0f;				//逃げ足スピード
+const float socialdistance = 700.0f;			//プレイヤーとの間合いです。
+const float escapeSpeed = 200.0f;				//プレイヤーから逃げるスピード
 const float gravity = -20.0f;					//重力
 Enemy_Bomber::Enemy_Bomber()
 {
@@ -65,7 +65,7 @@ void Enemy_Bomber::Draw()
 
 void Enemy_Bomber::Update()
 {
-	//なかったら作る
+	//キャラクターコントローラーなかったら作る
 	if (!m_isCharaconUse) {
 		m_isCharaconUse = true;
 		CharaconInit();
@@ -139,11 +139,10 @@ void Enemy_Bomber::Statekanri()
 
 void Enemy_Bomber::Animekanri()
 {
-	/// <summary>
-	/// 渡されたステートからどんなアニメーションを呼ぶかをこの関数内でやる象
-	/// 今の実装ではUpdateに1行足しただけで終わるけど、後から変更される可能性大なので
-	/// 関数にしときました。
-	/// </summary>
+	//渡されたステートからどんなアニメーションを呼ぶかをこの関数内でやる象
+	//今の実装ではUpdateに1行足しただけで終わるけど、後から変更される可能性大なので
+	//関数にしました。
+
 	m_bomberAnime.Play(m_state, InterpolationTime);
 }
 
@@ -163,7 +162,7 @@ void Enemy_Bomber::Turn()
 	}
 }
 
-//動き
+//爆弾を投げた後の動き
 void Enemy_Bomber::EscapeMove()
 {
 	CVector3 distance = m_player->GetPosition() - m_position;
@@ -175,7 +174,7 @@ void Enemy_Bomber::EscapeMove()
 		m_moveSpeed += hikigimi;
 	}
 }
-//ちょっといい書き方思いつかなかったのでTurn()をつかうぜ
+//攻撃方法、Turn()をつかう
 void Enemy_Bomber::attackMove()
 {
 	m_moveSpeed = m_player->GetPosition() - m_position;
@@ -183,6 +182,7 @@ void Enemy_Bomber::attackMove()
 	m_moveSpeed = CVector3::Zero();
 }
 
+//死んでしまった時の動き
 void Enemy_Bomber::DeathMove()
 {
 	if (m_isDeadfrag) {
@@ -194,6 +194,7 @@ void Enemy_Bomber::DeathMove()
 	}
 }
 
+//ステートで決める
 void Enemy_Bomber::Move()
 {
 	if (m_state == Asigaru_attack) {
@@ -204,6 +205,7 @@ void Enemy_Bomber::Move()
 	}
 }
 
+//呼ばれるとキャラコンの機能が入る。
 void Enemy_Bomber::CharaconInit()
 {
 	//キャラコンの初期化

@@ -28,13 +28,14 @@ Title::Title()
 
 Title::~Title()
 {
+	m_bgm.Release();
 	//g_goMgr.DeleteGOObject(this);
 	//m_sprite.~Sprite();
 }
 
 void Title::Update()
 {
-	//™X‚É‰¹‚ð—Ž‚Æ‚·Š´‚¶‚Å
+	//™X‚É‰¹‚ð—Ž‚Æ‚·‚æ‚¤‚É
 	if (g_pad->IsTrigger(enButtonA)) 
 	{
 		m_isWaitFadeOut = true;

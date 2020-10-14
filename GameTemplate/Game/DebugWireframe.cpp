@@ -3,7 +3,7 @@
 
 DebugWireframe::DebugWireframe()
 {
-	int i = 0;
+	
 }
 
 DebugWireframe::~DebugWireframe()
@@ -13,9 +13,7 @@ DebugWireframe::~DebugWireframe()
 
 void DebugWireframe::Prepare()
 {
-	///頂点バッファ 
-	///0構造体
-	///DescriptionのDesc。意味:説明 
+	//DescriptionのDesc。意味:説明 
 	D3D11_BUFFER_DESC desc{};
 	//どう使うか
 	desc.Usage = D3D11_USAGE_DEFAULT;
@@ -50,10 +48,6 @@ void DebugWireframe::Prepare()
 
 void DebugWireframe::Context()
 {
-	/// <summary>
-	/// デバイスコンテキストにも出るクラスなどの設定が
-	/// 残っているため上書きする(更新~)
-	/// </summary>
 }
 
 //1フレーム内にdrawLineは線の数だけ行う
@@ -63,12 +57,11 @@ void DebugWireframe::drawLine(const btVector3& from, const btVector3& to, const 
 	//まずはデバイスコンテキストを取得
 	ID3D11DeviceContext* dc = g_graphicsEngine->GetD3DDeviceContext();
 
-	/// <summary>
-	/// 頂点シェーダーをデバイスコンテキストに設定
-	/// Shaderは先生のラッパークラス
-	/// 実際に使うGetBodyはvoid*なので
-	/// ID3D11VertexShader*にキャストする必要がある
-	/// </summary>
+	 //頂点シェーダーをデバイスコンテキストに設定
+	 //Shaderは先生のラッパークラス
+	 //実際に使うGetBodyはvoid*なので
+	 //ID3D11VertexShader*にキャストする必要がある
+
 	dc->VSSetShader((ID3D11VertexShader*)m_Vshader.GetBody(), nullptr, 0);
 
 	//	ピクセルシェーダーをデバイスコンテキストに設定
@@ -133,11 +126,10 @@ void DebugWireframe::drawLine(const btVector3& from, const btVector3& to, const 
 	vers[1].color.y = color.y();
 	vers[1].color.z = color.z();
 
-	/// <summary>
-	/// 引数verはver[0]のアドレス
-	/// Prepare関数のByteWidthでサイズを*2にすることで
-	/// verの要素数が二つであることがわかる。
-	/// </summary>
+	
+	 //引数verはver[0]のアドレス
+	 //Prepare関数のByteWidthでサイズを*2にすることで
+	 //verの要素数が二つであることがわかる。
 	dc->UpdateSubresource(m_vertexBuffer, 0, nullptr, vers, 0, 0);
 
 	//描画

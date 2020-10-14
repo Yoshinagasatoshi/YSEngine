@@ -223,7 +223,7 @@ void GraphicsEngine::RenderToShadowMap()
 	//m_shadowMap->RenderToShadowMap();
 	
 	m_cascadeShadowMap->Update();
-	//‚±‚±‚ç‚Ö‚ñ‚Å‚æ‚­”‘‚Ü‚é
+
 	m_cascadeShadowMap->RenderToShadowMap();
 
 

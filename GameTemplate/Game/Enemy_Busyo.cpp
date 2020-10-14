@@ -127,7 +127,7 @@ void Enemy_Busyo::Update()
 	case DAMAGE_AFTER:
 		DamageAfter();
 	}
-	//だめーｚしょり
+	//ダメージ処理
 	ThisDamage();
 
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
@@ -167,12 +167,10 @@ void Enemy_Busyo::Draw()
 	);
 }
 
-
+// プレイヤーとの距離で呼ぶ関数を変えている処理
 void Enemy_Busyo::StateJudge()
 {
-	/// <summary>
-	/// プレイヤーとの距離で呼ぶ関数を変えている処理
-	/// </summary>
+	
 	distance = m_player->GetPosition() - m_position;
 
 	//ダメージを受けた後でなければ
@@ -213,19 +211,17 @@ void Enemy_Busyo::AttackMove()
 	}
 	//攻撃の感覚を決める
 	AttackframeNum();
-	/// <summary>
-	/// 事前に動いていた距離の量により
-	/// すぐに回転蹴りするか、立ち止まり
-	/// 待って攻撃するかを変えている
-	/// 2000が今の走行距離条件分岐です。
-	/// </summary>
+	// 事前に動いていた距離の量により
+	// すぐに回転蹴りするか、立ち止まり
+	// 待って攻撃するかを変えている
+	// 2000が今の走行距離条件分岐です。
 	if (m_mileage > 200.0f) {
 		if (!m_isFight) {
 			m_isFight = true;
 		}
 		//アニメーションイベントがある
 		//アニメーションが流れたらダメージを食らうはず
-		//Fightng_Kickはかなり特殊。プレイヤーを吹き飛ばしてえ
+		//Fightng_Kickはかなり特殊。プレイヤーを吹き飛ばしたい。
 		m_isFightingKick = true;
 		m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.5f);
 		if (!m_enemy_BusyoAnime.IsPlaying())
@@ -362,7 +358,6 @@ void Enemy_Busyo::ThisDelete()
 
 				//倒せばokという状態に
 				g_goMgr.NewGameObject<GameClear>("GameClear");
-				//消せてねえ？
 				m_game->GameDelete();
 				m_isDestroyed = true;
 			}

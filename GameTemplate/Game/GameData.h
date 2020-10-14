@@ -69,7 +69,7 @@ private:
 	const float kyori = 100.0f;
 	const float half = 50.0f;
 	//どの場所の囲いが使われているか。
-	//enemy型の配列にした方が都合がいいかも。
+	//enemy型の配列にした方が都合がいいので設定。
 	bool m_enclosure[kakoi_max] = { false,false,false,false,false };
 };
 

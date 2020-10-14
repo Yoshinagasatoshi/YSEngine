@@ -21,10 +21,10 @@ public:
 	void Update();
 	//描画
 	void Draw();
-	//動き
+	//倒されていない時に呼ぶ関数
 	void Move();
 	void Turn();
-	//死んだときのムーヴ
+	//倒されたときに呼ぶ関数
 	void DeadMove();
 	//idlePosの初期化
 	void idlePosInit();
@@ -84,7 +84,7 @@ private:
 		m_kougekiframenum = 100.0f + rand() % 500;
 		return m_kougekiframenum;
 	}
-	//アニメーションイベントを呼び出すよ
+	//アニメーションイベントを呼び出す
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
@@ -122,7 +122,7 @@ private:
 	float m_recivePower;
 	//円周率。必要なためここに書いた
 	double PI = 3.14159265358979323846f;
-	//取り巻けなかった奴らが使う変数
+	//取り巻けなかったasigaruが使う変数
 	bool m_torimaki = false;
 
 	//前方向
@@ -134,12 +134,11 @@ private:
 	Skeleton* m_skeleton;
 	//ゲームデータのポインタ。数値をここから抜粋していく。
 	GameData* gamedata = nullptr;
-	//あとでけすかもーーーー
 	//SEがどれだけなっているかをカウントする。
 	int m_seRingCount = 0;
 	//待機待ちのseがどれだけあるかをカウントする。
 	int m_seStockCount = 0;
-	//鳴らしているのかい？
+	//鳴らしている？
 	bool isRingSE = false;
 	InGameSoundDirector* m_sd = nullptr;
 	float timer = 10.0f;

@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "gameObject/ysGameObjectManager.h"
-//名前募集中
+//プレイヤーが敵を斬る時に補正をかけるかどうかを調べる
 void Player_target::HoseiJujge()
 {
 	if (m_enemy){

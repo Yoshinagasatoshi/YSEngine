@@ -81,7 +81,7 @@ Player::Player()
 	//ダメージロード
 	m_busyoAnimeClip[animClip_SmallDamage].Load(L"Assets/animData/busyo_smalldamage.tka");
 	m_busyoAnimeClip[animClip_busyo_dead].Load(L"Assets/animData/busyo_dead.tka");
-	//全部一回の再生でいいのでfalseにしとく
+	//全部一回の再生でいいのでfalseに設定
 	for (int i = animClip_ATK1; i < animClip_num; i++) {
 		m_busyoAnimeClip[i].SetLoopFlag(false);
 	}
@@ -130,7 +130,7 @@ Player::Player()
 		m_pl_Wepon->Playercall();
 		m_pl_Wepon->GhostInit();
 
-		//一行でよくなった
+		//サウンドディレクターに一任する
 		InGameSoundDirector::GetInstans().RingSE_Swing();
 
 		//if (!m_se.IsPlaying()) {
@@ -220,7 +220,7 @@ void Player::Update()
 				JumpAttackMove();
 			}
 		}
-		//ここら辺の処理ではほかに関数を使った方がいいかも
+		//ここら辺の処理ではほかに関数を使った方がいいかもしれません
 		if (m_damagefrag)
 		{
 			if (!m_muteki) {
@@ -267,7 +267,7 @@ void Player::Update()
 		}
 		if (!Fade::Getinstance().IsFade()) {
 			m_isDestroyed = true;
-			InGameSoundDirector::GetInstans().UpdateOff();
+			//InGameSoundDirector::GetInstans().UpdateOff();
 			g_goMgr.NewGameObject<GameOver>("GameOver");
 			m_game->GameDelete();
 		}
@@ -524,7 +524,6 @@ void Player::JumpAttackMove() {
 void Player::ThisDamage()
 {
 	//敵武器のゴーストが当たったらダメージを受ける。
-	//ここの処理は大丈夫
 	QueryGOs<Wepon_ghost>("EN_Wepon", [&](Wepon_ghost* wepon) {
 		PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 		g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {

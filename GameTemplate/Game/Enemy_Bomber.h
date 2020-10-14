@@ -12,15 +12,15 @@ public:
 
 	void Draw();
 	void Update();
-	//ステート管理ｼﾞﾂ
+	//ステート管理
 	void Statekanri();
-	//アニメーション管理ジツ
+	//アニメーション管理
 	void Animekanri();
 	//回転
 	void Turn();
 	//動き
 	void EscapeMove();
-	//攻撃。ぼったち。
+	//攻撃。
 	void attackMove();
 	//死ぬ。
 	void DeathMove();
@@ -44,9 +44,9 @@ public:
 	AnimationClip m_bomAnimeClip[Asigaru_anim_num];
 private:
 	CharacterController m_characon;//キャラコン
-	AsigaruState m_state = Asigaru_zyosou;
-	bom* m_bom;
-	CVector3 m_moveSpeed = CVector3::Zero();
+	AsigaruState m_state = Asigaru_zyosou;//最初の状態は助走しているモード
+	bom* m_bom;//ボムを出すため付随
+	CVector3 m_moveSpeed = CVector3::Zero();//移動速度
 	bool m_isCharaconUse = false;//キャラコン入ってる？
 	bool m_isDeadfrag = false;	//bomberが死んだかどうか
 };

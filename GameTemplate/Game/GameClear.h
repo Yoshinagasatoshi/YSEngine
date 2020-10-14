@@ -16,7 +16,7 @@ private:
 	void Update();	
 	void PostDraw();
 	void Draw();
-	SkinModel m_skinModel;//やられたプレイヤーを移す用。
+	SkinModel m_skinModel;//勝利したプレイヤーを移す用。
 	SkinModel m_skinModelStage;
 	Sprite m_sprite1; //一つ目のスプライト
 	Sprite m_sprite2; //二つ目のスプライト

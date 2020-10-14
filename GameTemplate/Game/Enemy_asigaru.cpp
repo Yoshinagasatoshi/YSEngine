@@ -31,7 +31,7 @@ Enemy_asigaru::Enemy_asigaru()
 	m_model.Init(L"Assets/modelData/asigaru.cmo");
 	//m_model_Row.Init(L"Assets/modelData/asigaru_Rowpori.cmo");
 	m_rotation = CQuaternion::Identity();
-	//アニメーションを格納だ
+	//アニメーションを格納
 	m_asigaruAnimeClip[Asigaru_totugeki].Load(L"Assets/animData/asigaru_totugeki.tka");
 	m_asigaruAnimeClip[Asigaru_tikazuki].Load(L"Assets/animData/asigaru_tikazuki.tka");
 	m_asigaruAnimeClip[Asigaru_sentou].Load(L"Assets/animData/asigaru_tikazuki.tka");
@@ -294,9 +294,6 @@ void Enemy_asigaru::Turn()
 //周りを囲むプレイヤーの周りを囲む場所の情報
 void Enemy_asigaru::idlePosInit()
 {
-	//４点を作ってそこにエネミーを群がらせる
-	//レベルでやった方がいいというアドヴァイスをもらったので
-	//後でレベルに変える。
 	m_playerPos = m_player->GetPosition();
 
 	CVector3 aho = m_playerPos - m_position;
@@ -308,7 +305,7 @@ void Enemy_asigaru::idlePosInit()
 		aho.Normalize();
 		aho *= 300.0f;
 	}
-	//問題は6対名港
+	//最初の五体はプレイヤーを囲むように到着地点を設定
 	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター
 	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣
 	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1
@@ -320,12 +317,7 @@ void Enemy_asigaru::idlePosInit()
 //距離による判定処理
 void Enemy_asigaru::StateJudge()
 {
-	//プレイヤーが死んだときにも図られてしまう
-	//～～Range 
-	/// <summary>
-	/// -282497216
-	/// -87308032
-	/// </summary>
+	//プレイヤーとの距離を測る
 	CVector3 kyori = m_player->GetPosition() - m_position;
 	//y成分を0にする。
 	kyori.y = 0.0f;
@@ -368,7 +360,7 @@ void Enemy_asigaru::StateJudge()
 			kyori.Normalize();
 			float angle = acosf(kyori.Dot(m_forward));
 
-			//視野角入ってる？
+			//視野角内に入っているか？
 			if (fabsf(angle) < PI * ViewLenght) {
 				m_asigaruState = Asigaru_sentou;
 			}
@@ -385,7 +377,7 @@ void Enemy_asigaru::StateJudge()
 
 	case Asigaru_totugeki:
 		if (kyori.LengthSq() < VigilanceRange) {
-			//視野角入ってる？
+			//視野角内に入っているか？
 			kyori.Normalize();
 			float angle = acosf(kyori.Dot(m_forward));
 			if (fabsf(angle) < PI * ViewLenght) {

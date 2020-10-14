@@ -18,12 +18,13 @@
 //コンストラクタが呼ばれるとレベルでキャラを表示させるようにしている
 Game::Game()
 {
+	//オブジェクトのカウントをリセット
 	g_goMgr.ResetCount();
 	//音SE素材
 	InGameSoundDirector::GetInstans().SoundInit();
 	InGameSoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
-	//プレイヤー
+	//プレイヤーなどのインスタンスを作成
 	m_player = g_goMgr.NewGameObject<Player>("Player");
 	m_player->SetGameInfo(this);
 	m_ui = g_goMgr.NewGameObject<UI>("UI");
@@ -33,7 +34,6 @@ Game::Game()
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
-	bool isHoge = true;
 	int enemyCount = 0;
 	//敵の総数は何体？数えます。
 	g_goMgr.EnemyNumResetCount();
@@ -66,7 +66,6 @@ Game::Game()
 				if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
 					//インスタンスの作成
 					//g_goMgr.EnemyCounting();
-					isHoge = false;
 					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");
 					m_enemy->SetPos(objdata.position);
 					m_enemy->SetPlayerInfo(m_player);
@@ -76,13 +75,10 @@ Game::Game()
 			return true;
 		});
 	Fade::Getinstance().StartFadeOut();
-	//メインとなるレンダリングターゲット
-	//m_renderTarget.Create(FRAME_BUFFER_W, FRAME_BUFFER_H, DXGI_FORMAT_R16G16B16A16_UNORM);
 }
 
 Game::~Game()
 {
-	//InGameSoundDirector::GetInstans().InGameBGMRelease();
 	g_goMgr.DeleteGOObject(m_player);
 	g_goMgr.DeleteGOObject(m_backGround);
 	g_goMgr.DeleteGOObject(m_ui);

@@ -176,7 +176,7 @@ private:
 	bool m_Jumpfrag = false;							//キャラはジャンプしているか？
 	bool m_damagefrag = false;							//プレイヤーにダメージを与えたかダメージ？
 	bool m_jumpAttackfrag = false;						//ジャンプアタック中？
-	bool m_gamefinal = false;							//終わりだ…
+	bool m_gamefinal = false;							//ゲームが終わるフラグ
 	bool m_isDestroyed = false;							//1度のみゲームオーバーを呼ぶ
 	bool m_plWeponSwhich = true;
 	bool m_XTrigger = false;

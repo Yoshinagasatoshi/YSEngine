@@ -1,7 +1,7 @@
 #pragma once
 #include "graphics/Sprite.h"
 #include "gameObject/ysGameObject.h"
-//UIクラス。体力バーとかの画像を張るぞ
+//UIクラス。体力バー等の画像を張る
 class Player;
 class UI : public IGameObject
 {

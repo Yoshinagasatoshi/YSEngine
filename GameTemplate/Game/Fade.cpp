@@ -3,6 +3,7 @@
 
 Fade::Fade()
 {
+	//フェード用の画像を用意
 	m_sprite.Init(L"Assets/sprite/fade.dds",1280.0f, 720.0f);
 	m_sprite.SetAlpha(m_currentAlpha);
 }

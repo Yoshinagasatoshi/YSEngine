@@ -291,7 +291,7 @@ void Sprite::InternalDraw(ID3D11BlendState* blendState)
 	//ワールドビュープロジェクション行列を作成
 	ConstantBuffer cb;
 	cb.WVP = m_world;
-	//2Dカメラクラスがないやん！つくる
+	//2Dカメラ用行列も作成
 	cb.WVP.Mul(cb.WVP,g_camera2D.GetViewMatrix());
 	cb.WVP.Mul(cb.WVP,g_camera2D.GetProjectionMatrix());
 	if (m_aiueo != i) {
@@ -324,7 +324,7 @@ void Sprite::CreateDepthStencilState()
 
 void Sprite::InitTranslucentBlendState()
 {
-	//例のごとく、作成するブレンドステートの情報を設定する。
+	//作成するブレンドステートの情報を設定する。
 	CD3D11_DEFAULT defaultSettings;
 	//デフォルトセッティングで初期化する。
 	CD3D11_BLEND_DESC blendDesc(defaultSettings);

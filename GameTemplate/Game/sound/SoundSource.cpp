@@ -75,11 +75,7 @@ void CSoundSource::Release()
 		m_waveFile->Release();
 	}	
 	else if (m_sourceVoice != nullptr) {
-		/// <summary>
-		/// 
-		/// </summary>
 		m_sourceVoice->DestroyVoice();
-		//m_sourceVoice->Stop();
 
 		m_sourceVoice = nullptr;
 	}

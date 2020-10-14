@@ -9,6 +9,7 @@ const float BOM_VELOCITY_HORIZON = 200;	//爆弾の水平方向の移動速度。
 
 bom::bom()
 {
+	//ボム初期設定
 	m_skinModel.Init(L"Assets/modelData/bom.cmo");
 	m_skinModel.SetShadowCaster(false);
 	m_ghostObject.CreateSphere(
@@ -29,7 +30,8 @@ void bom::Update()
 	//爆弾としての処理をする
 	if (Fade::Getinstance().IsFade()) {
 		if (!m_isFirst) {
-			FirstSet();//所見の大きさとか設定
+			FirstSet();//最初のボムの状態を作る
+
 			//CSoundSource* se = new CSoundSource;
 			//se->Init(L"Assets/sound/fuse.wav");
 			//se->Play(false);
@@ -37,9 +39,7 @@ void bom::Update()
 
 			//InGameSoundDirector::GetInstans().RingSE_Fuse();
 		}
-		/// <summary>
-		/// プレイヤーアクセスクラスを通して伝令
-		/// </summary>
+
 		//if (g_goMgr) {
 		HitThebom();
 		Finalbom();
@@ -59,8 +59,8 @@ void bom::Update()
 	//}
 	}
 	//シーンの切り替えをしている時にはもう
-	//プレイヤーとかのインスタンスを図る処理をしてほしくないので
-	//死んでもらいます。
+	//プレイヤー等のインスタンスを参照したりする処理をしてほしくないので
+	//ボムごとデリートする
 	else {
 		DeleteGO(this);
 	}
@@ -94,8 +94,8 @@ void bom::FirstSet()
 
 	m_bomVelocity = vec;
 
-	m_rotation = CQuaternion::Identity();//球体かつデフォルメされているので、どの方向が正面かわからんから気にしなくていい
-	m_scale = CVector3::One() * 3.0f; //モデルが小さかったので、3倍の大きさにした。
+	m_rotation = CQuaternion::Identity();//球体なので向いている方向は気にしない
+	m_scale = CVector3::One() * 3.0f; //爆弾モデルが小さかったので、3倍の大きさにした。
 	m_isFirst = true;
 }
 
@@ -125,9 +125,7 @@ void bom::Finalbom()
 
 void bom::HitThebom()
 {
-	//エラーがよく起こる場所
-	//プレイヤーが死んだ後に、投げられた状態のボムが死んだプレイヤーの距離を測っているからエラーが起こっている？
-	//クリアしててもプレイヤーのインスタンスが消されていてエラーが起こるため、クリアorゲームオーバーで処理を止める。
+	//プレイヤーにボムが当たった時の処理
 	if (!m_player->GetPlayerDead()) {
 		if (m_player == nullptr) {
 			DeleteGO(this);

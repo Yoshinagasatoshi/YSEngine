@@ -64,8 +64,8 @@ private:
 	Animation m_enemy_BusyoAnime;
 
 	AnimationClip m_animClip[AnimationClip_Num];
-	CVector3 distance;			//そのまま！距離です。
-	AnimState m_state;				//そのまま
+	CVector3 distance;			//距離。
+	AnimState m_state;			
 	SkinModel m_model;			//スキンモデル。
 
 
@@ -78,7 +78,7 @@ private:
 	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
 	bool m_isDestroyed = false;
 	bool m_isATKMode = false;			//攻撃態勢
-	bool m_isFightingKick = false;		//飛び蹴りの時の特殊な奴
+	bool m_isFightingKick = false;		//飛び蹴りをするかどうかの特殊なフラグ
 
 	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
 	float m_frameTimer = 0.0f;		//時間を図るため

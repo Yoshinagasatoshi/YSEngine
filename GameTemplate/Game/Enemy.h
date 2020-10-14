@@ -55,8 +55,7 @@ public:
 		return m_PtDistans;
 	}
 
-	//似たような関数はasigaruにもあるんですが、
-	//enemyにも追加しなければならなくなってしまった設計
+	//プレイヤーに倒されたら呼ばれる関数
 	void ThisDeath()
 	{
 		m_isDeath = true;

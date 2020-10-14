@@ -27,7 +27,7 @@ public:
 	void Update();
 
 	////BGMを鳴らす・ゲーム内
-	void InGameStartUpBGM()
+	const void InGameStartUpBGM() 
 	{
 		//音SE素材
 		m_bgm.Init(L"Assets/sound/Chanbara.wav");
@@ -36,9 +36,14 @@ public:
 		m_bgm.SetVolume(BGM_NormalVol);
 	}
 
-	void InGameBGMRelease()
+	CSoundSource& GetCSoundSo()
 	{
-		m_bgm.Release();
+		return m_bgm;
+	}
+
+	void InGameBGMRelease(CSoundSource& css)
+	{
+		css.Release();
 	}
 
 	static InGameSoundDirector& GetInstans()
@@ -56,7 +61,7 @@ public:
 	{
 		return m_seRingCount;
 	}
-	//
+	//流されてる音の数を減らす
 	void mainasuRingnum()
 	{
 		m_seRingCount--;
@@ -71,6 +76,7 @@ public:
 		m_seStockCount++;
 	}
 
+	//音のストックを減らす
 	void mainasustocknumS()
 	{
 		m_seStockCount--;

@@ -45,10 +45,4 @@ void Camera::InitCamera()
 	//g_camera3D.Update();
 
 	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
-	//g_camera2D.SetWidth(FRAME_BUFFER_W);
-	//g_camera2D.SetHeight(FRAME_BUFFER_H);
-	//-600‚ª‚¿‚å‚¤‚Ç‚¢‚¢Š´‚¶
-	//g_camera2D.SetPosition({ 0.0f, 0.0f, camera2Dpos_z });
-	//g_camera2D.SetTarget(CVector3::Zero());
-	//g_camera2D.Update();
 }

@@ -93,12 +93,12 @@
 				Draw();
 			}
 		}
-		//殺してください関数。受理するだけで内容をすぐ消すわけではない。
+		//デリートをリクエストする関数。受理するだけで内容をすぐ消すわけではない。
 		void RequestDelete()
 		{
 			m_isRequestdelete = true;
 		}
-		//死んでるかどうかを確認する関数。
+		//デリートされているかどうかを確認する関数。
 		bool isRequestDelete()
 		{
 			return m_isRequestdelete;
@@ -109,8 +109,8 @@
 	private:
 	protected:
 		bool m_isStart;						//Start開始フラグ
-		bool m_isDead;					    //死亡フラグ
-		bool m_isRegistDeadList = false;	//死亡リストに積まれている。
+		bool m_isDead;					    //ysGameObjectがデリートされるかのフラグ
+		bool m_isRegistDeadList = false;	//デリートリストに積まれている。
 		bool m_isRegist = false;			//!<GameObjectManager>に登録されているかどうか
 		bool m_isActive = true;				//Activeフラグ
 		unsigned int m_nameKey = 0;			//名前キー

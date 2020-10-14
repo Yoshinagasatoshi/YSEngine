@@ -19,7 +19,7 @@ GameOver::GameOver()
 	m_skinModel.Init(L"Assets/modelData/busyo.cmo");
 	m_skinModelStage.Init(L"Assets/modelData/result_stage.cmo");
 
-	//ゲームオーバーはゲームオーバーの処理だけ書くべき、本来は美しくない。
+	//プレイヤーが倒れるアニメーションを読み込む
 	m_animClip[anim_Lose].Load(L"Assets/animData/busyo_dead.tka");
 	m_animClip[anim_Lose].SetLoopFlag(false);
 

@@ -1,11 +1,8 @@
 #pragma once
 #include "gameObject/ysGameObject.h"
 /// <summary>
-/// 突発的に作ってしまったクラス
 /// 敵とプレイヤーの距離を測って一番近い距離を渡す
-/// 実質プレイヤークラス
-///	変なクラスだほんとに…
-/// </summary>
+/// /// </summary>
 class Enemy;
 class Player;
 class Player_target : public IGameObject
@@ -43,6 +40,5 @@ private:
 	CVector3 m_distans = CVector3::Zero();
 	bool m_isHosei = false;
 	//std::list<Enemy*> m_enemyList;
-	int i = 0;//テストコード
 };
 
