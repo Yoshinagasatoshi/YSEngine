@@ -10,6 +10,11 @@
 const float power = 250.0f;
 //ボスの体力。ここで設定する。
 const float InitHP = 1;
+//フットステップが入っているアニメーションの補正値
+const float FOOTSTEP_VALUE = 600.0f;
+//飛び蹴りさせるまでの走行量
+const float RUN_UP_VALUE = 200.0f;
+
 Enemy_Busyo::Enemy_Busyo()
 {
 	//HPを設定
@@ -141,7 +146,7 @@ void Enemy_Busyo::Update()
 	rotMatrix.MakeRotationFromQuaternion(m_rotation);
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
-	footStep *= 600.0f;
+	footStep *= FOOTSTEP_VALUE;//補正を強くかける
 	m_moveSpeed += footStep;
 
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
@@ -214,8 +219,8 @@ void Enemy_Busyo::AttackMove()
 	// 事前に動いていた距離の量により
 	// すぐに回転蹴りするか、立ち止まり
 	// 待って攻撃するかを変えている
-	// 2000が今の走行距離条件分岐です。
-	if (m_mileage > 200.0f) {
+	// 200が今の走行距離条件分岐です。
+	if (m_mileage > RUN_UP_VALUE) {
 		if (!m_isFight) {
 			m_isFight = true;
 		}

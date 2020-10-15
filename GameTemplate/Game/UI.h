@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/Sprite.h"
 #include "gameObject/ysGameObject.h"
+#include "Font.h"
 //UIクラス。体力バー等の画像を張る
 class Player;
 class UI : public IGameObject
@@ -49,6 +50,8 @@ private:
 	CVector3 m_scale4 = CVector3::One() * 10.0f;
 
 	Player* m_player;
+
+	Font m_font;
 	//プレイヤーのHPを保存
 	int m_playerHP;
 	//前フレームのプレイヤーのHPを保存

@@ -6,13 +6,17 @@
 #include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+
+const float BGM_VOL = 0.5f; //BGMのボリューム。数値によって変更可能
+
+
 Title::Title()
 {
 	m_soundEngine.Init();
 	//音SE素材
 	m_bgm.Init(L"Assets/sound/Hokora.wav");
 	m_bgm.Play(true);
-	m_bgm.SetVolume(0.5f);
+	m_bgm.SetVolume(BGM_VOL);
 
 	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);

@@ -144,13 +144,14 @@ void Enemy_asigaru::Update()
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
 					if (m_player->IsXTrigger()) {
-						//XとYで渡す引数を変える
+						//XとYで渡す引数の値をを変える。数値が大きければヒットストップの時間が長くなる
 						g_goMgr.HitStopOn(8);
 					}
 					else {
 						//Xなので少なめに
 						g_goMgr.HitStopOn(4);
 					}
+					g_goMgr.Counting();
 					//通っているのは確認完了
 					m_isDeadfrag = true;
 					//enemy用にも
@@ -371,7 +372,7 @@ void Enemy_asigaru::StateJudge()
 		}
 		//tikazukiの処理
 		kyori.Normalize();
-		m_moveSpeed = kyori * drawNearSpeed * 2.0f;
+		m_moveSpeed = kyori * drawNearSpeed * 2.0f; //速度が少し足りなかったので二倍速
 		break;
 
 

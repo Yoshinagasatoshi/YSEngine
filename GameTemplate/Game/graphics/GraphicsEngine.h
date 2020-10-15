@@ -64,6 +64,26 @@ public:
 	{
 		return m_cascadeShadowMap;
 	}
+
+	/// <summary>
+	/// スプライトバッチの取得
+	/// </summary>
+	/// <returns>スプライトバッチ</returns>
+	DirectX::SpriteBatch* GetSpriteBatch()
+	{
+		return m_spriteBatch.get();
+	}
+
+	/// <summary>
+	/// スプライトフォントの取得
+	/// </summary>
+	/// <returns>スプライトフォント</returns>
+	DirectX::SpriteFont* GetSpriteFont()
+	{
+		return m_spriteFont.get();
+	}
+
+
 	RenderTarget* GetMainRenderTarget()
 	{
 		return &m_renderTarget;
@@ -107,6 +127,10 @@ private:
 	ShadowMap* m_shadowMap = nullptr;
 	CascadeShadowMap* m_cascadeShadowMap = nullptr;
 	PostEffect* m_postEffect = nullptr;
+
+	//定義。
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;     //
+	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;		 //
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

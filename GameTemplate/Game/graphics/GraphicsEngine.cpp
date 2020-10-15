@@ -175,6 +175,9 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_cascadeShadowMap = new CascadeShadowMap;
 	m_postEffect = new PostEffect;
 	m_postEffect->InitFullScreenQuadPrimitive();
+
+	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_pd3dDeviceContext);
+	m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_pd3dDevice, L"Assets/font/myfile.spritefont");
 }
 
 void GraphicsEngine::ChangeRenderTarget(RenderTarget* renderTarget, D3D11_VIEWPORT* viewport)

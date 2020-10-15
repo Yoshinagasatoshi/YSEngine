@@ -25,12 +25,12 @@ UI::~UI()
 
 void UI::Update()
 {
-	CVector3 a = CVector3::Zero();
+	const CVector3& lifeVarPos = CVector3::Zero();
 	if (m_isPLInfo) {
 		m_playerHP = m_player->GetPlayerHP();
 		m_oldPlayerHP = m_player->GetPlayerHP();
 		m_lifeGauge.SetPosition(m_position);
-		m_lifeGaugeura.SetPosition(a);
+		m_lifeGaugeura.SetPosition(lifeVarPos);
 
 		m_isPLInfo = true;
 	}
@@ -62,6 +62,8 @@ void UI::Update()
 
 	m_face.Update(m_position2,m_rotation2,m_scale2,m_pivot2);
 	m_mapSprite.Update(m_position3,m_rotation3,m_scale3,m_pivot3);
+
+	
 }
 
 void UI::PostDraw()
@@ -71,5 +73,11 @@ void UI::PostDraw()
 	m_face.Draw();
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
+	int i = 0;
+	wchar_t text[255];
+	int defeadNum = g_goMgr.GetCount();
+	swprintf_s(text, L"%03d", defeadNum);
+
+	m_font.DrawScreenPos(text, CVector2::Zero());
 	//m_playerPointer_yazirushi.Draw();
 }

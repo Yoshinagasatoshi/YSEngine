@@ -108,6 +108,7 @@
     <ClCompile Include="Enemy_Bomber.cpp" />
     <ClCompile Include="Enemy_Busyo.cpp" />
     <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameClear.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Enemy_Bomber.h" />
     <ClInclude Include="Enemy_Busyo.h" />
     <ClInclude Include="Fade.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameClear.h" />
