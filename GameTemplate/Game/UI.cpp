@@ -3,10 +3,16 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Player.h"
 
+const float GAUGE_HEIGTH = 24.0f;
+
 UI::UI()
 {
-	m_lifeGauge.Init(L"Assets/sprite/Green.dds", 480.0f, 24.0f);
+	m_lifeGauge.Init(L"Assets/sprite/Green.dds", 480.0f, GAUGE_HEIGTH);
 	m_lifeGaugeura.Init(L"Assets/sprite/Green_ura.dds", 484.0f, 25.0f);
+
+	m_musouGauge.Init(L"Assets/sprite/musougauge.dds", 450.0f, GAUGE_HEIGTH);
+	m_musouGaugeura.Init(L"Assets/sprite/Green_ura.dds", 454.0f, 25.0f);
+
 
 	//m_sprite.SetPosition(m_position);
 	//m_sprite.SetRotation(m_rotation);
@@ -42,9 +48,19 @@ void UI::Update()
 		/// HP = 横幅の長さに設定して、攻撃を受けたら現在のHPに合わせた
 		/// 体力の幅にしていく。
 		/// </summary>
-		m_lifeGauge.InitCommon(m_playerHP,24.0f);
+		m_lifeGauge.InitCommon(m_playerHP, GAUGE_HEIGTH);
 	}
 	m_oldPlayerHP = m_playerHP;
+
+	//無双ゲージ　草案
+	//ゲージがMAXではない時 => 時間経過、敵を斬ることでゲージがたまる。
+	//ゲージがMaxな時 => もちろん切ってもたまらない。Xボタンを使った時にゲージが減る
+	timer++;
+	if (timer >= 450.0f)
+	{
+		timer = 450.0f;
+	}
+	m_musouGauge.InitCommon(timer, GAUGE_HEIGTH);
 
 	CVector3 PlayerPos = m_player->GetPosition();
 	PlayerPos /= 62.0f;
@@ -60,6 +76,9 @@ void UI::Update()
 	m_lifeGauge.Update(m_position, m_rotation, m_scale, m_pivot);
 	m_lifeGaugeura.Update(m_position, m_rotation, m_scale, m_pivot);
 
+	m_musouGauge.Update(m_musouPos, m_rotation, m_scale, m_pivot);
+	m_musouGaugeura.Update(m_musouPos, m_rotation, m_scale, m_pivot);
+
 	m_face.Update(m_position2,m_rotation2,m_scale2,m_pivot2);
 	m_mapSprite.Update(m_position3,m_rotation3,m_scale3,m_pivot3);
 
@@ -70,14 +89,27 @@ void UI::PostDraw()
 {
 	m_lifeGaugeura.Draw();
 	m_lifeGauge.Draw();
+
+	m_musouGaugeura.Draw();
+	m_musouGauge.Draw();	
+
 	m_face.Draw();
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
 	int i = 0;
 	wchar_t text[255];
 	int defeadNum = g_goMgr.GetCount();
-	swprintf_s(text, L"%03d", defeadNum);
 
-	m_font.DrawScreenPos(text, CVector2::Zero());
+	swprintf_s(text, L"撃破数 : %03d", defeadNum);
+	CVector4 Color = CVector4{1.0f,0.0f,0.0f,1.0f};
+
+	m_font.DrawScreenPos(text, CVector2{ 0.0f,650.0f },Color);
+
+
+	wchar_t teext[255];
+	float Num = timer;
+	swprintf_s(teext, L"時間 : %03f", timer);
+	m_timeFont.DrawScreenPos(teext, CVector2{0.0f,0.0f},Color);
+	
 	//m_playerPointer_yazirushi.Draw();
 }

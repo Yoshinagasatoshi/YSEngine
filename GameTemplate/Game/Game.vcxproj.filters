@@ -482,4 +482,7 @@
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\musougauge.png" />
+  </ItemGroup>
 </Project>

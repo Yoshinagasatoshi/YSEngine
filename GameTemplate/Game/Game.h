@@ -54,7 +54,6 @@ private:
 	Level m_level_EnemyBusyo;
 	bool m_attack = false;
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
-	bool m_busyofrag = false;
 	bool m_gameDelete = false;					//ゲームから出る時にtrueになるようにする
 	Fade* m_fade;
 	CSoundEngine m_soundEngine;

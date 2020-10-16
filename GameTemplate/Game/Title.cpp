@@ -14,9 +14,9 @@ Title::Title()
 {
 	m_soundEngine.Init();
 	//âπSEëfçﬁ
-	m_bgm.Init(L"Assets/sound/Hokora.wav");
-	m_bgm.Play(true);
-	m_bgm.SetVolume(BGM_VOL);
+	//m_bgm.Init(L"Assets/sound/Hokora.wav");
+	//m_bgm.Play(true);
+	//m_bgm.SetVolume(BGM_VOL);
 
 	//m_sprite = new Sprite();
 	m_sprite.Init(L"Assets/sprite/Title.dds",1280.0f,720.0f);

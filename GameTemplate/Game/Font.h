@@ -16,7 +16,8 @@ public:
 	/// <param name="rotation">回転</param>
 	/// <param name="effects">デフォルトはDirectX::SpriteEffects_None</param>
 	//引数が代入されていれば書かなくても大丈夫
-	//カラー、スケール、基準点
+	//逆に台数が書いてある場合、そっちが優先される
+	//スケール、基準点
 	void DrawScreenPos(
 		wchar_t const* text,
 		const CVector2& pos,

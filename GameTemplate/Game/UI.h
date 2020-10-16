@@ -19,6 +19,9 @@ private:
 	Sprite m_lifeGauge;
 	Sprite m_lifeGaugeura;
 
+	Sprite m_musouGauge;
+	Sprite m_musouGaugeura;
+
 	Sprite m_face;
 
 	Sprite m_mapSprite;
@@ -45,17 +48,22 @@ private:
 	CVector3 m_scale3 = CVector3::One();
 	CVector2 m_pivot3 = { 0.5f,0.5f };
 
+	//無双ゲージ
+	CVector3 m_musouPos = CVector3{ 0.0f,-304.0f,0.0f };
+
 	//プレイヤーポインタ
 	CVector3 m_position4 = CVector3{ 390.0f,192.0f,0.0f };
 	CVector3 m_scale4 = CVector3::One() * 10.0f;
 
 	Player* m_player;
 
-	Font m_font;
+	Font m_font;			//討伐数用フォント
+	Font m_timeFont;		//制限時間用フォント
 	//プレイヤーのHPを保存
 	int m_playerHP;
 	//前フレームのプレイヤーのHPを保存
 	int m_oldPlayerHP;
 	//プレイヤー情報が入っているか？
 	bool m_isPLInfo = false;
+	float timer = 0.0f;
 };

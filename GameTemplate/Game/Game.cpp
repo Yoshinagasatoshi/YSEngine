@@ -22,7 +22,7 @@ Game::Game()
 	g_goMgr.ResetCount();
 	//音SE素材
 	InGameSoundDirector::GetInstans().SoundInit();
-	InGameSoundDirector::GetInstans().InGameStartUpBGM();
+	//InGameSoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
 	//プレイヤーなどのインスタンスを作成
 	m_player = g_goMgr.NewGameObject<Player>("Player");
@@ -87,25 +87,19 @@ Game::~Game()
 	//ちゃんと140回呼ばれている
 	g_goMgr.FindGameObjects<Enemy>("Enemy_asigaru", [&](Enemy* enemy) {
 		g_goMgr.DeleteGOObject(enemy);
-		//if (enemy != nullptr) {
-		//	enemy = nullptr;
-		//}
+
 		g_goMgr.EnemyNumSubtract();
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_busyo", [&](Enemy* enemy) {
 		g_goMgr.EnemyNumSubtract();
-		//if (enemy != nullptr) {
-		//	enemy = nullptr;
-		//}
+
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
 	g_goMgr.FindGameObjects<Enemy>("Enemy_bomber", [&](Enemy* enemy) {
 		g_goMgr.EnemyNumSubtract();
-		//if (enemy != nullptr) {
-		//	enemy = nullptr;
-		//}
+
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
@@ -123,10 +117,6 @@ void Game::Update()
 
 void Game::Draw()
 {
-	/// <summary>
-	/// render関数の処理をDraw関数に書いていたけど
-	/// オーバーフローが起きたのでRenderに委託した。
-	/// </summary>
 }
 
 
