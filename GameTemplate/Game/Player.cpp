@@ -227,6 +227,7 @@ void Player::Update()
 				m_damagefrag = false;
 				if (m_PL_HP != onebrock) {
 					m_PL_HP -= onebrock;
+					g_goMgr.AddMusouGauge(50.0f);
 					//g_goMgr.HitStopOn();
 				}
 				else {
@@ -531,6 +532,7 @@ void Player::ThisDamage()
 
 				PlayerDamage();
 
+				
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
 			}
 			});

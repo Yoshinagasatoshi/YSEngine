@@ -22,8 +22,13 @@
 			Effekseer::Handle m_playEffectHandle = -1;
 		};
 
+		/// <summary>
+		/// イフェクサーを入れる。
+		/// </summary>
 		void InitEffekseer();
-		//アップデート
+		/// <summary>
+		/// アップデート
+		/// </summary>
 		void Update();
 		void XorY(int X);
 		/// <summary>
@@ -42,7 +47,10 @@
 			return hash;
 		}
 
-		//newGO
+		/// <summary>
+		/// ゲームオブジェクトを作るクラス
+		/// NewGO()を呼んでも結果的にはこの関数を通る
+		/// </summary>
 		template <class T>
 		T* NewGameObject(const char* objectName)
 		{
@@ -53,7 +61,13 @@
 			return newObj;
 		}
 
-		//デリート
+		/// <summary>
+		/// ゲームオブジェクトを消す関数
+		/// DeleteGO()を呼んでもこの関数を通ることになる
+		/// IGameObjectを継承しているクラスを1つだけ消すときはこちらを使う
+		/// 複数消したいときはDeleteGOObject"s"の方を使う。
+		/// </summary>
+		/// <param name="go"></param>
 		void DeleteGOObject(IGameObject* go)
 		{
 			//リストから検索して、見つかったら削除する。
@@ -66,7 +80,13 @@
 				}
 			}
 		}
-
+		/// <summary>
+		/// DeleteGOOnjectの複数形
+		/// 名前を検索して、その名前に該当するインスタンスを全て
+		/// デリートする。
+		/// </summary>
+		/// <param name="go"></param>
+		/// <param name="objname"></param>
 		void DeleteGOObjects(IGameObject* go, const char * objname)
 		{
 			//リストから検索して
@@ -81,7 +101,10 @@
 		}
 
 		/// <summary>
-		/// ゲームオブジェクト名の検索。重い
+		/// ゲームオブジェクト名(以下GO名)の検索。重い
+		/// GO名の検索を1回だけ行いたいならこれを呼ぶ
+		/// 同じ名前のGO名を複数呼びたい場合は
+		/// FindGameObject"s"を呼ぶ。
 		/// </summary>
 		template<class T>
 		T* FindGameObject(const char* objectName, bool enableErrorMessage = true)
@@ -101,6 +124,9 @@
 			}
 		}
 
+		/// <summary>
+		/// ゲームオブジェクト(以下GO)を複数検索したいときに使う関数
+		/// </summary>
 		template<class T>
 		void FindGameObjects(const char* objectName, std::function<bool(T* go)> func)
 		{
@@ -117,60 +143,112 @@
 			}
 		}
 
-		//呼ばれたら1追加
+		/// <summary>
+		/// 討伐数のカウント。呼ばれたら1足される
+		/// </summary>
 		void Counting()
 		{
 			Count++;
 		}
-		//確認
-		int GetCount()
+		/// <summary>
+		/// 何体討伐しているかを確認する関数
+		/// </summary>
+		/// <returns></returns>
+		int GetCount() const
 		{
 			return Count;
 		}
-		//カウントリセット
+		/// <summary>
+		/// 討伐数のカウントを0にするクラス。
+		/// ゲームの2周目以降に呼ばれることを想定しています。
+		/// </summary>
 		void ResetCount()
 		{
 			Count = 0;
 		}
 
-		//ふえてもろて…
+		/// <summary>
+		/// エネミーの数だけカウントする
+		/// </summary>
 		void EnemyCounting()
 		{
 			m_enemyCount++;
 		}
-		//しんでもろて…
+		/// <summary>
+		/// エネミーが死んだらカウントを減らす
+		/// </summary>
 		void EnemyNumSubtract()
 		{
 			m_enemyCount--;
 		}
-		//みせてもろて…
-		int GetEnemyNum()
+		///現在のエネミーの数を返す
+		int GetEnemyNum() const
 		{
 			return  m_enemyCount;
 		}
-		//リセットしてもろて…
+		///エネミーのカウントをリセットする
 		void EnemyNumResetCount()
 		{
-			m_enemyCount;
+			//?
+			m_enemyCount = 0;
 		}
-
-		//呼ばれたらヒットストップをオンに
+		/// <summary>
+		/// 呼ばれたらヒットストップをオンに
+		/// </summary>
 		void HitStopOn(int i)
 		{
 			m_isHitStopFrag = true;
 			m_HitStopCount = i;
 		}
 
-		//呼ばれたらヒットストップをオフに
+		///呼ばれたらヒットストップをオフに
 	/*	void HitStopOff()
 		{
 			m_isHitStopFrag = false;
 		}*/
-
-		//現在のヒットストップの状態は
-		bool IsHitStop()
+		//
+		/// <summary>
+		/// 現在のヒットストップの状態を返す
+		/// </summary>
+		/// <returns></returns>
+		bool IsHitStop() const 
 		{
 			return m_isHitStopFrag;
+		}
+
+		/// <summary>
+		/// 無双ゲージがどれだけあるかを返す関数。
+		/// </summary>
+		const float&GetMusouGaugeValue() const
+		{
+			return m_musouGauge;
+		}
+		/// <summary>
+		/// 無双ゲージがどれだけ増減したかを受け取る関数
+		/// 引数に-をいれたら減らせる。
+		/// </summary>
+		void AddMusouGauge(float Value)
+		{
+			m_musouGauge += Value;
+			//もし、無双ゲージの最大値を超えそうなら
+			if (m_musouGauge > 450.0f)
+			{
+				m_musouGauge = 450.0f;
+			}
+			//もし、無双ゲージの最低値を超えそうなら
+			if (m_musouGauge < 0.0f)
+			{
+				m_musouGauge = 0.0f;
+			}
+		}
+
+		/// <summary>
+		/// 無双技が打てる状況かどうかを返す
+		/// 判断はysGameObjectManager内に書いてあります。
+		/// </summary>
+		bool isMusouSpecial()const
+		{
+			return m_isMusouSpecial;
 		}
 
 		//実行。ExecuteからDrawとUpdateに分離
@@ -188,7 +266,7 @@
 				go->PostDraw();
 			}
 		}
-		//配列数を取りたいがためにしたけど不便、
+		//配列数を取りたいのでリストを返すようにした
 		std::list<IGameObject*> GetIGameObjectList()
 		{
 			return IGameObjectList;
@@ -221,6 +299,10 @@
 		int HitStopTimer = 0;
 		//ヒットストップのカウント
 		int m_HitStopCount = 0;
+		//無双ゲージの量を蓄積している変数
+		float m_musouGauge = 0.0f;
+		//無双技が打てるかどうかを判断する変数
+		bool m_isMusouSpecial = false;
 	private:
 		//授業版格納庫
 		std::list<IGameObject*> IGameObjectList; //ゲームオブジェクトのリスト

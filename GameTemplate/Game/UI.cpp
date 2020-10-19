@@ -60,7 +60,11 @@ void UI::Update()
 	{
 		timer = 450.0f;
 	}
-	m_musouGauge.InitCommon(timer, GAUGE_HEIGTH);
+	float hyouzi = 450.0f;
+	if (hyouzi > timer + g_goMgr.GetMusouGaugeValue()) {
+		hyouzi = timer + g_goMgr.GetMusouGaugeValue();
+	}
+	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGTH);
 
 	CVector3 PlayerPos = m_player->GetPosition();
 	PlayerPos /= 62.0f;

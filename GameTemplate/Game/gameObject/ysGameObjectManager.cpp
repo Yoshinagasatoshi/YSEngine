@@ -66,7 +66,14 @@ ysGameObjectManager::EffectTool g_Effect;
 				HitStopTimer = 0;
 			}
 		}
-		
+		//–³‘o‹Z‚ª‘Å‚Ä‚éó‘Ô‚©?’¼Ú‚Ì”’l‚È‚Ì‚ÍŒã‚Å•ÏX‚µ‚Ü‚·B
+		if (m_musouGauge >= 450.0f) {
+			m_isMusouSpecial = true;
+		}
+		else {
+			m_isMusouSpecial = false;
+		}
+
 		Effekseer::Matrix44 efCameraMat;
 		g_camera3D.GetViewMatrix().CopyTo(efCameraMat);
 		Effekseer::Matrix44 efProjMat;

@@ -84,7 +84,7 @@ Enemy_asigaru::Enemy_asigaru()
 Enemy_asigaru::~Enemy_asigaru()
 {
 	//“G‚ð“|‚µ‚½”‚ðŒv‘ª
-	g_goMgr.Counting();
+	//g_goMgr.Counting();
 	g_goMgr.EnemyNumSubtract();
 	g_goMgr.DeleteGOObject(this);
 }
@@ -188,7 +188,7 @@ void Enemy_asigaru::Update()
 		if (m_Deathtimer_f > DeleteTime) {
 			g_goMgr.EnemyNumSubtract();
 			m_model.SetShadowCaster(false);
-			CCount = true;
+			//CCount = true;
 			DeleteGO(this);
 			return;
 		}
