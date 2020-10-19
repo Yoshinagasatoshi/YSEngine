@@ -143,6 +143,9 @@ void Enemy_asigaru::Update()
 			PhysicsGhostObject* ghostobject = wepon->GetGhostObject();
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
+					g_goMgr.Counting();
+					g_goMgr.AddMusouGauge(15.0f);
+
 					if (m_player->IsXTrigger()) {
 						//XとYで渡す引数の値をを変える。数値が大きければヒットストップの時間が長くなる
 						g_goMgr.HitStopOn(8);
@@ -151,7 +154,7 @@ void Enemy_asigaru::Update()
 						//Xなので少なめに
 						g_goMgr.HitStopOn(4);
 					}
-					g_goMgr.Counting();
+					
 					//通っているのは確認完了
 					m_isDeadfrag = true;
 					//enemy用にも

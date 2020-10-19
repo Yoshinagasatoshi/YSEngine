@@ -61,8 +61,12 @@ void UI::Update()
 		timer = 450.0f;
 	}
 	float hyouzi = 450.0f;
-	if (hyouzi > timer + g_goMgr.GetMusouGaugeValue()) {
-		hyouzi = timer + g_goMgr.GetMusouGaugeValue();
+	if (hyouzi > 0.0f + g_goMgr.GetMusouGaugeValue()) {
+		hyouzi = 0.0f + g_goMgr.GetMusouGaugeValue();
+		g_goMgr.SetMusou_Utenai();
+	}
+	else {
+		g_goMgr.SetMusou_Uteru();
 	}
 	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGTH);
 

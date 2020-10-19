@@ -244,13 +244,27 @@
 
 		/// <summary>
 		/// –³‘o‹Z‚ª‘Å‚Ä‚éó‹µ‚©‚Ç‚¤‚©‚ğ•Ô‚·
-		/// ”»’f‚ÍysGameObjectManager“à‚É‘‚¢‚Ä‚ ‚è‚Ü‚·B
 		/// </summary>
 		bool isMusouSpecial()const
 		{
 			return m_isMusouSpecial;
 		}
 
+		/// <summary>
+		/// –³‘o‹Z‚ª‘Å‚Ä‚é‡}
+		/// </summary>
+		void SetMusou_Uteru()
+		{
+			m_isMusouSpecial = true;
+		}
+
+		/// <summary>
+		/// –³‘o‹Z‚ª‘Å‚Ä‚È‚¢‡}
+		/// </summary>
+		void SetMusou_Utenai()
+		{
+			m_isMusouSpecial = false;
+		}
 		//ÀsBExecute‚©‚çDraw‚ÆUpdate‚É•ª—£
 		void Execute();
 		//void Update();

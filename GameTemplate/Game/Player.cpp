@@ -393,7 +393,9 @@ void Player::AttackMove()
 			break;
 		}
 	}
-	XAttackMove();
+	if (g_goMgr.isMusouSpecial()) {
+		XAttackMove();
+	}
 
 	m_playTimer+= GameTime().GetFrameDeltaTime();
 	if (m_playTimer > 0.5f)
@@ -432,6 +434,7 @@ void Player::XAttackMove()
 	if (m_XTrigger && !m_busyoAnime.IsPlaying()) {
 		m_XTrigger = false;
 		m_underAttack = false;
+		g_goMgr.AddMusouGauge(-450.0f);
 	}
 }
 
