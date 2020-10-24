@@ -34,6 +34,8 @@ public:
 	void Turn();
 	//出力処理
 	void Execute();
+	//死亡処理
+	void DeadPlayer();
 	//キャラクターのコリジョン初期化
 	void CharaconInit();
 	//プレイヤーの位置を返す関数
@@ -80,6 +82,12 @@ public:
 	void SetPlayerMuTeki()
 	{
 		m_muteki = true;
+	}
+	//プレイヤーがどんな状況でも絶命する
+	void ConpulsionDead()
+	{
+		m_PL_HP = 0;
+		m_deadFrag = true;
 	}
 
 	//武将の状態を格納

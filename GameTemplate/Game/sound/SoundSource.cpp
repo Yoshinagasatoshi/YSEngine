@@ -155,7 +155,7 @@ void CSoundSource::UpdateStreaming()
 			char* buff = m_waveFile->GetReadBuffer();
 			Play(&buff[m_readStartPos], m_currentBufferingSize);
 			if (m_currentBufferingSize == 0) {
-				//読み込んだサイズが０ということは末端まで読み込みが終わったということ。
+				//読み込んだサイズが０ということは末端まで読み込みが終わった。
 				if (m_isLoop) {
 					//ループする？
 					//waveファイルの読み込み位置をリセットしてバッファリング再開。

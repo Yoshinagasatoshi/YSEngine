@@ -2,16 +2,24 @@
 #include "UI.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "Player.h"
+#include "Game.h"
 
-const float GAUGE_HEIGTH = 24.0f;
+const float GAUGE_HEIGHT = 24.0f;		//ゲージの縦の幅
+const float GAUGEURA_HEIGHT = 25.0f;	//ゲージ裏の立幅
+const float GAUGE_WEIGHT = 480.0f;		//ゲージの横幅
+const float GAUGEURA_WEIGHT = 484.0f;	//無双ゲージ裏の横幅
+const float MUSOUGAUGE_HEIGHT = 454.0f;	//無双ゲージ裏の横幅
+const float MUSOU_GAUGEMAX = 450.0f;	//無双ゲージの最大値
+const float TIMELIMIT = 6000.0f;		//制限時間の設定
 
 UI::UI()
 {
-	m_lifeGauge.Init(L"Assets/sprite/Green.dds", 480.0f, GAUGE_HEIGTH);
-	m_lifeGaugeura.Init(L"Assets/sprite/Green_ura.dds", 484.0f, 25.0f);
+	isTimeOver = false;
+	m_lifeGauge.Init(L"Assets/sprite/Green.dds", GAUGE_WEIGHT, GAUGE_HEIGHT);
+	m_lifeGaugeura.Init(L"Assets/sprite/Green_ura.dds", GAUGEURA_WEIGHT, GAUGEURA_HEIGHT);
 
-	m_musouGauge.Init(L"Assets/sprite/musougauge.dds", 450.0f, GAUGE_HEIGTH);
-	m_musouGaugeura.Init(L"Assets/sprite/Green_ura.dds", 454.0f, 25.0f);
+	m_musouGauge.Init(L"Assets/sprite/musougauge.dds", MUSOU_GAUGEMAX, GAUGE_HEIGHT);
+	m_musouGaugeura.Init(L"Assets/sprite/Green_ura.dds", MUSOUGAUGE_HEIGHT, GAUGEURA_HEIGHT);
 
 
 	//m_sprite.SetPosition(m_position);
@@ -31,6 +39,12 @@ UI::~UI()
 
 void UI::Update()
 {
+	if (!isTimeOver) {
+		if (timer >= TIMELIMIT) {
+			m_player->ConpulsionDead();
+			isTimeOver = true;
+		}
+	}
 	const CVector3& lifeVarPos = CVector3::Zero();
 	if (m_isPLInfo) {
 		m_playerHP = m_player->GetPlayerHP();
@@ -48,7 +62,7 @@ void UI::Update()
 		/// HP = 横幅の長さに設定して、攻撃を受けたら現在のHPに合わせた
 		/// 体力の幅にしていく。
 		/// </summary>
-		m_lifeGauge.InitCommon(m_playerHP, GAUGE_HEIGTH);
+		m_lifeGauge.InitCommon(m_playerHP, GAUGE_HEIGHT);
 	}
 	m_oldPlayerHP = m_playerHP;
 
@@ -56,19 +70,17 @@ void UI::Update()
 	//ゲージがMAXではない時 => 時間経過、敵を斬ることでゲージがたまる。
 	//ゲージがMaxな時 => もちろん切ってもたまらない。Xボタンを使った時にゲージが減る
 	timer++;
-	if (timer >= 450.0f)
-	{
-		timer = 450.0f;
-	}
-	float hyouzi = 450.0f;
-	if (hyouzi > 0.0f + g_goMgr.GetMusouGaugeValue()) {
-		hyouzi = 0.0f + g_goMgr.GetMusouGaugeValue();
+	//直地　後で直します。
+	hyouzi = g_goMgr.GetMusouGaugeValue();
+	if (hyouzi < MUSOU_GAUGEMAX) {
 		g_goMgr.SetMusou_Utenai();
 	}
 	else {
 		g_goMgr.SetMusou_Uteru();
 	}
-	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGTH);
+	//float timeVal = 0.75;
+	//hyouzi += timeVal;
+	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGHT);
 
 	CVector3 PlayerPos = m_player->GetPosition();
 	PlayerPos /= 62.0f;
@@ -115,8 +127,8 @@ void UI::PostDraw()
 
 
 	wchar_t teext[255];
-	float Num = timer;
-	swprintf_s(teext, L"時間 : %03f", timer);
+	float RemainingTime = TIMELIMIT - timer;
+	swprintf_s(teext, L"制限時間 : %03f",  RemainingTime);
 	m_timeFont.DrawScreenPos(teext, CVector2{0.0f,0.0f},Color);
 	
 	//m_playerPointer_yazirushi.Draw();

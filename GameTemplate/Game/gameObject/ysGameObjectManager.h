@@ -265,6 +265,17 @@
 		{
 			m_isMusouSpecial = false;
 		}
+
+		/// <summary>
+		/// 呼ばれたら無双ゲージ量をリセットする。
+		/// ゲームの2周目以降によばれる予定。
+		/// addMusouGaugeでも代用はできる
+		/// </summary>
+		void ResetMusouGauge()
+		{
+			m_musouGauge = 0.0f;
+		}
+
 		//実行。ExecuteからDrawとUpdateに分離
 		void Execute();
 		//void Update();
@@ -314,7 +325,7 @@
 		//ヒットストップのカウント
 		int m_HitStopCount = 0;
 		//無双ゲージの量を蓄積している変数
-		float m_musouGauge = 0.0f;
+		float m_musouGauge;
 		//無双技が打てるかどうかを判断する変数
 		bool m_isMusouSpecial = false;
 	private:

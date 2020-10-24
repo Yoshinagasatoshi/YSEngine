@@ -259,19 +259,7 @@ void Player::Update()
 
 	}
 	else {
-		//プレイヤーが死んでいる時の処理
-		m_moveSpeed = CVector3::Zero();
-		m_busyoAnime.Play(animClip_busyo_dead);
-		if (!m_busyoAnime.IsPlaying()
-			&& !m_isDestroyed) {
-			Fade::Getinstance().StartFadeIn();
-		}
-		if (!Fade::Getinstance().IsFade()) {
-			m_isDestroyed = true;
-			//InGameSoundDirector::GetInstans().UpdateOff();
-			g_goMgr.NewGameObject<GameOver>("GameOver");
-			m_game->GameDelete();
-		}
+		DeadPlayer();
 	}
 	Execute();
 	/// <summary>
@@ -542,4 +530,22 @@ void Player::ThisDamage()
 		return true;
 		}
 	);
+}
+
+void Player::DeadPlayer()
+{
+	m_busyoState = BusyoDead;
+	//プレイヤーが死んでいる時の処理
+	m_moveSpeed = CVector3::Zero();
+	m_busyoAnime.Play(animClip_busyo_dead);
+	if (!m_busyoAnime.IsPlaying()
+		&& !m_isDestroyed) {
+		Fade::Getinstance().StartFadeIn();
+	}
+	if (!Fade::Getinstance().IsFade()) {
+		m_isDestroyed = true;
+		//InGameSoundDirector::GetInstans().UpdateOff();
+		g_goMgr.NewGameObject<GameOver>("GameOver");
+		m_game->GameDelete();
+	}
 }

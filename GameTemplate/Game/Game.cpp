@@ -20,6 +20,8 @@ Game::Game()
 {
 	//オブジェクトのカウントをリセット
 	g_goMgr.ResetCount();
+	//無双ゲージのリセット
+	g_goMgr.ResetMusouGauge();
 	//音SE素材
 	InGameSoundDirector::GetInstans().SoundInit();
 	//InGameSoundDirector::GetInstans().InGameStartUpBGM();
@@ -29,6 +31,7 @@ Game::Game()
 	m_player->SetGameInfo(this);
 	m_ui = g_goMgr.NewGameObject<UI>("UI");
 	m_ui->SetPlayerInfo(m_player);
+	m_ui->SetGameInfo(this);
 	m_backGround = g_goMgr.NewGameObject<BackGround>("BackGround");
 	m_gameCamera = g_goMgr.NewGameObject<GameCamera>("GameCamera");
 	m_gameCamera->SetPlayerInfo(m_player);
@@ -122,5 +125,8 @@ void Game::Draw()
 
 void Game::GameDelete()
 {
+	//ゲームそのもののデリートフラグ。
+	//ゲームクリアとかゲームオーバーで
+	//シーンを転換するときに呼ばれます。
 	m_gameDelete = true;
 }

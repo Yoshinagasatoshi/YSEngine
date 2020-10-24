@@ -7,13 +7,25 @@
 #include "InGameSoundDirector.h"
 #include "Fade.h"
 #include "InGameSoundDirector.h"
-const float power = 250.0f;
-//ボスの体力。ここで設定する。
-const float InitHP = 1;
-//フットステップが入っているアニメーションの補正値
-const float FOOTSTEP_VALUE = 600.0f;
-//飛び蹴りさせるまでの走行量
-const float RUN_UP_VALUE = 200.0f;
+const float BLOW_AWAY_POWER = 250.0f;	//吹き飛ばす力。雑魚にどれだけ吹き飛んでもらうかを数値化したもの
+const float InitHP = 5;					//ボスの体力。ここで設定する。
+const float FOOTSTEP_VALUE = 600.0f;	//フットステップが入っているアニメーションの補正値
+const float RUN_UP_VALUE = 200.0f;		//飛び蹴りさせるまでの走行量
+const float MODEL_RADIUS = 60.0f;		//キャラクターの半径
+const float MODEL_HEIGHT = 100.0f;		//キャラクターの高さ
+const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間をしたいときに使う。 
+const float INTERPORATION_TIME_M = 0.2f;//補間時間・中、アニメーション補間をしたいときに使う。
+const float INTERPORATION_TIME_L = 0.5f;//補間時間・大、長めのアニメーション補間をしたいときに使う。
+const float BIAS = -0.5f;				//アニメーションの移動量を調整するバイアス
+
+
+//~_ZERO系は型が違うのでなければ全部統一してもいいかもしれませんが、
+//変数名で見たときのわかりやすさから、一応全部分けています。
+
+const float SPEED_ZERO = 0.0f;			//速度を0にしたいときに使う定数。
+const float TIMER_ZERO = 0.0f;			//時間を0にしたいときに使う定数。
+const float MILEAGE_ZERO = 0.0f;		//距離を0にしたいときに使う定数。
+const int	ENEMYBUSYO_HP = 0;			//武将のHPがゼロである時。
 
 Enemy_Busyo::Enemy_Busyo()
 {
@@ -140,7 +152,7 @@ void Enemy_Busyo::Update()
 	//if (m_busyoState == BusyoAttack) {
 	//攻撃中はフットステップの移動量を加算する。
 	CMatrix mBias = CMatrix::Identity();
-	mBias.MakeRotationX(CMath::PI * -0.5f);
+	mBias.MakeRotationX(CMath::PI * BIAS);
 	CMatrix rotMatrix;
 	//回転行列を作成する。
 	rotMatrix.MakeRotationFromQuaternion(m_rotation);
@@ -158,8 +170,8 @@ void Enemy_Busyo::CharaconInit()
 {
 	//キャラコンの初期化
 	m_characon.Init(
-		60.0f, //半径
-		100.0f,//高さ
+		MODEL_RADIUS,
+		MODEL_HEIGHT,
 		m_position//位置
 	);
 }
@@ -210,9 +222,9 @@ void Enemy_Busyo::AttackMove()
 	//攻撃中の動き
 	m_moveSpeed = CVector3::Zero();
 	//ワールド座標の更新
-	m_moveSpeed.y += grabity * 10.0f;
+	m_moveSpeed.y += grabity;
 	if (m_characon.IsOnGround()) {
-		m_moveSpeed.y = 0.0f;
+		m_moveSpeed.y = SPEED_ZERO;
 	}
 	//攻撃の感覚を決める
 	AttackframeNum();
@@ -228,14 +240,14 @@ void Enemy_Busyo::AttackMove()
 		//アニメーションが流れたらダメージを食らうはず
 		//Fightng_Kickはかなり特殊。プレイヤーを吹き飛ばしたい。
 		m_isFightingKick = true;
-		m_enemy_BusyoAnime.Play(FIGHTING_KICK, 0.5f);
+		m_enemy_BusyoAnime.Play(FIGHTING_KICK, INTERPORATION_TIME_L);
 		if (!m_enemy_BusyoAnime.IsPlaying())
 		{
-			m_frameTimer = 0;
-			m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+			m_frameTimer = TIMER_ZERO;
+			m_enemy_BusyoAnime.Play(MOVE, INTERPORATION_TIME_M);
 			m_isFight = false;
 			m_isFightingKick = false;
-			m_mileage = 0.0f;
+			m_mileage = MILEAGE_ZERO;
 		}
 	}
 	if (m_frameTimer > m_attackFrameNum)
@@ -243,19 +255,19 @@ void Enemy_Busyo::AttackMove()
 
 			m_isATKMode = true;
 			if (m_mileage < 200.0f) {
-				m_enemy_BusyoAnime.Play(ATK, 0.2f);
+				m_enemy_BusyoAnime.Play(ATK, INTERPORATION_TIME_M);
 				if (!m_enemy_BusyoAnime.IsPlaying())
 				{
-					m_frameTimer = 0;
-					m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+					m_frameTimer = TIMER_ZERO;
+					m_enemy_BusyoAnime.Play(MOVE, INTERPORATION_TIME_M);
 					m_isFight = false;
-					m_mileage = 0.0f;
+					m_mileage = MILEAGE_ZERO;
 				}
 			}
 	}
 
 	if (!m_isFight) {
-		m_enemy_BusyoAnime.Play(FIGHTING, 0.1f);
+		m_enemy_BusyoAnime.Play(FIGHTING, INTERPORATION_TIME_S);
 	}
 
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
@@ -266,26 +278,26 @@ void Enemy_Busyo::NormalMove()
 {
 	if (distance.LengthSq() > 200.0f * 200.0f) {
 		CVector3 direction = distance;
-		direction.y = 0.0f;
+		direction.y = SPEED_ZERO;
 		direction.Normalize();
-		m_moveSpeed = direction * power;
+		m_moveSpeed = direction * BLOW_AWAY_POWER;
 		//ワールド座標の更新
 		m_moveSpeed.y += grabity;
 		if (m_characon.IsOnGround()) {
-			m_moveSpeed.y = 0.0f;
+			m_moveSpeed.y = SPEED_ZERO;
 		}
 		float angle = atan2(distance.x, distance.z);
 		m_rotation.SetRotation(CVector3::AxisY(), angle);
-		m_enemy_BusyoAnime.Play(MOVE, 0.2f);
+		m_enemy_BusyoAnime.Play(MOVE, INTERPORATION_TIME_M);
 		//アニメーションイベントのために歩きアニメをループ再生からワンショット再生に変更。
 		//それをごまかすために、アニメーション再生が終わったら1フレームだけ別のアニメを入れる。
 		if (!m_enemy_BusyoAnime.IsPlaying()) {
-			m_enemy_BusyoAnime.Play(IDL, 0.1f);
+			m_enemy_BusyoAnime.Play(IDL, INTERPORATION_TIME_S);
 		}
 	}
 	else {
 		m_moveSpeed = CVector3::Zero();
-		m_enemy_BusyoAnime.Play(IDL, 0.1f);
+		m_enemy_BusyoAnime.Play(IDL, INTERPORATION_TIME_S);
 	}
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ここで計算を入れる
@@ -300,10 +312,10 @@ void Enemy_Busyo::IdleMove()
 	//ワールド座標の更新
 	m_moveSpeed.y += grabity;
 	if (m_characon.IsOnGround()) {
-		m_moveSpeed.y = 0.0f;
+		m_moveSpeed.y = SPEED_ZERO;
 	}
 
-	m_enemy_BusyoAnime.Play(IDL, 0.2f);
+	m_enemy_BusyoAnime.Play(IDL, INTERPORATION_TIME_M);
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 }
 
@@ -335,7 +347,7 @@ void Enemy_Busyo::ThisDelete()
 	if (m_HP != 0) {
 		InGameSoundDirector::GetInstans().RingSE_Slash();
 		m_HP--;
-		m_enemy_BusyoAnime.Play(DAMAGE, 0.2f);
+		m_enemy_BusyoAnime.Play(DAMAGE, INTERPORATION_TIME_M);
 		m_state = DAMAGE_AFTER;
 		m_moveSpeed = CVector3::Zero();
 	}
@@ -351,7 +363,7 @@ void Enemy_Busyo::ThisDelete()
 		//ゲームクリアとゲームオーバーが一緒に出てしまうため。
 		m_player->SetPlayerMuTeki();
 
-		m_enemy_BusyoAnime.Play(DEATH, 0.1f);
+		m_enemy_BusyoAnime.Play(DEATH, INTERPORATION_TIME_S);
 		if (!m_isDestroyed && !m_enemy_BusyoAnime.IsPlaying()) {
 			{
 				Fade::Getinstance().StartFadeIn();
@@ -377,7 +389,7 @@ void Enemy_Busyo::DamageAfter()
 	if (!m_enemy_BusyoAnime.IsPlaying()) {
 		//切り替え
 		m_state = IDL;
-		//m_enemy_BusyoAnime.Play(IDL, 0.2f);
+		//m_enemy_BusyoAnime.Play(IDL, INTERPORATION_TIME_M);
 		//体力がゼロじゃなければダメージが入るようにもする、
 		if (m_HP != 0) {
 			m_isDeadfrag = false;

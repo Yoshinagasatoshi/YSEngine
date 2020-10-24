@@ -4,6 +4,7 @@
 #include "Font.h"
 //UIクラス。体力バー等の画像を張る
 class Player;
+class Game;
 class UI : public IGameObject
 {
 public:
@@ -14,6 +15,10 @@ public:
 	void SetPlayerInfo(Player* pl)
 	{
 		m_player = pl;
+	}
+	void SetGameInfo(Game* game)
+	{
+		m_game = game;
 	}
 private:
 	Sprite m_lifeGauge;
@@ -56,7 +61,7 @@ private:
 	CVector3 m_scale4 = CVector3::One() * 10.0f;
 
 	Player* m_player;
-
+	Game*	m_game;
 	Font m_font;			//討伐数用フォント
 	Font m_timeFont;		//制限時間用フォント
 	//プレイヤーのHPを保存
@@ -66,4 +71,9 @@ private:
 	//プレイヤー情報が入っているか？
 	bool m_isPLInfo = false;
 	float timer = 0.0f;
+
+	float hyouzi = 0.0f;
+	float timeVal = 0.75f;
+
+	bool isTimeOver = false;
 };
