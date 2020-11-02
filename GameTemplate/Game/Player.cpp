@@ -24,9 +24,15 @@ const float JumpPower = 1000.0f;				//プレイヤーの飛ぶ力
 const float JumpATKPower = 350.0f;				//ジャンプ義理の強さ
 const float standardPower = 200.0f;				//プレイヤーの敵吹き飛ばし力
 const float limit = 2.0f;						//重力係数の上限
-const int Timer_ZERO = 0;						//0になる。そのまま
+const int	Timer_ZERO = 0;						//計測時間が0になる。
 const float InterpolationTime = 0.2f;			//アニメーションの補間時間
-const int	 onebrock = 24;						//定数ダメージ。ボスからの攻撃とか威力が高い奴には*2とかすると思う
+const int	onebrock = 24;						//プレイヤが敵から受ける定数ダメージ。ボスからの攻撃とか威力が高い奴には*2とかすると思う
+const float ghost_Y_Hosei = 70.0f;				//ゴーストのYにどれくらいの補正をかけたか
+const float musou_syouhi = 450.0f;				//無双奥義を打つ時に消費する数値
+const float animfoot_bairitu = 32.0f;			//アニメのフットステップに書ける倍率
+
+const int	PL_DeadHP = 0;						//プレイヤーのHPがゼロである。
+const int	AnimEventBorn = 20;					//アニメーションイベント情報が組み込まれているボーンの数字
 //アニメーションの補間時間・小
 const float InterpolationTimeS = 0.1f;		
 //アニメーションの補間時間・中
@@ -109,7 +115,7 @@ Player::Player()
 
 	m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
 	{
-		auto m_bone = m_skelton->GetBone(20);
+		auto m_bone = m_skelton->GetBone(AnimEventBorn); //二十番目のボーンを取得。引数のボーンにアニメーションイベント情報が組み込まれている。
 		CVector3 bonepos;
 		//y成分を除いたボーンをセット
 		bonepos.Set(
@@ -122,7 +128,7 @@ Player::Player()
 		//ボーンのposとプレイヤーのposを足した場所
 		m_calcPos = m_position + bonepos;
 		//ghostが半分埋まっていたので少し上に合わせる。
-		m_calcPos.y += 70.0f;
+		m_calcPos.y += ghost_Y_Hosei;
 
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(m_calcPos);
@@ -231,7 +237,7 @@ void Player::Update()
 					//g_goMgr.HitStopOn();
 				}
 				else {
-					m_PL_HP = 0;
+					m_PL_HP = PL_DeadHP;
 					m_deadFrag = true;
 				}
 			}
@@ -422,7 +428,7 @@ void Player::XAttackMove()
 	if (m_XTrigger && !m_busyoAnime.IsPlaying()) {
 		m_XTrigger = false;
 		m_underAttack = false;
-		g_goMgr.AddMusouGauge(-450.0f);
+		g_goMgr.AddMusouGauge(-musou_syouhi);
 	}
 }
 
@@ -440,7 +446,7 @@ void Player::Execute()
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
 
-	footStep *= 32.0f;
+	footStep *= animfoot_bairitu;
 	m_moveSpeed += footStep;
 
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);

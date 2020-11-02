@@ -9,6 +9,12 @@ const float harfrenge = 1400.0f;
 const float socialdistance = 700.0f;			//プレイヤーとの間合いです。
 const float escapeSpeed = 200.0f;				//プレイヤーから逃げるスピード
 const float gravity = -20.0f;					//重力
+
+const float Model_Radius = 60.0f;					//敵のモデルの半径。コリジョンを作るために使用
+const float Model_Hight = 100.0f;					//敵のモデルの高さ。コリジョンを作るために使用
+const float EffectPos_Y = 100.0f;					//エフェクトを出す位置の高さを調整。
+
+const float SoundVol = 0.55f;					//鳴らす音のおおきさ。数値が大きいほど音も大きくなる
 Enemy_Bomber::Enemy_Bomber()
 {
 	//ボム敵のモデルはasigaruのモデルに槍を取っ払ったものなので
@@ -95,12 +101,12 @@ void Enemy_Bomber::Update()
 				CSoundSource* m_se2 = new CSoundSource;
 				m_se2->Init(L"Assets/sound/slash1.wav");
 				m_se2->Play(false);
-				m_se2->SetVolume(0.55f);//
+				m_se2->SetVolume(SoundVol);
 				//エフェクトも出す。
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 					g_Effect.m_sampleEffect,
 					m_position.x,
-					m_position.y + 100.0f,
+					m_position.y + EffectPos_Y,
 					m_position.z
 				);
 			}
@@ -210,8 +216,8 @@ void Enemy_Bomber::CharaconInit()
 {
 	//キャラコンの初期化
 	m_characon.Init(
-		60.0f, //半径
-		100.0f,//高さ
+		Model_Radius, //半径
+		Model_Hight,//高さ
 		m_position//位置
 	);
 }

@@ -7,6 +7,8 @@
 #include "InGameSoundDirector.h"
 #include "Fade.h"
 #include "InGameSoundDirector.h"
+
+
 const float BLOW_AWAY_POWER = 250.0f;	//吹き飛ばす力。雑魚にどれだけ吹き飛んでもらうかを数値化したもの
 const float InitHP = 5;					//ボスの体力。ここで設定する。
 const float FOOTSTEP_VALUE = 600.0f;	//フットステップが入っているアニメーションの補正値
@@ -17,7 +19,9 @@ const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間
 const float INTERPORATION_TIME_M = 0.2f;//補間時間・中、アニメーション補間をしたいときに使う。
 const float INTERPORATION_TIME_L = 0.5f;//補間時間・大、長めのアニメーション補間をしたいときに使う。
 const float BIAS = -0.5f;				//アニメーションの移動量を調整するバイアス
-
+const float EffectPos_Y = 100.0f;		//エフェクトを出す位置の高さを調整。
+const float FRAMERATE_30 = 1.0f / 30.0f;//フレームレート30　30fps
+const float Search_range = 200.0f;		//敵武将の索敵範囲を設定。この数値を2乗している
 
 //~_ZERO系は型が違うのでなければ全部統一してもいいかもしれませんが、
 //変数名で見たときのわかりやすさから、一応全部分けています。
@@ -25,7 +29,9 @@ const float BIAS = -0.5f;				//アニメーションの移動量を調整するバイアス
 const float SPEED_ZERO = 0.0f;			//速度を0にしたいときに使う定数。
 const float TIMER_ZERO = 0.0f;			//時間を0にしたいときに使う定数。
 const float MILEAGE_ZERO = 0.0f;		//距離を0にしたいときに使う定数。
-const int	ENEMYBUSYO_HP = 0;			//武将のHPがゼロである時。
+const float S_plussframe = 1.0f;		//1フレームごとにタイマーに追加される数値。Sは秒の略です。
+
+const int	ENEMYBUSYO_HP_ZERO = 0;		//武将のHPがゼロである時。
 
 Enemy_Busyo::Enemy_Busyo()
 {
@@ -148,7 +154,7 @@ void Enemy_Busyo::Update()
 	ThisDamage();
 
 	//ワールド座標の更新　こっちのskeletonUpdateをいじる
-	auto footStep = m_enemy_BusyoAnime.Update(1.0f / 30.0f);//ローカル座標の更新　こっちはいじらない
+	auto footStep = m_enemy_BusyoAnime.Update(FRAMERATE_30);//ローカル座標の更新　こっちはいじらない
 	//if (m_busyoState == BusyoAttack) {
 	//攻撃中はフットステップの移動量を加算する。
 	CMatrix mBias = CMatrix::Identity();
@@ -217,7 +223,7 @@ void Enemy_Busyo::StateJudge()
 //攻撃範囲に来たらここに入る。
 void Enemy_Busyo::AttackMove()
 {
-	m_frameTimer += 1.0f;
+	m_frameTimer += S_plussframe;
 
 	//攻撃中の動き
 	m_moveSpeed = CVector3::Zero();
@@ -254,7 +260,7 @@ void Enemy_Busyo::AttackMove()
 	{
 
 			m_isATKMode = true;
-			if (m_mileage < 200.0f) {
+			if (m_mileage < RUN_UP_VALUE) {
 				m_enemy_BusyoAnime.Play(ATK, INTERPORATION_TIME_M);
 				if (!m_enemy_BusyoAnime.IsPlaying())
 				{
@@ -276,7 +282,7 @@ void Enemy_Busyo::AttackMove()
 //索敵範囲に来たらここに入る
 void Enemy_Busyo::NormalMove()
 {
-	if (distance.LengthSq() > 200.0f * 200.0f) {
+	if (distance.LengthSq() > Search_range * Search_range) {
 		CVector3 direction = distance;
 		direction.y = SPEED_ZERO;
 		direction.Normalize();
@@ -331,7 +337,7 @@ void Enemy_Busyo::ThisDamage()
 				//エフェクトも出す。
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 					g_Effect.m_sampleEffect,
-					m_position.x, m_position.y + 100.0f,
+					m_position.x, m_position.y + EffectPos_Y,
 					m_position.z
 				);
 
@@ -391,7 +397,7 @@ void Enemy_Busyo::DamageAfter()
 		m_state = IDL;
 		//m_enemy_BusyoAnime.Play(IDL, INTERPORATION_TIME_M);
 		//体力がゼロじゃなければダメージが入るようにもする、
-		if (m_HP != 0) {
+		if (m_HP != ENEMYBUSYO_HP_ZERO) {
 			m_isDeadfrag = false;
 		}
 	}

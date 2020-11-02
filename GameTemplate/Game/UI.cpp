@@ -12,6 +12,14 @@ const float MUSOUGAUGE_HEIGHT = 454.0f;	//無双ゲージ裏の横幅
 const float MUSOU_GAUGEMAX = 450.0f;	//無双ゲージの最大値
 const float TIMELIMIT = 6000.0f;		//制限時間の設定
 
+const int TEXT_MAX = 255;				//テキスト文字上限値
+
+const float minimap_tekiou = 62.0f;		//ミニマップに適応するための数値
+const float RESET = 0.0f;				//0にしたいときに使う
+const float mainasu_Vector = -1.0f;		//ベクトルを逆方向にしたいときに使う
+
+const CVector2 TOUBATU_SU_FONTPOS = { 0.0f,650.0f }; //討伐数のフォントの位置
+const CVector2 TIMER_FONT_POS = { 0.0f,0.0f };		 //制限時間のフォントの位置
 UI::UI()
 {
 	isTimeOver = false;
@@ -83,10 +91,10 @@ void UI::Update()
 	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGHT);
 
 	CVector3 PlayerPos = m_player->GetPosition();
-	PlayerPos /= 62.0f;
-	PlayerPos.x *= -1.0f;
-	PlayerPos.y = PlayerPos.z * -1.0f;
-	PlayerPos.z = 0.0f;
+	PlayerPos /= minimap_tekiou;
+	PlayerPos.x *= mainasu_Vector;
+	PlayerPos.y = PlayerPos.z * mainasu_Vector;
+	PlayerPos.z = RESET;	//三次元情報はいらないので0にする
 
 	CQuaternion PlayerRot = m_player->GetRotation();
 	//プレイヤーポインタ
@@ -117,19 +125,19 @@ void UI::PostDraw()
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
 	int i = 0;
-	wchar_t text[255];
+	wchar_t text[TEXT_MAX];
 	int defeadNum = g_goMgr.GetCount();
 
 	swprintf_s(text, L"撃破数 : %03d", defeadNum);
 	CVector4 Color = CVector4{1.0f,0.0f,0.0f,1.0f};
 
-	m_font.DrawScreenPos(text, CVector2{ 0.0f,650.0f },Color);
+	m_font.DrawScreenPos(text, TOUBATU_SU_FONTPOS,Color);
 
 
-	wchar_t teext[255];
+	wchar_t teext[TEXT_MAX];
 	float RemainingTime = TIMELIMIT - timer;
 	swprintf_s(teext, L"制限時間 : %03f",  RemainingTime);
-	m_timeFont.DrawScreenPos(teext, CVector2{0.0f,0.0f},Color);
+	m_timeFont.DrawScreenPos(teext,TIMER_FONT_POS,Color);
 	
 	//m_playerPointer_yazirushi.Draw();
 }

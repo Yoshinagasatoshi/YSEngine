@@ -6,6 +6,12 @@
 const float B_radius = 30.0f;			//ゴーストの当たり判定の大きさ用
 const float BOM_GRAVITY_ACC = -1000.0f;	//爆弾の重力加速度。
 const float BOM_VELOCITY_HORIZON = 200;	//爆弾の水平方向の移動速度。
+const float BOM_SCALE = 3.0f;			//爆弾の大きさをいじれる。
+
+const float BOM_Displacement = 0.5f;	//ボムの変位に使う数値
+
+const float BOM_HIT_AREA = 150.0f;		//ボムがプレイヤー当たる範囲
+const float BOM_LANDING_AREA = 100.0f;	//ボムが地面に着地したと認識する範囲
 
 bom::bom()
 {
@@ -80,13 +86,13 @@ void bom::Draw()
 void bom::FirstSet()
 {
 	CVector3 vec = m_inpactPoint - m_position;
-	vec.y = 0.0f;
+	vec.y = 0.0f;//Yの成分を除去
 	vec.Normalize();
 	vec *= BOM_VELOCITY_HORIZON;
 	
 	CVector3 distans = m_inpactPoint - m_position;
-	distans.y = 0.0f;
-	float a = BOM_GRAVITY_ACC * 0.5f;
+	distans.y = 0.0f;	//Yの成分を除去
+	float a = BOM_GRAVITY_ACC * BOM_Displacement;
 	float x =  m_inpactPoint.y - m_position.y;
 	float t = distans.Length() / vec.Length();
 	float Vo = (x - a * t * t) / t;
@@ -95,7 +101,7 @@ void bom::FirstSet()
 	m_bomVelocity = vec;
 
 	m_rotation = CQuaternion::Identity();//球体なので向いている方向は気にしない
-	m_scale = CVector3::One() * 3.0f; //爆弾モデルが小さかったので、3倍の大きさにした。
+	m_scale = CVector3::One() * BOM_SCALE; //爆弾モデルが小さかったので、3倍の大きさにした。
 	m_isFirst = true;
 }
 
@@ -103,7 +109,7 @@ void bom::Finalbom()
 {
 	auto I_diff = m_inpactPoint - m_position;
 	//着地処理。プレイヤーに当たっていない時の処理
-	if (I_diff.Length() < 100.0f) {
+	if (I_diff.Length() < BOM_LANDING_AREA) {
 		//CSoundSource* se = new CSoundSource;
 		//se->Init(L"Assets/sound/destruction.wav");
 		//se->Play(false);
@@ -131,7 +137,7 @@ void bom::HitThebom()
 			DeleteGO(this);
 		}
 		auto P_diff = m_player->GetPosition() - m_position;
-		if (P_diff.Length() < 150.0f)
+		if (P_diff.Length() < BOM_HIT_AREA)
 		{
 			m_player->PlayerDamage();
 

@@ -3,6 +3,9 @@
 #include "gameObject/ysGameObjectManager.h"
 
 const float TARGET_Y_UP_VALUE = 100.0f;//ここを変更するとカメラの注視点の高さが変わる。
+const float RotAmount = 5.0f; //回転の速度単位
+const float Camera_Y_MAX = 0.9f;//カメラ上限
+const float Camera_Y_MIN = 0.1f;//カメラかげん
 
 GameCamera::GameCamera()
 {
@@ -14,7 +17,6 @@ GameCamera::~GameCamera()
 }
 void GameCamera::Update()
 {
-	const float RotAmount = 5.0f; //回転の速度単位
 	//注視点の計算
 	m_target = m_player->GetPosition();
 	CVector3 m_toCameraPosOld = m_toPos;
@@ -37,10 +39,10 @@ void GameCamera::Update()
 	//カメラ回転の上限を決める。
 	CVector3 toPosDir = m_toPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < 0.1f) {//カメラのyが0.1以下のとき(地面の方向に向かないようにする為)
+	if (toPosDir.y < Camera_Y_MIN) {//カメラのyが0.1以下のとき(地面の方向に向かないようにする為)
 		m_toPos = m_toCameraPosOld;
 	}
-	else if (toPosDir.y > 0.9f) {//カメラのyが0,9以上の時(カメラが真上を向きすぎないように)
+	else if (toPosDir.y > Camera_Y_MAX) {//カメラのyが0,9以上の時(カメラが真上を向きすぎないように)
 		m_toPos = m_toCameraPosOld;
 	}
 	//視点の計算

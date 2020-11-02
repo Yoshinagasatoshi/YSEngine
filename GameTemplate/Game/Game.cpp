@@ -12,6 +12,8 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "InGameSoundDirector.h"
 #include "Fade.h"
+//完全に一致であるか？
+const int String_match = 0;	//文字列に違いはないかを確認するために使用する変数
 
 //倒された数の指標
 //const int knockDownNum = 50;
@@ -37,14 +39,14 @@ Game::Game()
 	m_gameCamera->SetPlayerInfo(m_player);
 	m_gamedata = g_goMgr.NewGameObject<GameData>("GameData");
 	m_gamedata->SetPlayerInfo(m_player);
-	int enemyCount = 0;
+	int enemyCount = 0;//デバック用コード　後で消します
 	//敵の総数は何体？数えます。
 	g_goMgr.EnemyNumResetCount();
 	//レベルでモデルを出す。
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-				if (wcscmp(objdata.name, L"asigaru") == 0) {
+				if (wcscmp(objdata.name, L"asigaru") == String_match) {
 					g_goMgr.EnemyCounting();
 					//インスタンスの作成
 					m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
@@ -56,7 +58,7 @@ Game::Game()
 					return true;
 				}
 				//敵武将
-				if (wcscmp(objdata.name, L"enemy_busyo") == 0) {
+				if (wcscmp(objdata.name, L"enemy_busyo") == String_match) {
 					//g_goMgr.EnemyCounting();
 					//インスタンスの作成
 					m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
@@ -66,7 +68,7 @@ Game::Game()
 					return true;
 				}
 				//隊長兵(爆発兵)
-				if (wcscmp(objdata.name, L"asigaru_taicho") == 0) {
+				if (wcscmp(objdata.name, L"asigaru_taicho") == String_match) {
 					//インスタンスの作成
 					//g_goMgr.EnemyCounting();
 					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");

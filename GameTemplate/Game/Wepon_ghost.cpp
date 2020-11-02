@@ -6,7 +6,9 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Player.h"
 const float m_ghostscale = 200.0f;
-
+const float GhostTimerRimit = 2.0f;
+const float GhostTimerReset = 0.0f;
+const float GhostTimerAdd = 30.0f;
 Wepon_ghost::Wepon_ghost()
 {
 	
@@ -24,11 +26,11 @@ Wepon_ghost::~Wepon_ghost()
 
 void Wepon_ghost::Update()
 {
-	m_ghostTimer += 30.0f * GameTime().GetFrameDeltaTime();
+	m_ghostTimer += GhostTimerAdd * GameTime().GetFrameDeltaTime();
 	//•\Ž¦‚³‚ê‚Ä‚¢‚éŽžŠÔ‚ª2.0‚†ˆÈã‚È‚çÁ‚¦‚é
-	if (m_ghostTimer > 2.0f)
+	if (m_ghostTimer > GhostTimerRimit)
 	{
-		m_ghostTimer = 0.0f;
+		m_ghostTimer = GhostTimerReset;
 		DeleteGO(this);
 	}
 }

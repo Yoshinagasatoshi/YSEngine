@@ -6,13 +6,20 @@
 #include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+
+const float BGM_VOL = 0.2f;
+const float SpriteH = 240.0f;
+
+const CVector3 cameraPos = { 0.0f,100.0f,300.0f };
+const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間をしたいときに使う。 
+const float FRAMERATE_30 = 1.0f / 30.0f;//フレームレート30　30fps
 GameOver::GameOver()
 {
 	m_soundEngine.Init();
 	//音SE素材
 	m_bgm.Init(L"Assets/sound/GameOver.wav");
 	m_bgm.Play(true);
-	m_bgm.SetVolume(0.2f);
+	m_bgm.SetVolume(BGM_VOL);
 	//SoundDirector::GetInstans().SoundInit();
 	//SoundDirector::GetInstans().GameOverBGM();
 
@@ -24,7 +31,7 @@ GameOver::GameOver()
 	m_animClip[anim_Lose].SetLoopFlag(false);
 
 
-	m_sprite2.Init(L"Assets/sprite/Lose.dds", 1280.0f, 240.0f);
+	m_sprite2.Init(L"Assets/sprite/Lose.dds", FRAME_BUFFER_W, SpriteH);
 	Fade::Getinstance().StartFadeOut();
 	
 	//アニメーション先モデルとアニメーションの個数を設定。
@@ -42,9 +49,7 @@ GameOver::~GameOver()
 
 void GameOver::Update()
 {
-	CVector3 cameraPos = { 0.0f,100.0f,300.0f };
-
-	m_animeModel.Play(anim_Lose, 0.1f);
+	m_animeModel.Play(anim_Lose, INTERPORATION_TIME_S);
 
 	if (g_pad->IsTrigger(enButtonA)) {
 		m_isWaitFadeOut = true;
@@ -60,7 +65,7 @@ void GameOver::Update()
 	
 	g_camera3D.SetPosition(cameraPos);
 
-	m_animeModel.Update(1.0f / 30.0f);
+	m_animeModel.Update(FRAMERATE_30);
 	m_sprite2.Update(m_position, m_rot, m_scale, m_pivot);
 	m_skinModel.UpdateWorldMatrix(CVector3::Zero(), m_rot, m_scale);
 	m_skinModelStage.UpdateWorldMatrix(CVector3::Zero(), m_rot, m_scale);
