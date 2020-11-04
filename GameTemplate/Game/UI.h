@@ -60,6 +60,9 @@ private:
 	CVector3 m_position4 = CVector3{ 390.0f,192.0f,0.0f };
 	CVector3 m_scale4 = CVector3::One() * 10.0f;
 
+	//ディファートカラー。○○体以上倒したら、カラーを変えるようにしたいのでこいつはconstでは設定しない
+	CVector4 m_defeatColor = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。
+
 	Player* m_player;
 	Game*	m_game;
 	Font m_font;			//討伐数用フォント

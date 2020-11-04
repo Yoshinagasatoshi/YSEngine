@@ -40,8 +40,6 @@ void Camera::Update()
 
 void Camera::InitCamera()
 {
-	const float camera2Dpos_z = -600.0f;
-
 	//g_camera3D.Update();
 
 	g_camera2D.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);

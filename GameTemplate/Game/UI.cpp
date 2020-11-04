@@ -8,8 +8,14 @@ const float GAUGE_HEIGHT = 24.0f;		//ゲージの縦の幅
 const float GAUGEURA_HEIGHT = 25.0f;	//ゲージ裏の立幅
 const float GAUGE_WEIGHT = 480.0f;		//ゲージの横幅
 const float GAUGEURA_WEIGHT = 484.0f;	//無双ゲージ裏の横幅
-const float MUSOUGAUGE_HEIGHT = 454.0f;	//無双ゲージ裏の横幅
+const float MUSOUGAUGE_HEIGHT = 454.0f;	//無双ゲージ裏の立幅
 const float MUSOU_GAUGEMAX = 450.0f;	//無双ゲージの最大値
+const float FACEAICON_WEIGHT = 80.0f;	//武将の顔アイコンの横幅
+const float FACEAICON_HEIGHT = 80.0f;	//武将の顔アイコンの縦幅
+const float MINIMAP_WEIGHT = 160.0f;	//ミニマップの横幅
+const float MINIMAP_HEIGHT = 160.0f;	//ミニマップの立幅
+const float MINI_PL_AICON_WEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
+const float MINI_PL_AICON_HEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
 const float TIMELIMIT = 6000.0f;		//制限時間の設定
 
 const int TEXT_MAX = 255;				//テキスト文字上限値
@@ -17,6 +23,9 @@ const int TEXT_MAX = 255;				//テキスト文字上限値
 const float minimap_tekiou = 62.0f;		//ミニマップに適応するための数値
 const float RESET = 0.0f;				//0にしたいときに使う
 const float mainasu_Vector = -1.0f;		//ベクトルを逆方向にしたいときに使う
+const CVector4 Color = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。
+
+const int ColorChangeNum = 10;			//色替えするために必要な数
 
 const CVector2 TOUBATU_SU_FONTPOS = { 0.0f,650.0f }; //討伐数のフォントの位置
 const CVector2 TIMER_FONT_POS = { 0.0f,0.0f };		 //制限時間のフォントの位置
@@ -28,14 +37,14 @@ UI::UI()
 
 	m_musouGauge.Init(L"Assets/sprite/musougauge.dds", MUSOU_GAUGEMAX, GAUGE_HEIGHT);
 	m_musouGaugeura.Init(L"Assets/sprite/Green_ura.dds", MUSOUGAUGE_HEIGHT, GAUGEURA_HEIGHT);
-
+	
 
 	//m_sprite.SetPosition(m_position);
 	//m_sprite.SetRotation(m_rotation);
 	//m_sprite.SetScale(m_scale);
-	m_face.Init(L"Assets/sprite/new_Busyo_icon.dds", 80.0f, 80.0f);
-	m_mapSprite.Init(L"Assets/sprite/minimap.dds",160.0f, 160.0f);
-	m_playerPointer.Init(L"Assets/sprite/PlayerPointer.dds", 8.0f, 8.0f);
+	m_face.Init(L"Assets/sprite/new_Busyo_icon.dds", FACEAICON_WEIGHT, FACEAICON_HEIGHT);
+	m_mapSprite.Init(L"Assets/sprite/minimap.dds", MINIMAP_WEIGHT, MINIMAP_HEIGHT);
+	m_playerPointer.Init(L"Assets/sprite/PlayerPointer.dds", MINI_PL_AICON_WEIGHT, MINI_PL_AICON_HEIGHT);
 	//m_playerPointer_yazirushi.Init(L"Assets/sprite/PlayerPointer_yazirusi.dds", 16.0f, 16.0f);
 
 }
@@ -74,13 +83,18 @@ void UI::Update()
 	}
 	m_oldPlayerHP = m_playerHP;
 
+	if (g_goMgr.GetCount() > ColorChangeNum)
+	{
+		m_defeatColor = CVector4{ 0.85f,0.70f,0.0f,1.0f };
+	}
+
 	//無双ゲージ　草案
 	//ゲージがMAXではない時 => 時間経過、敵を斬ることでゲージがたまる。
 	//ゲージがMaxな時 => もちろん切ってもたまらない。Xボタンを使った時にゲージが減る
 	timer++;
 	//直地　後で直します。
 	hyouzi = g_goMgr.GetMusouGaugeValue();
-	if (hyouzi < MUSOU_GAUGEMAX) {
+	if (hyouzi <= MUSOU_GAUGEMAX) {
 		g_goMgr.SetMusou_Utenai();
 	}
 	else {
@@ -124,14 +138,13 @@ void UI::PostDraw()
 	m_face.Draw();
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
-	int i = 0;
 	wchar_t text[TEXT_MAX];
 	int defeadNum = g_goMgr.GetCount();
 
 	swprintf_s(text, L"撃破数 : %03d", defeadNum);
-	CVector4 Color = CVector4{1.0f,0.0f,0.0f,1.0f};
-
-	m_font.DrawScreenPos(text, TOUBATU_SU_FONTPOS,Color);
+	
+	
+	m_font.DrawScreenPos(text, TOUBATU_SU_FONTPOS,m_defeatColor);
 
 
 	wchar_t teext[TEXT_MAX];
