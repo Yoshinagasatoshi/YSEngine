@@ -3,9 +3,9 @@
 #include "gameObject/ysGameObjectManager.h"
 
 const float TARGET_Y_UP_VALUE = 100.0f;//ここを変更するとカメラの注視点の高さが変わる。
-const float RotAmount = 5.0f; //回転の速度単位
-const float Camera_Y_MAX = 0.9f;//カメラ上限
-const float Camera_Y_MIN = 0.1f;//カメラかげん
+const float ROTAMOUNT = 5.0f; //回転の速度単位
+const float CAMERA_Y_MAX = 0.9f;//カメラ上限
+const float CAMERA_Y_MIN = 0.1f;//カメラかげん
 
 GameCamera::GameCamera()
 {
@@ -26,7 +26,7 @@ void GameCamera::Update()
 	//Y軸での回転
 	CQuaternion qRot;
 	//ベクトルクラス作ろう
-	qRot.SetRotationDeg(m_AxisY, RotAmount * stickx);
+	qRot.SetRotationDeg(m_AxisY, ROTAMOUNT * stickx);
 	qRot.Multiply(m_toPos);
 	//X軸での回転
 	/*CVector3 axisX;
@@ -39,10 +39,10 @@ void GameCamera::Update()
 	//カメラ回転の上限を決める。
 	CVector3 toPosDir = m_toPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < Camera_Y_MIN) {//カメラのyが0.1以下のとき(地面の方向に向かないようにする為)
+	if (toPosDir.y < CAMERA_Y_MIN) {//カメラのyが0.1以下のとき(地面の方向に向かないようにする為)
 		m_toPos = m_toCameraPosOld;
 	}
-	else if (toPosDir.y > Camera_Y_MAX) {//カメラのyが0,9以上の時(カメラが真上を向きすぎないように)
+	else if (toPosDir.y > CAMERA_Y_MAX) {//カメラのyが0,9以上の時(カメラが真上を向きすぎないように)
 		m_toPos = m_toCameraPosOld;
 	}
 	//視点の計算

@@ -25,6 +25,7 @@ public:
 	{
 		m_playerCall = true;
 	}
+	//const
 	PhysicsGhostObject* GetGhostObject() {
 		return &m_ghostObject;
 	}

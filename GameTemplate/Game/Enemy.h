@@ -28,9 +28,10 @@ public:
 		return m_position;
 	}
 
-	CQuaternion SetRot(const CQuaternion qrot)
+	const CQuaternion& SetRot(const CQuaternion& qrot)
 	{
-		return m_rotation = qrot;
+		m_rotation = qrot;
+		return m_rotation;
 	}
 	void SetPlayerInfo(Player* pl)
 	{
@@ -61,7 +62,7 @@ public:
 		m_isDeath = true;
 	}
 
-	bool GetenemyDeath()
+	bool GetenemyDeath() const
 	{
 		return m_isDeath;
 	}
@@ -77,8 +78,8 @@ protected:
 	Game* m_game;				//ゲーム
 	CVector3 m_PtDistans;		//プレイヤーとエネミーの距離
 	const float grabity = -9.8f * 2.0f;//重力
-	const float BattleRange = 200.0f * 200.0f;			//この距離の範囲内に近づくとバトル
-	const float VigilanceRange = 700.0f * 700.0f;		//この距離の範囲内ならプレイヤーに近づく。
+	const float BattleRange = 200.0f * 200.0f;			//この距離の範囲内に近づくとバトル(2乗)
+	const float VigilanceRange = 700.0f * 700.0f;		//この距離の範囲内ならプレイヤーに近づく(2乗)
 
 	bool m_isDeath = false;
 };

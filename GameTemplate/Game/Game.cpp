@@ -13,7 +13,7 @@
 #include "InGameSoundDirector.h"
 #include "Fade.h"
 //完全に一致であるか？
-const int String_match = 0;	//文字列に違いはないかを確認するために使用する変数
+const int STRING_MATCH = 0;	//文字列に違いはないかを確認するために使用する変数
 
 //倒された数の指標
 //const int knockDownNum = 50;
@@ -26,7 +26,7 @@ Game::Game()
 	g_goMgr.ResetMusouGauge();
 	//音SE素材
 	InGameSoundDirector::GetInstans().SoundInit();
-	//InGameSoundDirector::GetInstans().InGameStartUpBGM();
+	InGameSoundDirector::GetInstans().InGameStartUpBGM();
 	//InitCamera();
 	//プレイヤーなどのインスタンスを作成
 	m_player = g_goMgr.NewGameObject<Player>("Player");
@@ -46,7 +46,7 @@ Game::Game()
 	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
-				if (wcscmp(objdata.name, L"asigaru") == String_match) {
+				if (wcscmp(objdata.name, L"asigaru") == STRING_MATCH) {
 					g_goMgr.EnemyCounting();
 					//インスタンスの作成
 					m_enemy = g_goMgr.NewGameObject<Enemy_asigaru>("Enemy_asigaru");
@@ -58,7 +58,7 @@ Game::Game()
 					return true;
 				}
 				//敵武将
-				if (wcscmp(objdata.name, L"enemy_busyo") == String_match) {
+				if (wcscmp(objdata.name, L"enemy_busyo") == STRING_MATCH) {
 					//g_goMgr.EnemyCounting();
 					//インスタンスの作成
 					m_enemy = g_goMgr.NewGameObject<Enemy_Busyo>("Enemy_busyo");
@@ -68,7 +68,7 @@ Game::Game()
 					return true;
 				}
 				//隊長兵(爆発兵)
-				if (wcscmp(objdata.name, L"asigaru_taicho") == String_match) {
+				if (wcscmp(objdata.name, L"asigaru_taicho") == STRING_MATCH) {
 					//インスタンスの作成
 					//g_goMgr.EnemyCounting();
 					m_enemy = g_goMgr.NewGameObject<Enemy_Bomber>("Enemy_bomber");

@@ -72,7 +72,8 @@ public:
 		bool m_Syokika = false;
 	};
 	//配列数は待機場所の数。いまは5
-	static IdlePos m_idlePos[5];
+	static const int m_Waiting_Point = 5;			//待機場所の数
+	static IdlePos M_IDLEPOS[m_Waiting_Point];
 	CVector3 m_moveSpeed = CVector3::Zero();
 	CVector3 moveV = CVector3::Zero();
 	int i = 0;
@@ -121,7 +122,7 @@ private:
 	//吹き飛ばし量を入れる箱
 	float m_recivePower;
 	//円周率。必要なためここに書いた
-	double PI = 3.14159265358979323846f;
+	double m_PI = 3.14159265358979323846f;
 	//取り巻けなかったasigaruが使う変数
 	bool m_torimaki = false;
 
@@ -139,10 +140,10 @@ private:
 	//待機待ちのseがどれだけあるかをカウントする。
 	int m_seStockCount = 0;
 	//鳴らしている？
-	bool isRingSE = false;
+	bool m_isRingSE = false;
 	InGameSoundDirector* m_sd = nullptr;
-	float timer = 10.0f;
+	float m_timer = 10.0f;
 	bool m_isFirstUpdate = true;
-	bool CCount = false;
+	bool m_CCount = false;
 }; 
 

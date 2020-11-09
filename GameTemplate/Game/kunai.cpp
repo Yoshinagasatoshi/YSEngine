@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "kunai.h"
 
-kunai::kunai()
+Kunai::Kunai()
 {
 
 }
 
-kunai::~kunai()
+Kunai::~Kunai()
 {
 
 }
 
-void kunai::Update()
+void Kunai::Update()
 {
 
 }

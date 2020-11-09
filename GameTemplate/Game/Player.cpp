@@ -14,31 +14,39 @@
 #include "Fade.h"
 #include "graphics\shadow\ShadowMap.h"
 
-const float posClearRange = 600.0f * 600.0f;	//クリア判定を行う範囲。ゲームクリアではない
+const float POSCLEAR_RANGE = 600.0f * 600.0f;	//クリア判定を行う範囲。ゲームクリアではない
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
 const float PLAYER_COLLIDER_RADIUS = 60.0f;		//プレイヤーのカプセルコライダーの半径。
 
-const float SpeedAmount = 1500.0f;				//平面の移動量
-const float gravity = 200.0f;					//重力
-const float JumpPower = 1000.0f;				//プレイヤーの飛ぶ力
-const float JumpATKPower = 350.0f;				//ジャンプ義理の強さ
-const float standardPower = 200.0f;				//プレイヤーの敵吹き飛ばし力
-const float limit = 2.0f;						//重力係数の上限
-const int	Timer_ZERO = 0;						//計測時間が0になる。
-const float InterpolationTime = 0.2f;			//アニメーションの補間時間
-const int	onebrock = 24;						//プレイヤが敵から受ける定数ダメージ。ボスからの攻撃とか威力が高い奴には*2とかすると思う
-const float ghost_Y_Hosei = 70.0f;				//ゴーストのYにどれくらいの補正をかけたか
-const float musou_syouhi = 450.0f;				//無双奥義を打つ時に消費する数値
-const float animfoot_bairitu = 32.0f;			//アニメのフットステップに書ける倍率
+const float SPEEDAMOUNT = 1500.0f;				//平面の移動量
+const float GRAVITY = 200.0f;					//重力
+const float GRAVITY_START = 0.1f;				//重力加速値_初期値
+const float GRAVITY_ACCELE = 0.1f;				//重力加速値
+const float JUMPPOWER = 1000.0f;				//プレイヤーの飛ぶ力
+const float JUMPATKPOWER = 350.0f;				//ジャンプ義理の強さ
+const float STANDARDPOWER = 200.0f;				//プレイヤーの敵吹き飛ばし力
+const float LIMIT = 2.0f;						//重力係数の上限
+const int	TIMER_ZERO = 0;						//計測時間が0になる。
+const float INTERPOLATIONTIME = 0.2f;			//アニメーションの補間時間
+const int	ONEBROCK = 24;						//プレイヤが敵から受ける定数ダメージ。ボスからの攻撃とか威力が高い奴には*2とかすると思う
+const float GHOST_Y_HOSEI = 70.0f;				//ゴーストのYにどれくらいの補正をかけたか
+const float MUSOU_SYOUHI = 450.0f;				//無双奥義を打つ時に消費する数値
+const float ANIMFOOT_BAIRITU = 32.0f;			//アニメのフットステップに書ける倍率
+const float BIAS = -0.5f;						//アニメーションの移動量を調整するバイアス
+const float PLAYER_TIMER_RIMIT = 0.5f;			//アニメーションの限界
 
-const int	PL_DeadHP = 0;						//プレイヤーのHPがゼロである。
-const int	AnimEventBorn = 20;					//アニメーションイベント情報が組み込まれているボーンの数字
+const float X_ZERO = 0.0f;						//Xの数値を0にする
+const float Y_ZERO = 0.0f;						//Yの数値を0にする
+const float Z_ZERO = 0.0f;						//Zの数値を0にする
+
+const int	PL_DEADHP = 0;						//プレイヤーのHPがゼロである。
+const int	ANIMEVENTBORN = 20;					//アニメーションイベント情報が組み込まれているボーンの数字
 //アニメーションの補間時間・小
-const float InterpolationTimeS = 0.1f;		
+const float INTERPOLATIONTIME_S = 0.1f;		
 //アニメーションの補間時間・中
-const float InterpolationTimeM = 0.2f;		
+const float INTERPOLATIONTIME_M = 0.2f;		
 //アニメーションの補間時間・大
-const float InterpolationTimeL = 0.5f;			
+const float INTERPOLATIONTIME_L = 0.5f;			
 
 Player::Player()
 {
@@ -115,7 +123,7 @@ Player::Player()
 
 	m_busyoAnime.AddAnimationEventListener(	[&](const wchar_t* clipName, const wchar_t* eventName)
 	{
-		auto m_bone = m_skelton->GetBone(AnimEventBorn); //二十番目のボーンを取得。引数のボーンにアニメーションイベント情報が組み込まれている。
+		auto m_bone = m_skelton->GetBone(ANIMEVENTBORN); //二十番目のボーンを取得。引数のボーンにアニメーションイベント情報が組み込まれている。
 		CVector3 bonepos;
 		//y成分を除いたボーンをセット
 		bonepos.Set(
@@ -128,7 +136,7 @@ Player::Player()
 		//ボーンのposとプレイヤーのposを足した場所
 		m_calcPos = m_position + bonepos;
 		//ghostが半分埋まっていたので少し上に合わせる。
-		m_calcPos.y += ghost_Y_Hosei;
+		m_calcPos.y += GHOST_Y_HOSEI;
 
 		m_pl_Wepon = g_goMgr.NewGameObject<Wepon_ghost>("PL_Wepon");
 		m_pl_Wepon->SetPosition(m_calcPos);
@@ -185,7 +193,7 @@ void Player::Update()
 			//攻撃するときのモーション
 			AttackMove();
 			//重力の重みを軽くする
-			m_gravity_keisuu = 0.1f;
+			m_gravity_keisuu = GRAVITY_START;
 			//ジャンプしてた？
 			if (m_Jumpfrag) {
 				m_Jumpfrag = false;
@@ -194,7 +202,7 @@ void Player::Update()
 				if (m_busyoState == BusyoAttack_Y)
 				{
 					//着地時にダメージ判定を行うアニメーションを流す
-					m_busyoAnime.Play(animClip_JUMP_X_ATK1, InterpolationTimeS);
+					m_busyoAnime.Play(animClip_JUMP_X_ATK1, INTERPOLATIONTIME_S);
 				}
 			}
 		}
@@ -202,24 +210,24 @@ void Player::Update()
 		if (m_busyoState != BusyoAttack) {
 			if (g_pad->IsTrigger(enButtonA)) {
 				if (!m_Jumpfrag) {
-					m_moveSpeed.y += JumpPower;
+					m_moveSpeed.y += JUMPPOWER;
 					m_Jumpfrag = true;
 					m_animStep = 0;
 					//攻撃モーション中にジャンプするとプレイヤーが動かなくなる時があったので追加
 					m_underAttack = false;
 				}
 			}
-			m_gravity_keisuu += 0.1f;
-			if (m_gravity_keisuu > limit) {
-				m_gravity_keisuu = limit;
+			m_gravity_keisuu += GRAVITY_ACCELE;
+			if (m_gravity_keisuu > LIMIT) {
+				m_gravity_keisuu = LIMIT;
 			}
 			//ジャンプ状態じゃなければ移動速度によってアニメーションを変える。
 			if (!m_Jumpfrag) {
 				if (m_moveSpeed.Length() > 300.0f) {
-					m_busyoAnime.Play(animClip_Walk, InterpolationTimeS);
+					m_busyoAnime.Play(animClip_Walk, INTERPOLATIONTIME_S);
 				}
 				else {
-					m_busyoAnime.Play(animClip_idle, InterpolationTimeS);
+					m_busyoAnime.Play(animClip_idle, INTERPOLATIONTIME_S);
 				}
 			}
 			else {
@@ -231,18 +239,18 @@ void Player::Update()
 		{
 			if (!m_muteki) {
 				m_damagefrag = false;
-				if (m_PL_HP != onebrock) {
-					m_PL_HP -= onebrock;
+				if (m_PL_HP != ONEBROCK) {
+					m_PL_HP -= ONEBROCK;
 					g_goMgr.AddMusouGauge(50.0f);
 					//g_goMgr.HitStopOn();
 				}
 				else {
-					m_PL_HP = PL_DeadHP;
+					m_PL_HP = PL_DEADHP;
 					m_deadFrag = true;
 				}
 			}
 			m_animState = animClip_SmallDamage;
-			m_busyoAnime.Play(animClip_SmallDamage,InterpolationTimeL);
+			m_busyoAnime.Play(animClip_SmallDamage,INTERPOLATIONTIME_L);
 		}
 
 		//ダメージアニメーションが終わったら立ち姿に
@@ -254,7 +262,7 @@ void Player::Update()
 			//	m_underAttack = false;
 			//}
 			if (!m_Jumpfrag) {
-				m_busyoAnime.Play(animClip_idle,InterpolationTimeM);
+				m_busyoAnime.Play(animClip_idle,INTERPOLATIONTIME_M);
 			}
 		}
 		//移動処理
@@ -282,8 +290,8 @@ void Player::Move()
 {
 	//プレイヤーが死んでいない時の処理。
 	//平面の移動量はアプデごとにリセットする。
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
+	m_moveSpeed.x = X_ZERO;
+	m_moveSpeed.z = Z_ZERO;
 	if (m_busyoState != BusyoAttack) {
 		//入力量を受け取る
 		WideMoveL = g_pad->GetLStickXF();
@@ -293,22 +301,22 @@ void Player::Move()
 		m_CameraForward = g_camera3D.GetForword();
 		m_CameraRight = g_camera3D.GetRight();
 		//Yの情報はいらないので0にし、前と右方向の単位とする。
-		m_CameraForward.y = 0.0f;
+		m_CameraForward.y = Y_ZERO;
 		m_CameraForward.Normalize();
-		m_CameraRight.y = 0.0f;
+		m_CameraRight.y = Y_ZERO;
 		m_CameraRight.Normalize();
 		//攻撃中は自由に動かない時にする。
 		//m_busyoState = BusyoAttack;
 		if (!m_underAttack) {
-			m_moveSpeed += m_CameraForward * heightMoveL * SpeedAmount;
-			m_moveSpeed += m_CameraRight * WideMoveL * SpeedAmount;
+			m_moveSpeed += m_CameraForward * heightMoveL * SPEEDAMOUNT;
+			m_moveSpeed += m_CameraRight * WideMoveL * SPEEDAMOUNT;
 		}
 	}
 	if (m_moveSpeed.Length() > 1.0f
 		&&!m_Jumpfrag) {
 		InGameSoundDirector::GetInstans().RingSE_Run();
 	}
-	m_moveSpeed.y -= gravity * m_gravity_keisuu;
+	m_moveSpeed.y -= GRAVITY * m_gravity_keisuu;
 }
 
 void Player::Draw()
@@ -361,29 +369,29 @@ void Player::AttackMove()
 		switch (m_animStep)
 		{
 		case animClip_idle:
-			m_busyoAnime.Play(animClip_ATK1, InterpolationTime);
+			m_busyoAnime.Play(animClip_ATK1, INTERPOLATIONTIME);
 			m_busyoAnimeClip->GetKeyFramePtrListArray();
 			//enmuの離れた位置にアタックがあるため、最初だけ+= animClip_ATK1を足す
 			m_animStep += animClip_ATK1;
-			m_blowOffPower = standardPower * 1.7f;
+			m_blowOffPower = STANDARDPOWER * 1.7f;
 			break;
 		case animClip_ATK1:
-			m_busyoAnime.Play(animClip_ATK2, InterpolationTime);
+			m_busyoAnime.Play(animClip_ATK2, INTERPOLATIONTIME);
 			m_animStep++;
 			break;
 		case animClip_ATK2:
-			m_busyoAnime.Play(animClip_ATK3, InterpolationTime);
+			m_busyoAnime.Play(animClip_ATK3, INTERPOLATIONTIME);
 			m_animStep++;
 			break;
 		case animClip_ATK3:
-			m_busyoAnime.Play(animClip_ATK4, InterpolationTime);
+			m_busyoAnime.Play(animClip_ATK4, INTERPOLATIONTIME);
 			m_animStep++;
-			m_blowOffPower = standardPower * 2.0f;
+			m_blowOffPower = STANDARDPOWER * 2.0f;
 			break;
 		case animClip_ATK4:
-			m_busyoAnime.Play(animClip_ATK5, InterpolationTime);
+			m_busyoAnime.Play(animClip_ATK5, INTERPOLATIONTIME);
 			m_animStep++;
-			m_blowOffPower = standardPower * 2.5f;
+			m_blowOffPower = STANDARDPOWER * 2.5f;
 			break;
 		}
 	}
@@ -392,13 +400,14 @@ void Player::AttackMove()
 	}
 
 	m_playTimer+= GameTime().GetFrameDeltaTime();
-	if (m_playTimer > 0.5f)
+	//プレイタイマーが上限値を超えそうなら、上限値のままにする
+	if (m_playTimer > PLAYER_TIMER_RIMIT)
 	{
-		m_playTimer = 0.5;
+		m_playTimer = PLAYER_TIMER_RIMIT;
 	}
 	if (m_animStep != 0) {
 		if (m_animStep != m_oldAnimStep) {
-			m_playTimer = Timer_ZERO;
+			m_playTimer = TIMER_ZERO;
 			m_oldAnimStep = m_animStep;
 		}
 		const float RELEASE_TIME = 0.4f;
@@ -407,8 +416,8 @@ void Player::AttackMove()
 			m_busyoState = BusyoNormal;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
-			m_playTimer = Timer_ZERO;
-			m_busyoAnime.Play(animClip_idle, InterpolationTime*2.0f);
+			m_playTimer = TIMER_ZERO;
+			m_busyoAnime.Play(animClip_idle, INTERPOLATIONTIME*2.0f);
 			m_underAttack = false;
 		}
 	}
@@ -416,19 +425,18 @@ void Player::AttackMove()
 
 void Player::XAttackMove()
 {
-	float interTime = 0.1f;
 	//攻撃してないかつYが押されたら
 	if (g_pad->IsTrigger(enButtonY)&&!m_underAttack) {
 		m_busyoState = BusyoAttack;
-		m_busyoAnime.Play(animClip_XATK, interTime);
-		m_blowOffPower = standardPower * 3.4f;
+		m_busyoAnime.Play(animClip_XATK, INTERPOLATIONTIME_S);
+		m_blowOffPower = STANDARDPOWER * 3.4f;
 		m_underAttack = true;
 		m_XTrigger = true;
 	}
 	if (m_XTrigger && !m_busyoAnime.IsPlaying()) {
 		m_XTrigger = false;
 		m_underAttack = false;
-		g_goMgr.AddMusouGauge(-musou_syouhi);
+		g_goMgr.AddMusouGauge(-MUSOU_SYOUHI);
 	}
 }
 
@@ -439,14 +447,14 @@ void Player::Execute()
 	//if (m_busyoState == BusyoAttack) {
 	//攻撃中はフットステップの移動量を加算する。
 	CMatrix mBias = CMatrix::Identity();
-	mBias.MakeRotationX(CMath::PI * -0.5f);
+	mBias.MakeRotationX(CMath::PI * BIAS);
 	CMatrix rotMatrix;
 	//回転行列を作成する。
 	rotMatrix.MakeRotationFromQuaternion(m_rotation);
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
 
-	footStep *= animfoot_bairitu;
+	footStep *= ANIMFOOT_BAIRITU;
 	m_moveSpeed += footStep;
 
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
@@ -464,7 +472,7 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 	{
 		if (!enemy->GetenemyDeath()) {
 			//一番最初にエネミーの空いている所に情報を入れる
-			if (m_enemydata[i].position.y == 0.0f) {
+			if (m_enemydata[i].position.y == Y_ZERO) {
 				m_enemydata[i].position = pos;
 				m_enemydata[i].enemy = enemy;
 				//このタイミングで敵との距離計る(距離が近かったら呼ばれる処理なのに…？)
@@ -477,11 +485,11 @@ int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 				return i;
 			}
 
-			if (m_enemydata[i].position.y != 0.0f) {
+			if (m_enemydata[i].position.y != Y_ZERO) {
 				CVector3 kyori = m_enemydata[i].position - pos;
-				if (kyori.LengthSq() > posClearRange) {
+				if (kyori.LengthSq() > POSCLEAR_RANGE) {
 					m_enemydata[i].enemy = NULL;
-					m_enemydata[i].position = CVector3{ 0.0f,0.0f,0.0f };
+					m_enemydata[i].position = CVector3::Zero();
 					m_pl_target->Hoseioff();
 					return -1;
 				}
@@ -504,18 +512,18 @@ void Player::JumpAttackMove() {
 		//
 		if (g_pad->IsTrigger(enButtonX)) {
 			m_jumpAttackfrag = true;
-			m_busyoAnime.Play(animClip_JUMP_ATK, InterpolationTimeS);
-			m_blowOffPower = JumpATKPower;
+			m_busyoAnime.Play(animClip_JUMP_ATK, INTERPOLATIONTIME_S);
+			m_blowOffPower = JUMPATKPOWER;
 		}
 		else if(g_pad->IsTrigger(enButtonY)) {
 			m_jumpAttackfrag = true;
-			m_busyoAnime.Play(animClip_JUMP_X_ATK1, InterpolationTimeS);
-			m_blowOffPower = JumpATKPower;
+			m_busyoAnime.Play(animClip_JUMP_X_ATK1, INTERPOLATIONTIME_S);
+			m_blowOffPower = JUMPATKPOWER;
 			m_busyoState = BusyoAttack_Y;
 		}
 	}
 	if (!m_jumpAttackfrag) {
-		m_busyoAnime.Play(animClip_jump, InterpolationTimeM);
+		m_busyoAnime.Play(animClip_jump, INTERPOLATIONTIME_M);
 	}
 }
 

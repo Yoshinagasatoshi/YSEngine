@@ -8,11 +8,12 @@
 #include "sound/SoundSource.h"
 
 const float BGM_VOL = 0.2f;
-const float SpriteH = 240.0f;
+const float SPRITE_H = 240.0f;
 
-const CVector3 cameraPos = { 0.0f,100.0f,300.0f };
+const CVector3 CAMERAPOS = { 0.0f,100.0f,300.0f };
 const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間をしたいときに使う。 
 const float FRAMERATE_30 = 1.0f / 30.0f;//フレームレート30　30fps
+
 GameOver::GameOver()
 {
 	m_soundEngine.Init();
@@ -31,7 +32,7 @@ GameOver::GameOver()
 	m_animClip[anim_Lose].SetLoopFlag(false);
 
 
-	m_sprite2.Init(L"Assets/sprite/Lose.dds", FRAME_BUFFER_W, SpriteH);
+	m_sprite2.Init(L"Assets/sprite/Lose.dds", FRAME_BUFFER_W, SPRITE_H);
 	Fade::Getinstance().StartFadeOut();
 	
 	//アニメーション先モデルとアニメーションの個数を設定。
@@ -63,7 +64,7 @@ void GameOver::Update()
 	}
 	g_camera3D.SetTarget(CVector3::Zero());
 	
-	g_camera3D.SetPosition(cameraPos);
+	g_camera3D.SetPosition(CAMERAPOS);
 
 	m_animeModel.Update(FRAMERATE_30);
 	m_sprite2.Update(m_position, m_rot, m_scale, m_pivot);

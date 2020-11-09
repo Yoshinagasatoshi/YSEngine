@@ -3,7 +3,7 @@
 #include "character/CharacterController.h"
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
-class bom;
+class Bom;
 class Enemy_Bomber : public Enemy
 {
 public:
@@ -43,10 +43,10 @@ public:
 	//アニメを格納している配列
 	AnimationClip m_bomAnimeClip[Asigaru_anim_num];
 private:
-	CharacterController m_characon;//キャラコン
-	AsigaruState m_state = Asigaru_zyosou;//最初の状態は助走しているモード
-	bom* m_bom;//ボムを出すため付随
+	CharacterController m_characon;			//キャラコン
+	AsigaruState m_state = Asigaru_zyosou;	//最初の状態は助走しているモード
+	Bom* m_bom;								//ボムを出すため付随
 	CVector3 m_moveSpeed = CVector3::Zero();//移動速度
-	bool m_isCharaconUse = false;//キャラコン入ってる？
-	bool m_isDeadfrag = false;	//bomberが死んだかどうか
+	bool m_isCharaconUse = false;			//キャラコン入ってる？
+	bool m_isDeadfrag = false;				//bomberが死んだかどうか
 };

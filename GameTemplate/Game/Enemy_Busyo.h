@@ -49,7 +49,7 @@ private:
 	}
 	enum AnimState
 	{
-		IDL = 0,
+		IDL,
 		ATK,
 		MOVE,
 		DAMAGE,
@@ -63,32 +63,29 @@ private:
 	};
 	Animation m_enemy_BusyoAnime;
 
-	AnimationClip m_animClip[AnimationClip_Num];
-	CVector3 distance;			//距離。
-	AnimState m_state;			
-	SkinModel m_model;			//スキンモデル。
-
-
-	CharacterController m_characon;//キャラコン
-	CVector3 m_moveSpeed = CVector3::Zero();//移動量を入れる変数。
-	CVector3 m_lastPosition;				//直前までいた武将の位置
-	float m_mileage = 0;					//移動した量の受け皿。一定値を超えると処理が変わる仕様
-	bool m_charaConUse = false;//キャラコンが入っているか確認する変数。
-	bool m_isDeadfrag = false;
-	bool m_isFight = false;			//ファイトポーズをするかどうかのフラグ
-	bool m_isDestroyed = false;
-	bool m_isATKMode = false;			//攻撃態勢
-	bool m_isFightingKick = false;		//飛び蹴りをするかどうかの特殊なフラグ
-
-	float m_attackFrameNum = 0.0f;	//攻撃時間。この時間を超えると攻撃フラグがたつ
-	float m_frameTimer = 0.0f;		//時間を図るため
+	AnimationClip m_animClip[AnimationClip_Num];//アニメーションクリップ
+	CVector3 distance;							//距離。
+	AnimState m_state;							//アニメーションステート。			
+	SkinModel m_model;							//スキンモデル。
+	CharacterController m_characon;				//キャラコン
+	CVector3 m_moveSpeed = CVector3::Zero();	//移動量を入れる変数。
+	CVector3 m_lastPosition;					//直前までいた武将の位置
+	float m_mileage = 0;						//移動した量の受け皿。一定値を超えると処理が変わる仕様
+	bool m_charaConUse = false;					//キャラコンが入っているか確認する変数。
+	bool m_isDeadfrag = false;					//死亡フラグ。
+	bool m_isFight = false;						//ファイトポーズをするかどうかのフラグ
+	bool m_isDestroyed = false;					
+	bool m_isATKMode = false;					//攻撃態勢
+	bool m_isFightingKick = false;				//飛び蹴りをするかどうかの特殊なフラグ
+	float m_attackFrameNum = 0.0f;				//攻撃時間。この時間を超えると攻撃フラグがたつ
+	float m_frameTimer = 0.0f;					//時間を図るため
 	//自分が出す武器のゴーストのポインタ。
 	Wepon_ghost* m_en_Wepon;
 
 	int m_HP = 0;					//仮体力
 	int m_gacha = -1;				//攻撃方法の抽選をする変数。最初だけ-1
-	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
-	ID3D11ShaderResourceView* m_specMapSRV = nullptr;
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;	//法線マップのSRV
+	ID3D11ShaderResourceView* m_specMapSRV = nullptr;	//スペキュラマップのSRV
 
 };
 

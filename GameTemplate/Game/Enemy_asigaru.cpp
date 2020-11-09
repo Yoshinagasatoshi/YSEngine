@@ -7,26 +7,26 @@
 #include "GameCamera.h"
 #include "math/Matrix.h"
 
-const float Too_close = 7.0f;						//この範囲より近ければ～の条件式に使う。直訳は[近すぎる]
-const float Timer_ZERO = 0.0f;						//タイマーをゼロにしたいときに使う
-const float DeleteTime = 10.0f;						//倒れる～死ぬまでにかかる時間。
-const float drawNearSpeed = 110.0f;					//プレイヤーと距離が近いときのスピード
-const float DoubleSpeed = 2.0f;						//倍速したいときに使う。
-const float SrowSpeed = 0.1f;						//低速にしたい時に使う。1/10の速さになる
-const float earlySpeed = 30.0f;						//超高速したいときに使う。30倍
-const float ViewLenght = 0.25f;						//視野角範囲
-const float fastTime = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
-const int MAX_RING_SE = 10;							//音が出る最大数
-const float SoundTimer = 60.0f;						//音ガタセルカを計測するタイマー
-const int	Sound_Zero = 0;							//音が鳴るタイマーがないとき
-const float FramePlusNum = 1.0f;					//毎フレームごとに足される数。攻撃間隔の調整に使用
+const float TOO_CLOSE= 7.0f;						//この範囲より近ければ～の条件式に使う。直訳は[近すぎる]
+const float TIMER_ZERO = 0.0f;						//タイマーをゼロにしたいときに使う
+const float DELETE_TIME = 10.0f;						//倒れる～死ぬまでにかかる時間。
+const float DRAW_NEAR_SPEED = 110.0f;					//プレイヤーと距離が近いときのスピード
+const float	DOUBLE_SPEED = 2.0f;						//倍速したいときに使う。
+const float SROW_SPEED = 0.1f;						//低速にしたい時に使う。1/10の速さになる
+const float EARLY_SPEED = 30.0f;						//超高速したいときに使う。30倍
+const float VIEW_LENGHT = 0.25f;						//視野角範囲
+const float FAST_TIME = 1.0f;						//この数値が大きくなれば音が鳴る時間が長くなる
+const int	MAX_RING_SE = 10;							//音が出る最大数
+const float SOUND_TIMER = 60.0f;						//音ガタセルカを計測するタイマー
+const int	SOUND_ZERO = 0;							//音が鳴るタイマーがないとき
+const float FRAME_PLUS_NUM = 1.0f;					//毎フレームごとに足される数。攻撃間隔の調整に使用
 
 const float CULLING_AREA = 8000.0f;					//アップデートや描画する武将モデルの範囲
-const float Sound_Interval = 10.0f;					//次の音がなるまでの時間。音が重ならないようにするためのもの
-const float Model_Radius = 60.0f;					//敵のモデルの半径。コリジョンを作るために使用
-const float Model_Hight = 100.0f;					//敵のモデルの高さ。コリジョンを作るために使用
-const float EffectPos_Y = 100.0f;					//エフェクトを出す位置の高さを調整。
-const float Musou_GaugePlus = 15.0f;				//無双ゲージがどれだけ足されるのかの数値。調整可能
+const float SOUND_INTERVAL = 10.0f;					//次の音がなるまでの時間。音が重ならないようにするためのもの
+const float MODEL_RADIUS = 60.0f;					//敵のモデルの半径。コリジョンを作るために使用
+const float MODEL_HIGHT = 100.0f;					//敵のモデルの高さ。コリジョンを作るために使用
+const float EFFECTPOS_Y = 100.0f;					//エフェクトを出す位置の高さを調整。
+const float MUSOU_GAUGEPLUS = 15.0f;				//無双ゲージがどれだけ足されるのかの数値。調整可能
 
 
 const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間をしたいときに使う。 
@@ -35,10 +35,11 @@ const float INTERPORATION_TIME_M = 0.2f;//補間時間・中、アニメーション補間をした
 const int HITSTOP_BIG = 8;				//ヒットストップをするフレーム数(大)。無双技を当てた時はこちらを使う
 const int HITSTOP_SMALL = 4;			//ヒットストップをするフレーム数(小)。通常技を当てた時はこちらを使う
 
+
 /// <summary>
 /// boid
 /// </summary>
-Enemy_asigaru::IdlePos Enemy_asigaru::m_idlePos[5];
+Enemy_asigaru::IdlePos Enemy_asigaru::M_IDLEPOS[m_Waiting_Point];
 //コンストラクタ
 Enemy_asigaru::Enemy_asigaru()
 {
@@ -113,8 +114,8 @@ void Enemy_asigaru::CharaconInit()
 {
 	//キャラコンの初期化
 	m_characon.Init(
-		Model_Radius,
-		Model_Hight,
+		MODEL_RADIUS,
+		MODEL_HIGHT,
 		m_position//位置
 	);
 }
@@ -131,13 +132,13 @@ void Enemy_asigaru::Update()
 	}
 	m_isFirstUpdate = false;
 	
-	if (isRingSE) {
-		timer -= SoundTimer * GameTime().GetFrameDeltaTime();
+	if (m_isRingSE) {
+		m_timer -= SOUND_TIMER * GameTime().GetFrameDeltaTime();
 		//タイマーが0未満になるとリセット。音が出せるようになる
-		if (timer < Timer_ZERO) {
-			if (m_sd->GetReturnRingNum() <= Sound_Zero) {
-				isRingSE = false;
-				timer = Sound_Interval;
+		if (m_timer < TIMER_ZERO) {
+			if (m_sd->GetReturnRingNum() <= SOUND_ZERO) {
+				m_isRingSE = false;
+				m_timer = SOUND_INTERVAL;
 			}
 			////なっている効果音が0じゃなかったら減らす
 			//else if (!m_sd->GetReturnRingNum() == 0) {
@@ -164,7 +165,7 @@ void Enemy_asigaru::Update()
 			g_physics.ContactTest(m_characon, [&](const btCollisionObject& contactObject) {
 				if (ghostobject->IsSelf(contactObject) == true) {
 					g_goMgr.Counting();
-					g_goMgr.AddMusouGauge(Musou_GaugePlus);
+					g_goMgr.AddMusouGauge(MUSOU_GAUGEPLUS);
 
 					if (m_player->IsXTrigger()) {
 						//XとYで渡す引数の値をを変える。数値が大きければヒットストップの時間が長くなる
@@ -185,7 +186,7 @@ void Enemy_asigaru::Update()
 					g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 						g_Effect.m_sampleEffect,
 						m_position.x,
-						m_position.y + EffectPos_Y, //少し上に出す
+						m_position.y + EFFECTPOS_Y, //少し上に出す
 						m_position.z
 					);
 				}
@@ -201,14 +202,14 @@ void Enemy_asigaru::Update()
 		m_moveSpeed = CVector3::Zero();
 
 		//音をロード。1回だけ鳴らす。
-		if (m_Deathtimer_f <= fastTime) {
+		if (m_Deathtimer_f <= FAST_TIME) {
 			//downの音
 			m_sd->RingSE_Down();
 		}
 		m_Deathtimer_f++;
 
 		//死んだ後に少したってモデルが消える
-		if (m_Deathtimer_f > DeleteTime) {
+		if (m_Deathtimer_f > DELETE_TIME) {
 			g_goMgr.EnemyNumSubtract();
 			m_model.SetShadowCaster(false);
 			//CCount = true;
@@ -248,7 +249,7 @@ void Enemy_asigaru::Draw()
 {
 	//モデルの描画
 	//消えるときは呼ばない
-	if (m_Deathtimer_f < DeleteTime) {
+	if (m_Deathtimer_f < DELETE_TIME) {
 		//最初のアップデートではない。
 		//カメラとの距離を計算する。
 		CVector3 toCamera = m_position - g_camera3D.GetPosition();
@@ -279,14 +280,14 @@ void Enemy_asigaru::Move()
 		CVector3 kaiten = m_playerPos - m_position;
 		//ここだけ動きと回転の処理を変える
 		idlePosInit();
-		m_moveSpeed = m_idlePos[kakoi_num].idlePos - m_position;
+		m_moveSpeed = M_IDLEPOS[kakoi_num].idlePos - m_position;
 		//目的地と距離があまりにも近いときは動かない
-		if (m_moveSpeed.Length() < Too_close) {
+		if (m_moveSpeed.Length() < TOO_CLOSE) {
 			m_moveSpeed = CVector3::Zero();
 		}
 		else {
 			m_moveSpeed.Normalize();
-			m_moveSpeed *= earlySpeed;//30倍
+			m_moveSpeed *= EARLY_SPEED;//30倍
 		}
 	float angle = atan2(kaiten.x,kaiten.z);
 	m_rotation.SetRotation(CVector3::AxisY(), angle);
@@ -302,6 +303,7 @@ void Enemy_asigaru::Turn()
 {
 	auto Rot = CMatrix::Identity();
 	Rot.MakeRotationFromQuaternion(m_rotation);
+
 	m_forward.x = Rot.m[2][0];
 	m_forward.y = Rot.m[2][1];
 	m_forward.z = Rot.m[2][2];
@@ -322,11 +324,11 @@ void Enemy_asigaru::idlePosInit()
 	m_playerPos = m_player->GetPosition();
 
 	//最初の五体はプレイヤーを囲むように到着地点を設定
-	m_idlePos[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター
-	m_idlePos[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣
-	m_idlePos[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1
-	m_idlePos[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);	//端っこ2
-	m_idlePos[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);	//奥にいるやつの隣2
+	M_IDLEPOS[0].idlePos = m_playerPos + CVector3(0.0f,0.0f,-150.0f);		//一番奥にいるセンター
+	M_IDLEPOS[1].idlePos = m_playerPos + CVector3(100.0f, 0.0f, -100.0f);	//奥にいるやつの隣
+	M_IDLEPOS[2].idlePos = m_playerPos + CVector3(150.0f, 0.0f, -30.0f);	//端っこ1
+	M_IDLEPOS[3].idlePos = m_playerPos + CVector3(-150.0f, 0.0f, -30.0f);	//端っこ2
+	M_IDLEPOS[4].idlePos = m_playerPos + CVector3(-100.0f, 0.0f, -100.0f);	//奥にいるやつの隣2
 
 }
 
@@ -355,16 +357,16 @@ void Enemy_asigaru::StateJudge()
 		}	
 		if (kyori.LengthSq() > BattleRange) {
 			m_asigaruState = Asigaru_tikazuki;
-			m_frameTimer = Timer_ZERO;
+			m_frameTimer = TIMER_ZERO;
 			AttackframeNum();
 		}
 		//sentouの処理
 		m_moveSpeed = CVector3::Zero();
-		m_frameTimer += FramePlusNum;
+		m_frameTimer += FRAME_PLUS_NUM;
 
 		if (m_frameTimer >= m_kougekiframenum)
 		{
-			m_frameTimer = Timer_ZERO;
+			m_frameTimer = TIMER_ZERO;
 			AttackframeNum();
 
 			m_asigaruState = Asigaru_attack;
@@ -377,7 +379,7 @@ void Enemy_asigaru::StateJudge()
 			float angle = acosf(kyori.Dot(m_forward));
 
 			//視野角内に入っているか？
-			if (fabsf(angle) < PI * ViewLenght) {
+			if (fabsf(angle) < m_PI * VIEW_LENGHT) {
 				m_asigaruState = Asigaru_sentou;
 			}
 		}
@@ -387,7 +389,7 @@ void Enemy_asigaru::StateJudge()
 		}
 		//tikazukiの処理
 		kyori.Normalize();
-		m_moveSpeed = kyori * drawNearSpeed * DoubleSpeed; //速度が少し足りなかったので二倍速
+		m_moveSpeed = kyori * DRAW_NEAR_SPEED * DOUBLE_SPEED; //速度が少し足りなかったので二倍速
 		break;
 
 
@@ -396,12 +398,12 @@ void Enemy_asigaru::StateJudge()
 			//視野角内に入っているか？
 			kyori.Normalize();
 			float angle = acosf(kyori.Dot(m_forward));
-			if (fabsf(angle) < PI * ViewLenght) {
+			if (fabsf(angle) < m_PI * VIEW_LENGHT) {
 				m_asigaruState = Asigaru_tikazuki;
 			}
 		}
 		kyori.Normalize();
-		m_moveSpeed = kyori * drawNearSpeed * SrowSpeed;
+		m_moveSpeed = kyori * DRAW_NEAR_SPEED * SROW_SPEED;
 		//今の処理
 		//m_moveSpeed = CVector3::Zero();
 		CQuaternion ADDrot = CQuaternion::Identity();

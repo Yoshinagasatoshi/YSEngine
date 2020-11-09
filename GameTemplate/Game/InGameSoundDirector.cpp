@@ -2,9 +2,9 @@
 #include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-const float MinBGMVol = 0.4f;		//BGM音量の下限値
-const float magnification = 0.1f;	//倍率。この数値を調整すると効果音が鳴る時にどれだけBGMの音量が小さくなるかが変わる
-const float RiggZero = 0;			//効果音のなっている数がゼロなら
+const float MIN_BGM_VOL = 0.4f;		//BGM音量の下限値
+const float MAGNIFICATION = 0.1f;	//倍率。この数値を調整すると効果音が鳴る時にどれだけBGMの音量が小さくなるかが変わる
+const float RIGGZERO = 0;			//効果音のなっている数がゼロなら
 InGameSoundDirector::InGameSoundDirector()
 {
 	
@@ -27,17 +27,17 @@ void InGameSoundDirector::Update()
 	if (m_bgm.IsPlaying()) {
 		//BGMが鳴らされているなら以下の処理をする
 
-		float subtraction = m_seRingCount * magnification;	//m_seRingCount…addringnum()が呼ばれた数だけ数値が増える変数
+		float subtraction = m_seRingCount * MAGNIFICATION;	//m_seRingCount…addringnum()が呼ばれた数だけ数値が増える変数
 		float BGM_finalVol = BGM_NormalVol - subtraction;
 		//BGMが小さくなりすぎないようにする
-		if (BGM_finalVol < MinBGMVol)
+		if (BGM_finalVol < MIN_BGM_VOL)
 		{
-			BGM_finalVol = MinBGMVol;//MinBGMは0.5が入っており、これ以下にはならない
+			BGM_finalVol = MIN_BGM_VOL;//MinBGMは0.5が入っており、これ以下にはならない
 		}
 		m_bgm.SetVolume(BGM_finalVol);//最終的な音量のBGMを流す。
 	}
 
-		if (m_seRingCount >= RiggZero) {
+		if (m_seRingCount >= RIGGZERO) {
 			if (!m_Slash.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;

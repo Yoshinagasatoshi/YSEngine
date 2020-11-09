@@ -10,7 +10,7 @@
 
 
 const float BLOW_AWAY_POWER = 250.0f;	//‚«”ò‚Î‚·—ÍBŽG‹›‚É‚Ç‚ê‚¾‚¯‚«”ò‚ñ‚Å‚à‚ç‚¤‚©‚ð”’l‰»‚µ‚½‚à‚Ì
-const float InitHP = 5;					//ƒ{ƒX‚Ì‘Ì—ÍB‚±‚±‚ÅÝ’è‚·‚éB
+const float INIT_HP = 5;					//ƒ{ƒX‚Ì‘Ì—ÍB‚±‚±‚ÅÝ’è‚·‚éB
 const float FOOTSTEP_VALUE = 600.0f;	//ƒtƒbƒgƒXƒeƒbƒv‚ª“ü‚Á‚Ä‚¢‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•â³’l
 const float RUN_UP_VALUE = 200.0f;		//”ò‚ÑR‚è‚³‚¹‚é‚Ü‚Å‚Ì‘–s—Ê
 const float MODEL_RADIUS = 60.0f;		//ƒLƒƒƒ‰ƒNƒ^[‚Ì”¼Œa
@@ -19,9 +19,9 @@ const float INTERPORATION_TIME_S = 0.1f;//•âŠÔŽžŠÔE¬A’Z‚ß‚ÌƒAƒjƒ[ƒVƒ‡ƒ“•âŠÔ
 const float INTERPORATION_TIME_M = 0.2f;//•âŠÔŽžŠÔE’†AƒAƒjƒ[ƒVƒ‡ƒ“•âŠÔ‚ð‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤B
 const float INTERPORATION_TIME_L = 0.5f;//•âŠÔŽžŠÔE‘åA’·‚ß‚ÌƒAƒjƒ[ƒVƒ‡ƒ“•âŠÔ‚ð‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤B
 const float BIAS = -0.5f;				//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌˆÚ“®—Ê‚ð’²®‚·‚éƒoƒCƒAƒX
-const float EffectPos_Y = 100.0f;		//ƒGƒtƒFƒNƒg‚ðo‚·ˆÊ’u‚Ì‚‚³‚ð’²®B
+const float EFFECTPOS_Y = 100.0f;		//ƒGƒtƒFƒNƒg‚ðo‚·ˆÊ’u‚Ì‚‚³‚ð’²®B
 const float FRAMERATE_30 = 1.0f / 30.0f;//ƒtƒŒ[ƒ€ƒŒ[ƒg30@30fps
-const float Search_range = 200.0f;		//“G•«‚Ìõ“G”ÍˆÍ‚ðÝ’èB‚±‚Ì”’l‚ð2æ‚µ‚Ä‚¢‚é
+const float SEARCH_RANGE = 200.0f;		//“G•«‚Ìõ“G”ÍˆÍ‚ðÝ’èB‚±‚Ì”’l‚ð2æ‚µ‚Ä‚¢‚é
 
 //~_ZEROŒn‚ÍŒ^‚ªˆá‚¤‚Ì‚Å‚È‚¯‚ê‚Î‘S•”“ˆê‚µ‚Ä‚à‚¢‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªA
 //•Ï”–¼‚ÅŒ©‚½‚Æ‚«‚Ì‚í‚©‚è‚â‚·‚³‚©‚çAˆê‰ž‘S•”•ª‚¯‚Ä‚¢‚Ü‚·B
@@ -29,14 +29,14 @@ const float Search_range = 200.0f;		//“G•«‚Ìõ“G”ÍˆÍ‚ðÝ’èB‚±‚Ì”’l‚ð2æ‚µ‚Ä‚
 const float SPEED_ZERO = 0.0f;			//‘¬“x‚ð0‚É‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤’è”B
 const float TIMER_ZERO = 0.0f;			//ŽžŠÔ‚ð0‚É‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤’è”B
 const float MILEAGE_ZERO = 0.0f;		//‹——£‚ð0‚É‚µ‚½‚¢‚Æ‚«‚ÉŽg‚¤’è”B
-const float S_plussframe = 1.0f;		//1ƒtƒŒ[ƒ€‚²‚Æ‚Éƒ^ƒCƒ}[‚É’Ç‰Á‚³‚ê‚é”’lBS‚Í•b‚Ì—ª‚Å‚·B
+const float S_PLUSSFRAME = 1.0f;		//1ƒtƒŒ[ƒ€‚²‚Æ‚Éƒ^ƒCƒ}[‚É’Ç‰Á‚³‚ê‚é”’lBS‚Í•b‚Ì—ª‚Å‚·B
 
 const int	ENEMYBUSYO_HP_ZERO = 0;		//•«‚ÌHP‚ªƒ[ƒ‚Å‚ ‚éŽžB
 
 Enemy_Busyo::Enemy_Busyo()
 {
 	//HP‚ðÝ’è
-	m_HP = InitHP;
+	m_HP = INIT_HP;
 	m_model.Init(L"Assets/modelData/enemy_busyo.cmo");
 
 	//normalmap
@@ -154,6 +154,7 @@ void Enemy_Busyo::Update()
 	ThisDamage();
 
 	//ƒ[ƒ‹ƒhÀ•W‚ÌXV@‚±‚Á‚¿‚ÌskeletonUpdate‚ð‚¢‚¶‚é
+	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶Œ‹‰Ê‚©‚çfootstepƒ{[ƒ“ˆÚ“®—Ê‚ðŽæ“¾‚·‚éB
 	auto footStep = m_enemy_BusyoAnime.Update(FRAMERATE_30);//ƒ[ƒJƒ‹À•W‚ÌXV@‚±‚Á‚¿‚Í‚¢‚¶‚ç‚È‚¢
 	//if (m_busyoState == BusyoAttack) {
 	//UŒ‚’†‚ÍƒtƒbƒgƒXƒeƒbƒv‚ÌˆÚ“®—Ê‚ð‰ÁŽZ‚·‚éB
@@ -165,8 +166,8 @@ void Enemy_Busyo::Update()
 	rotMatrix.Mul(mBias, rotMatrix);
 	rotMatrix.Mul(footStep);
 	footStep *= FOOTSTEP_VALUE;//•â³‚ð‹­‚­‚©‚¯‚é
+	//ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶‚ÌŒ‹‰Ê‚ÌˆÚ“®—Ê‚ð”½‰f‚·‚éB
 	m_moveSpeed += footStep;
-
 	m_position = m_characon.Execute(GameTime().GetFrameDeltaTime(), m_moveSpeed);
 	//ƒ[ƒ‹ƒhs—ñ‚ÌXVB
 	m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -223,7 +224,7 @@ void Enemy_Busyo::StateJudge()
 //UŒ‚”ÍˆÍ‚É—ˆ‚½‚ç‚±‚±‚É“ü‚éB
 void Enemy_Busyo::AttackMove()
 {
-	m_frameTimer += S_plussframe;
+	m_frameTimer += S_PLUSSFRAME;
 
 	//UŒ‚’†‚Ì“®‚«
 	m_moveSpeed = CVector3::Zero();
@@ -282,7 +283,7 @@ void Enemy_Busyo::AttackMove()
 //õ“G”ÍˆÍ‚É—ˆ‚½‚ç‚±‚±‚É“ü‚é
 void Enemy_Busyo::NormalMove()
 {
-	if (distance.LengthSq() > Search_range * Search_range) {
+	if (distance.LengthSq() > SEARCH_RANGE * SEARCH_RANGE) {
 		CVector3 direction = distance;
 		direction.y = SPEED_ZERO;
 		direction.Normalize();
@@ -337,7 +338,7 @@ void Enemy_Busyo::ThisDamage()
 				//ƒGƒtƒFƒNƒg‚ào‚·B
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 					g_Effect.m_sampleEffect,
-					m_position.x, m_position.y + EffectPos_Y,
+					m_position.x, m_position.y + EFFECTPOS_Y,
 					m_position.z
 				);
 

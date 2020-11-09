@@ -189,17 +189,17 @@ private:
 	bool m_plWeponSwhich = true;
 	bool m_XTrigger = false;
 	bool m_muteki = false;								//無敵スイッチ、ダメージを食らわなくなる。
-	
-	CSoundSource m_bgm;
-	CSoundSource m_se;									//効果音
-	CSoundSource m_se2;									//効果音
+	//
+	//CSoundSource m_bgm;									//ＢＧＭ
+	//CSoundSource m_se;									//効果音
+	//CSoundSource m_se2;									//効果音
 
 
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト
 	Player_target* m_pl_target = nullptr;				//プレイヤーターゲット
-	InGameSoundDirector* m_sd;						//鳴らす
-	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;
+	InGameSoundDirector* m_sd;							//鳴らす
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;	//法線マップのSRV
 
 
 };

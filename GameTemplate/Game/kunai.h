@@ -1,9 +1,9 @@
 #pragma once
-class kunai
+class Kunai
 {
 public:
-	kunai();
-	~kunai();
+	Kunai();
+	~Kunai();
 
 	void Update();
 private:

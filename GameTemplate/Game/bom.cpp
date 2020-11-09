@@ -3,7 +3,7 @@
 #include "gameObject/ysGameObjectManager.h"
 #include "Fade.h"
 #include "InGameSoundDirector.h"
-const float B_radius = 30.0f;			//ゴーストの当たり判定の大きさ用
+const float BOM_RADIUS = 30.0f;			//ゴーストの当たり判定の大きさ用
 const float BOM_GRAVITY_ACC = -1000.0f;	//爆弾の重力加速度。
 const float BOM_VELOCITY_HORIZON = 200;	//爆弾の水平方向の移動速度。
 const float BOM_SCALE = 3.0f;			//爆弾の大きさをいじれる。
@@ -13,7 +13,7 @@ const float BOM_Displacement = 0.5f;	//ボムの変位に使う数値
 const float BOM_HIT_AREA = 150.0f;		//ボムがプレイヤー当たる範囲
 const float BOM_LANDING_AREA = 100.0f;	//ボムが地面に着地したと認識する範囲
 
-bom::bom()
+Bom::Bom()
 {
 	//ボム初期設定
 	m_skinModel.Init(L"Assets/modelData/bom.cmo");
@@ -21,16 +21,16 @@ bom::bom()
 	m_ghostObject.CreateSphere(
 		m_position,
 		m_rotation,
-		B_radius
+		BOM_RADIUS
 	);
 }
 
-bom::~bom()
+Bom::~Bom()
 {
 	g_goMgr.DeleteGOObject(this);
 }
 
-void bom::Update()
+void Bom::Update()
 {
 	//フェード状態(シーンの切り替えをしている状態)じゃなければ
 	//爆弾としての処理をする
@@ -72,7 +72,7 @@ void bom::Update()
 	}
 }
 
-void bom::Draw()
+void Bom::Draw()
 {
 	//モデルの描画
 	m_skinModel.Draw(
@@ -83,7 +83,7 @@ void bom::Draw()
 
 //一番最初にボムの設定をする。
 //最初はプレイヤーに直接投げるのではなく、その中継点を目指す軌道をする。
-void bom::FirstSet()
+void Bom::FirstSet()
 {
 	CVector3 vec = m_inpactPoint - m_position;
 	vec.y = 0.0f;//Yの成分を除去
@@ -105,7 +105,7 @@ void bom::FirstSet()
 	m_isFirst = true;
 }
 
-void bom::Finalbom()
+void Bom::Finalbom()
 {
 	auto I_diff = m_inpactPoint - m_position;
 	//着地処理。プレイヤーに当たっていない時の処理
@@ -129,7 +129,7 @@ void bom::Finalbom()
 	g_Effect.m_effekseerManager->Update();
 }
 
-void bom::HitThebom()
+void Bom::HitThebom()
 {
 	//プレイヤーにボムが当たった時の処理
 	if (!m_player->GetPlayerDead()) {

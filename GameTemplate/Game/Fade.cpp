@@ -3,7 +3,7 @@
 
 const float FEEDIN_VALUE = 1.0f;	//フェードイン
 const float FEEDAUTO_VALUE = 0.0f;	//フェードアウト
-const float Add_Val = 0.03f;		//追加される数値群
+const float ADD_VAL = 0.03f;		//追加される数値群
 
 Fade::Fade()
 {
@@ -23,7 +23,7 @@ void Fade::Update()
 		//a値が1以下なら濃くしていく
 	case enState_FadeIn:
 		if (m_currentAlpha < FEEDIN_VALUE) {
-			m_currentAlpha += Add_Val;
+			m_currentAlpha += ADD_VAL;
 			m_isFade = true;
 			m_isEnd = false;
 		}
@@ -36,7 +36,7 @@ void Fade::Update()
 	case enState_FadeOut:
 		//a値が0以上なら薄くしていく
 		if (m_currentAlpha >= FEEDAUTO_VALUE) {
-			m_currentAlpha -= Add_Val;
+			m_currentAlpha -= ADD_VAL;
 			m_isFade = true;
 			m_isEnd = false;
 		}

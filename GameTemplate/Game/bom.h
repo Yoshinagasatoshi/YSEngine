@@ -3,11 +3,11 @@
 #include "Enemy.h"
 #include "physics/PhysicsGhostObject.h"
 class Player;
-class bom : public Wepon
+class Bom : public Wepon
 {
 public:
-	bom();
-	~bom();
+	Bom();
+	~Bom();
 	void Draw();
 	void Update();
 	void SetPosition(CVector3 pos)

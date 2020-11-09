@@ -20,12 +20,12 @@ const float TIMELIMIT = 6000.0f;		//制限時間の設定
 
 const int TEXT_MAX = 255;				//テキスト文字上限値
 
-const float minimap_tekiou = 62.0f;		//ミニマップに適応するための数値
+const float MINIMAP_TEKIOU = 62.0f;		//ミニマップに適応するための数値
 const float RESET = 0.0f;				//0にしたいときに使う
-const float mainasu_Vector = -1.0f;		//ベクトルを逆方向にしたいときに使う
-const CVector4 Color = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。
-
-const int ColorChangeNum = 10;			//色替えするために必要な数
+const float MAINASU_VECTOR = -1.0f;		//ベクトルを逆方向にしたいときに使う
+const CVector4 COLOR = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。これは赤
+const CVector4 GORLD = CVector4{ 0.85f,0.70f,0.0f,1.0f };//金色フォント
+const int COLORCHANGE_NUM = 10;			//色替えするために必要な数
 
 const CVector2 TOUBATU_SU_FONTPOS = { 0.0f,650.0f }; //討伐数のフォントの位置
 const CVector2 TIMER_FONT_POS = { 0.0f,0.0f };		 //制限時間のフォントの位置
@@ -83,9 +83,9 @@ void UI::Update()
 	}
 	m_oldPlayerHP = m_playerHP;
 
-	if (g_goMgr.GetCount() > ColorChangeNum)
+	if (g_goMgr.GetCount() > COLORCHANGE_NUM)
 	{
-		m_defeatColor = CVector4{ 0.85f,0.70f,0.0f,1.0f };
+		m_defeatColor = GORLD;
 	}
 
 	//無双ゲージ　草案
@@ -94,7 +94,7 @@ void UI::Update()
 	timer++;
 	//直地　後で直します。
 	hyouzi = g_goMgr.GetMusouGaugeValue();
-	if (hyouzi <= MUSOU_GAUGEMAX) {
+	if (hyouzi < MUSOU_GAUGEMAX) {
 		g_goMgr.SetMusou_Utenai();
 	}
 	else {
@@ -105,9 +105,9 @@ void UI::Update()
 	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGHT);
 
 	CVector3 PlayerPos = m_player->GetPosition();
-	PlayerPos /= minimap_tekiou;
-	PlayerPos.x *= mainasu_Vector;
-	PlayerPos.y = PlayerPos.z * mainasu_Vector;
+	PlayerPos /= MINIMAP_TEKIOU;
+	PlayerPos.x *= MAINASU_VECTOR;
+	PlayerPos.y = PlayerPos.z * MAINASU_VECTOR;
 	PlayerPos.z = RESET;	//三次元情報はいらないので0にする
 
 	CQuaternion PlayerRot = m_player->GetRotation();
@@ -150,7 +150,7 @@ void UI::PostDraw()
 	wchar_t teext[TEXT_MAX];
 	float RemainingTime = TIMELIMIT - timer;
 	swprintf_s(teext, L"制限時間 : %03f",  RemainingTime);
-	m_timeFont.DrawScreenPos(teext,TIMER_FONT_POS,Color);
+	m_timeFont.DrawScreenPos(teext,TIMER_FONT_POS,COLOR);
 	
 	//m_playerPointer_yazirushi.Draw();
 }

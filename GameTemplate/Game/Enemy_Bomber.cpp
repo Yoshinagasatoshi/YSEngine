@@ -3,18 +3,18 @@
 #include "Enemy_Bomber.h"
 #include "Wepon_ghost.h"
 #include "bom.h"
-const float InterpolationTime = 0.2f;			//アニメーションの補間時間
-const float bomberSpeed = 5.0f;
-const float harfrenge = 1400.0f;
-const float socialdistance = 700.0f;			//プレイヤーとの間合いです。
-const float escapeSpeed = 200.0f;				//プレイヤーから逃げるスピード
-const float gravity = -20.0f;					//重力
+const float INTERPOLATION_TIME = 0.2f;			//アニメーションの補間時間
+const float BOMBER_SPEED = 5.0f;
+const float HARF_RENGE = 1400.0f;
+const float SOCIAL_DISTANCE = 700.0f;			//プレイヤーとの間合いです。
+const float ESCAPE_SPEED = 200.0f;				//プレイヤーから逃げるスピード
+const float GRAVITY = -20.0f;					//重力
 
-const float Model_Radius = 60.0f;					//敵のモデルの半径。コリジョンを作るために使用
-const float Model_Hight = 100.0f;					//敵のモデルの高さ。コリジョンを作るために使用
-const float EffectPos_Y = 100.0f;					//エフェクトを出す位置の高さを調整。
+const float MODEL_RADIUS = 60.0f;					//敵のモデルの半径。コリジョンを作るために使用
+const float MODEL_HIGHT = 100.0f;					//敵のモデルの高さ。コリジョンを作るために使用
+const float EFFECTPOS_Y = 100.0f;					//エフェクトを出す位置の高さを調整。
 
-const float SoundVol = 0.55f;					//鳴らす音のおおきさ。数値が大きいほど音も大きくなる
+const float SOUND_VOL = 0.55f;					//鳴らす音のおおきさ。数値が大きいほど音も大きくなる
 Enemy_Bomber::Enemy_Bomber()
 {
 	//ボム敵のモデルはasigaruのモデルに槍を取っ払ったものなので
@@ -43,7 +43,7 @@ Enemy_Bomber::Enemy_Bomber()
 	);
 	m_bomberAnime.AddAnimationEventListener([&](const wchar_t* clipName, const wchar_t* eventName) {
 		(void)clipName;
-			m_bom = g_goMgr.NewGameObject<bom>("bom");
+			m_bom = g_goMgr.NewGameObject<Bom>("bom");
 			m_bom->SetPosition(m_position);
 			m_bom->SetPlayerInfo(m_player);
 			m_bom->SetInpactPosition(m_player->GetPosition());
@@ -101,12 +101,12 @@ void Enemy_Bomber::Update()
 				CSoundSource* m_se2 = new CSoundSource;
 				m_se2->Init(L"Assets/sound/slash1.wav");
 				m_se2->Play(false);
-				m_se2->SetVolume(SoundVol);
+				m_se2->SetVolume(SOUND_VOL);
 				//エフェクトも出す。
 				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(
 					g_Effect.m_sampleEffect,
 					m_position.x,
-					m_position.y + EffectPos_Y,
+					m_position.y + EFFECTPOS_Y,
 					m_position.z
 				);
 			}
@@ -127,20 +127,20 @@ void Enemy_Bomber::Statekanri()
 	// ボマーのアニメーションが終わった時のbomberの状態によって、
 	// ステートを変える処理を実装
 	CVector3 distans = m_position - m_player->GetPosition();
-		if (distans.LengthSq() < harfrenge * harfrenge) {
-			if (m_state != Asigaru_attack) {
-				m_state = Asigaru_attack;
-			}
-			else if(!m_bomberAnime.IsPlaying()){
-				m_state = Asigaru_escape;
-			}
+	if (distans.LengthSq() < HARF_RENGE * HARF_RENGE) {
+		if (m_state != Asigaru_attack) {
+			m_state = Asigaru_attack;
 		}
-		else {
-			m_state = Asigaru_Idle;
+		else if(!m_bomberAnime.IsPlaying()){
+			m_state = Asigaru_escape;
 		}
-		if (m_isDeadfrag) {
-			m_state = Asigaru_dead;
-		}
+	}
+	else {
+		m_state = Asigaru_Idle;
+	}
+	if (m_isDeadfrag) {
+		m_state = Asigaru_dead;
+	}
 }
 
 void Enemy_Bomber::Animekanri()
@@ -149,7 +149,7 @@ void Enemy_Bomber::Animekanri()
 	//今の実装ではUpdateに1行足しただけで終わるけど、後から変更される可能性大なので
 	//関数にしました。
 
-	m_bomberAnime.Play(m_state, InterpolationTime);
+	m_bomberAnime.Play(m_state, INTERPOLATION_TIME);
 }
 
 //回転
@@ -172,11 +172,11 @@ void Enemy_Bomber::Turn()
 void Enemy_Bomber::EscapeMove()
 {
 	CVector3 distance = m_player->GetPosition() - m_position;
-	if (distance.Length() < socialdistance) {
+	if (distance.Length() < SOCIAL_DISTANCE) {
 		CVector3 hikigimi = m_position - m_player->GetPosition();
 		hikigimi.y = 0.0f;
 		hikigimi.Normalize();
-		hikigimi *= escapeSpeed;
+		hikigimi *= ESCAPE_SPEED;
 		m_moveSpeed += hikigimi;
 	}
 }
@@ -193,7 +193,7 @@ void Enemy_Bomber::DeathMove()
 {
 	if (m_isDeadfrag) {
 		m_state = Asigaru_dead;
-		m_bomberAnime.Play(m_state, InterpolationTime);
+		m_bomberAnime.Play(m_state, INTERPOLATION_TIME);
 		if (!m_bomberAnime.IsPlaying()) {
 			DeleteGO(this);
 		}
@@ -216,8 +216,8 @@ void Enemy_Bomber::CharaconInit()
 {
 	//キャラコンの初期化
 	m_characon.Init(
-		Model_Radius, //半径
-		Model_Hight,//高さ
+		MODEL_RADIUS, //半径
+		MODEL_HIGHT,//高さ
 		m_position//位置
 	);
 }

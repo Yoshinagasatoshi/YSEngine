@@ -11,8 +11,8 @@ const float halfVol = 0.5f;		//半分の音量、音量が大きいwaveファイルはここで調整
 const float INTERPORATION_TIME_S = 0.1f;//補間時間・小、短めのアニメーション補間をしたいときに使う。 
 const float FRAMERATE_30 = 1.0f / 30.0f;//フレームレート30　30fps
 
-const CVector3 cameraPos = { 0.0f,200.0f,300.0f };	//カメラ位置の調整
-const CVector3 targetPos = { 0.0f,100.0f,0.0f };	//カメラ注視点の調整
+const CVector3 CAMERA_POS = { 0.0f,200.0f,300.0f };	//カメラ位置の調整
+const CVector3 TARGET_POS = { 0.0f,100.0f,0.0f };	//カメラ注視点の調整
 GameClear::GameClear()
 {
 	m_soundEngine.Init();
@@ -62,9 +62,9 @@ void GameClear::Update()
 		}
 	}
 
-	g_camera3D.SetTarget(targetPos);
+	g_camera3D.SetTarget(TARGET_POS);
 
-	g_camera3D.SetPosition(cameraPos);
+	g_camera3D.SetPosition(CAMERA_POS);
 	m_sprite1.Update(m_position, m_rot, m_scale, m_pivot);
 	m_animeModel.Update(FRAMERATE_30);
 	m_skinModel.UpdateWorldMatrix(CVector3::Zero(), m_rot, m_scale);
