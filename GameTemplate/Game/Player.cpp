@@ -18,6 +18,7 @@ const float POSCLEAR_RANGE = 600.0f * 600.0f;	//クリア判定を行う範囲。ゲームクリ
 const float PLAYER_COLLIDER_HEIGHT = 100.0f;	//プレイヤーのカプセルコライダーの高さ。
 const float PLAYER_COLLIDER_RADIUS = 60.0f;		//プレイヤーのカプセルコライダーの半径。
 
+const float KAKOI_MAX = 5;						//囲いの数
 const float SPEEDAMOUNT = 1500.0f;				//平面の移動量
 const float GRAVITY = 200.0f;					//重力
 const float GRAVITY_START = 0.1f;				//重力加速値_初期値
@@ -27,7 +28,6 @@ const float JUMPATKPOWER = 350.0f;				//ジャンプ義理の強さ
 const float STANDARDPOWER = 200.0f;				//プレイヤーの敵吹き飛ばし力
 const float LIMIT = 2.0f;						//重力係数の上限
 const int	TIMER_ZERO = 0;						//計測時間が0になる。
-const float INTERPOLATIONTIME = 0.2f;			//アニメーションの補間時間
 const int	ONEBROCK = 24;						//プレイヤが敵から受ける定数ダメージ。ボスからの攻撃とか威力が高い奴には*2とかすると思う
 const float GHOST_Y_HOSEI = 70.0f;				//ゴーストのYにどれくらいの補正をかけたか
 const float MUSOU_SYOUHI = 450.0f;				//無双奥義を打つ時に消費する数値
@@ -40,14 +40,25 @@ const float Y_ZERO = 0.0f;						//Yの数値を0にする
 const float Z_ZERO = 0.0f;						//Zの数値を0にする
 
 const int	PL_DEADHP = 0;						//プレイヤーのHPがゼロである。
+const int	ENEMY_NOT_NUM = 0;					//エネミーはゼロですという事を表す
+const int	ANIM_STEP_RESET = 0;				//アニメーションステップのリセット
+const int	ANIM_STEP_NO_USE = 0;				//アニメーションイベントが動いていない時に使われる
 const int	ANIMEVENTBORN = 20;					//アニメーションイベント情報が組み込まれているボーンの数字
+
+const float RELEASE_TIME = 0.4f;				//戦闘中のアニメーションイベントの解放条件。この数値より上なら開放
+
+const float SE_RUN_SPEED = 300.0f;				//移動速度がこの数値以上なら走る音を鳴らす
+
+const int	PLAYER_BORN_NUM = 30;				//プレイヤーのボーンの数
 //アニメーションの補間時間・小
 const float INTERPOLATIONTIME_S = 0.1f;		
 //アニメーションの補間時間・中
-const float INTERPOLATIONTIME_M = 0.2f;		
+const float INTERPOLATIONTIME_M = 0.2f;
 //アニメーションの補間時間・大
 const float INTERPOLATIONTIME_L = 0.5f;			
 
+//特別なアニメーションの補間時間
+const float INTERPOLATIONTIME_SP = 0.4;
 Player::Player()
 {
 	testID = rand();
@@ -108,14 +119,12 @@ Player::Player()
 
 	m_skelton = &m_playerModel.GetSkeleton();
 	//このコードはボーンの配列を確認するために書いているコード。直接ゲームには関わってない。
-	//とりあえず30個分入る配列を作成
-	//30なのはプレイヤーのボーンの数が30だからです。
-	const wchar_t* bonename[30];
+	const wchar_t* bonename[PLAYER_BORN_NUM];
 
-	for (int i = 0; i < 29; i++) {
+	for (int i = 0; i < PLAYER_BORN_NUM - 1; i++) {
 		bonename[i] = m_skelton->GetBone(i)->GetName();
 
-		if (i == 28)
+		if (i == PLAYER_BORN_NUM - 2)
 		{
 			bonename[i + 1] = L"end";
 		}
@@ -212,7 +221,7 @@ void Player::Update()
 				if (!m_Jumpfrag) {
 					m_moveSpeed.y += JUMPPOWER;
 					m_Jumpfrag = true;
-					m_animStep = 0;
+					m_animStep = ANIM_STEP_RESET;
 					//攻撃モーション中にジャンプするとプレイヤーが動かなくなる時があったので追加
 					m_underAttack = false;
 				}
@@ -223,7 +232,7 @@ void Player::Update()
 			}
 			//ジャンプ状態じゃなければ移動速度によってアニメーションを変える。
 			if (!m_Jumpfrag) {
-				if (m_moveSpeed.Length() > 300.0f) {
+				if (m_moveSpeed.Length() > SE_RUN_SPEED) {
 					m_busyoAnime.Play(animClip_Walk, INTERPOLATIONTIME_S);
 				}
 				else {
@@ -312,6 +321,7 @@ void Player::Move()
 			m_moveSpeed += m_CameraRight * WideMoveL * SPEEDAMOUNT;
 		}
 	}
+	//一定の速さで進んでいるなら走るSEを追加
 	if (m_moveSpeed.Length() > 1.0f
 		&&!m_Jumpfrag) {
 		InGameSoundDirector::GetInstans().RingSE_Run();
@@ -369,32 +379,36 @@ void Player::AttackMove()
 		switch (m_animStep)
 		{
 		case animClip_idle:
-			m_busyoAnime.Play(animClip_ATK1, INTERPOLATIONTIME);
+			m_busyoAnime.Play(animClip_ATK1, INTERPOLATIONTIME_M);
 			m_busyoAnimeClip->GetKeyFramePtrListArray();
 			//enmuの離れた位置にアタックがあるため、最初だけ+= animClip_ATK1を足す
 			m_animStep += animClip_ATK1;
+			//マジックナンバーが使われているが、元々単位がある数値に
+			//攻撃ごとに敵の吹き飛び微調整をしたかったので
+			//1.7fや2.5fなどの倍率をかけています。
 			m_blowOffPower = STANDARDPOWER * 1.7f;
 			break;
 		case animClip_ATK1:
-			m_busyoAnime.Play(animClip_ATK2, INTERPOLATIONTIME);
+			m_busyoAnime.Play(animClip_ATK2, INTERPOLATIONTIME_M);
 			m_animStep++;
 			break;
 		case animClip_ATK2:
-			m_busyoAnime.Play(animClip_ATK3, INTERPOLATIONTIME);
+			m_busyoAnime.Play(animClip_ATK3, INTERPOLATIONTIME_M);
 			m_animStep++;
 			break;
 		case animClip_ATK3:
-			m_busyoAnime.Play(animClip_ATK4, INTERPOLATIONTIME);
+			m_busyoAnime.Play(animClip_ATK4, INTERPOLATIONTIME_M);
 			m_animStep++;
 			m_blowOffPower = STANDARDPOWER * 2.0f;
 			break;
 		case animClip_ATK4:
-			m_busyoAnime.Play(animClip_ATK5, INTERPOLATIONTIME);
+			m_busyoAnime.Play(animClip_ATK5, INTERPOLATIONTIME_M);
 			m_animStep++;
 			m_blowOffPower = STANDARDPOWER * 2.5f;
 			break;
 		}
 	}
+	//無双奥義が打てる状態なら、XAttackMove()を動かす
 	if (g_goMgr.isMusouSpecial()) {
 		XAttackMove();
 	}
@@ -405,19 +419,18 @@ void Player::AttackMove()
 	{
 		m_playTimer = PLAYER_TIMER_RIMIT;
 	}
-	if (m_animStep != 0) {
+	if (m_animStep != ANIM_STEP_NO_USE) {
 		if (m_animStep != m_oldAnimStep) {
 			m_playTimer = TIMER_ZERO;
 			m_oldAnimStep = m_animStep;
 		}
-		const float RELEASE_TIME = 0.4f;
 		if (m_playTimer >= RELEASE_TIME) {
 			//一定の時間が過ぎたらアニメステート関係を初期化
 			m_busyoState = BusyoNormal;
 			m_animStep = animClip_idle;
 			m_oldAnimStep = animClip_idle;
 			m_playTimer = TIMER_ZERO;
-			m_busyoAnime.Play(animClip_idle, INTERPOLATIONTIME*2.0f);
+			m_busyoAnime.Play(animClip_idle, INTERPOLATIONTIME_SP);
 			m_underAttack = false;
 		}
 	}
@@ -429,6 +442,9 @@ void Player::XAttackMove()
 	if (g_pad->IsTrigger(enButtonY)&&!m_underAttack) {
 		m_busyoState = BusyoAttack;
 		m_busyoAnime.Play(animClip_XATK, INTERPOLATIONTIME_S);
+		//マジックナンバーが使われているが、元々単位がある数値に
+		//攻撃ごとに敵の吹き飛び微調整をしたかったので
+		//3.4fをかけています。
 		m_blowOffPower = STANDARDPOWER * 3.4f;
 		m_underAttack = true;
 		m_XTrigger = true;
@@ -468,15 +484,15 @@ void Player::Execute()
 //エネミーに呼ばれる奴
 int Player::RequestEnemyData(CVector3 pos,Enemy* enemy)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < KAKOI_MAX; i++)
 	{
 		if (!enemy->GetenemyDeath()) {
 			//一番最初にエネミーの空いている所に情報を入れる
 			if (m_enemydata[i].position.y == Y_ZERO) {
 				m_enemydata[i].position = pos;
 				m_enemydata[i].enemy = enemy;
-				//このタイミングで敵との距離計る(距離が近かったら呼ばれる処理なのに…？)
-				if (g_goMgr.GetEnemyNum() != 0) {
+				//このタイミングで敵との距離計る
+				if (g_goMgr.GetEnemyNum() != ENEMY_NOT_NUM) {
 					m_pl_target->SetEnemyInfo(enemy);
 				}
 				return i;

@@ -85,6 +85,7 @@ void Enemy_Bomber::Update()
 		Move();
 		Turn();
 	}
+	//Ž€–Sƒtƒ‰ƒO‚ª‚½‚Á‚Ä‚¢‚é‚È‚çŽ€‚Ê“®‚«‚ð‚·‚é
 	if (m_isDeadfrag) {
 		DeathMove();
 	}

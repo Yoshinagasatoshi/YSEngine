@@ -38,8 +38,8 @@ public:
 private:
 	struct Vertex
 	{
-		CVector3 pos;
-		CVector3 color;
+		CVector3 pos;	//頂点場所
+		CVector3 color;	//色
 	};
 
 	ID3D11Buffer*		m_vertexBuffer = nullptr;		//頂点バッファ

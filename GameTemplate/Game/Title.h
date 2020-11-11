@@ -3,6 +3,10 @@
 #include "gameObject/ysGameObject.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+/// <summary>
+/// タイトルクラス
+/// ボタンを押されるとシーン遷移が行われるシンプルなクラスです
+/// </summary>
 class Title : public IGameObject
 {
 public:
@@ -11,13 +15,11 @@ public:
 	void Update();
 	void Draw();
 private:
-	Sprite m_sprite;
-	bool m_isWaitFadeOut = false;
-	float m_timer = 0.0f;
-	bool ando = false;
+	Sprite m_sprite;									//画像データ
+	bool m_isWaitFadeOut = false;						//フェードアウトが完了したかどうか
 
-	CSoundEngine m_soundEngine;
+	CSoundEngine m_soundEngine;							//タイトルで再生するためのサウンドエンジン
 	CSoundSource m_se;									//効果音
-	CSoundSource m_bgm;
+	CSoundSource m_bgm;									//タイトルで流すＢＧＭ
 };
 

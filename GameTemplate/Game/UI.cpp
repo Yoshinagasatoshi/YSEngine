@@ -100,8 +100,6 @@ void UI::Update()
 	else {
 		g_goMgr.SetMusou_Uteru();
 	}
-	//float timeVal = 0.75;
-	//hyouzi += timeVal;
 	m_musouGauge.InitCommon(hyouzi, GAUGE_HEIGHT);
 
 	CVector3 PlayerPos = m_player->GetPosition();

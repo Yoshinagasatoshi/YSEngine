@@ -35,60 +35,69 @@ public:
 		//seボリュームを引数にセット
 		m_bgm.SetVolume(BGM_NormalVol);
 	}
-
+	/// <summary>
+	/// BGMの取得
+	/// </summary>
+	/// <returns></returns>
 	CSoundSource& GetCSoundSo()
 	{
 		return m_bgm;
 	}
-
+	/// <summary>
+	/// サウンドソースの削除
+	/// </summary>
+	/// <param name="css"></param>
 	void InGameBGMRelease(CSoundSource& css)
 	{
 		css.Release();
 	}
-
+	/// <summary>
+	/// このクラスのインスタンスをゲットする
+	/// </summary>
+	/// <returns></returns>
 	static InGameSoundDirector& GetInstans()
 	{
 		static InGameSoundDirector SDdata;
 		return SDdata;
 	}
-	//流されている音を足す
+	///流されている音を足す
 	void addringnum()
 	{
 		m_seRingCount++;
 	}
-	//流されている音を渡す
+	///流されている音を渡す
 	int GetReturnRingNum()
 	{
 		return m_seRingCount;
 	}
-	//流されてる音の数を減らす
+	///流されてる音の数を減らす
 	void mainasuRingnum()
 	{
 		m_seRingCount--;
 	}
 
-	//BGMとSEの調和を目指す。
+	///BGMとSEの調和を目指す。
 	void BGMtyousei();
 
-	//流す予定がある予定の奴を足す
+	///流す予定がある予定の奴を足す
 	void addstocknumS()
 	{
 		m_seStockCount++;
 	}
 
-	//音のストックを減らす
+	///音のストックを減らす
 	void mainasustocknumS()
 	{
 		m_seStockCount--;
 	}
 
-	//待機中の音がどれだけあるか
+	///待機中の音がどれだけあるか
 	int GetReturnRingNumS()
 	{
 		return m_seStockCount;
 	}
 
-	//SE_素振り音
+	///SE_素振り音
 	void RingSE_Swing()
 	{
 		if (m_seRingCount< Max_RingNum) {
@@ -105,7 +114,7 @@ public:
 			addringnum();
 		}
 	}
-	//SE_斬撃音
+	///SE_斬撃音
 	void RingSE_Slash()
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -115,7 +124,7 @@ public:
 			addringnum();//効果音が鳴っている数を+1する。
 		}
 	}
-	//SE_走る音
+	///SE_走る音
 	void RingSE_Run()
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -127,7 +136,7 @@ public:
 			}
 		}
 	}
-	//SE_倒れる音
+	///SE_倒れる音
 	void RingSE_Down() 
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -137,7 +146,7 @@ public:
 			addringnum();
 		}
 	}
-	//SE_導火線の音
+	///SE_導火線の音
 	void RingSE_Fuse()
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -147,7 +156,7 @@ public:
 			addringnum();
 		}
 	}
-	//SE_爆発の音
+	///SE_爆発の音
 	void RingSE_Destruct()
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -158,7 +167,7 @@ public:
 		}
 	}
 	
-	//SE_けり音
+	///SE_けり音
 	void RingSE_Kick()
 	{
 		if (m_seRingCount < Max_RingNum) {
@@ -175,17 +184,17 @@ public:
 			addringnum();
 		}
 	}
-	//Updateをオンにする
+	///Updateをオンにする
 	void UpdateOn()
 	{
 		m_isUpdate = true;
 	}
-	//Updateをオフにする
+	///Updateをオフにする
 	void UpdateOff()
 	{
 		m_isUpdate = false;
 	}
-	//Updateの状態を確認する。
+	///Updateの状態を確認する。
 	bool GetisUpdateMode()
 	{
 		return m_isUpdate;

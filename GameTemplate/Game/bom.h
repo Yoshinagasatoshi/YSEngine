@@ -26,12 +26,12 @@ private:
 	void FirstSet();				//ボムの初期設定
 	void Finalbom();				//ボムが着弾地点付いた時に呼ぶ関数
 	void HitThebom();				//ボムがプレイヤーに当たった時呼ぶ関数
-	bool m_isFirst = false;
-	bool m_isSecond = false;
+	bool m_isFirst = false;			//ボムが生成されているかの第一フラグ
+
 	CVector3 m_inpactPoint;//着地点
 	CVector3 m_ReleyPoint;//中継点
 	CVector3 m_bomGhostPos;//ボムのポジションを修正する用の変数
-	Player* m_player;
+	Player* m_player;	//プレイヤーのポインタ
 	CVector3 m_bomVelocity;//ボムの速さ
 	PhysicsGhostObject m_ghostObject;				//武器の当たり判定
 };

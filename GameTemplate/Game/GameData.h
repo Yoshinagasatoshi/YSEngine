@@ -15,6 +15,10 @@ public:
 	void Update() {};
 	void Draw() {};
 	void RandomPos();
+	/// <summary>
+	/// ゲームデータのインスタンスを取得
+	/// </summary>
+	/// <returns></returns>
 	static GameData& GetInstans()
 	{
 		static GameData gamedata;
@@ -39,35 +43,49 @@ public:
 		}
 		return m_enclosure[i];
 	}
+	/// <summary>
+	/// どの場所を使っているのか
+	/// </summary>
+	/// <param name="i"></param>
 	void SetSpotUse(int i)
 	{
 		m_enclosure[i] = true;
 	}
 
+	/// <summary>
+	/// この場所は使われていない。という事を設定する
+	/// </summary>
+	/// <param name="i"></param>
 	void RemoveSpotUse(int i)
 	{
 		m_enclosure[i] = false;
 	}
-
-	int GetKakoiNum()
+	/// <summary>
+	/// 囲いの最大数を返す
+	/// </summary>
+	/// <returns></returns>
+	int GetKakoiNum()const
 	{
 		return kakoi_max;
 	}
+	/// <summary>
+	/// プレイヤーの情報をセットする
+	/// </summary>
+	/// <param name="pl"></param>
 	void SetPlayerInfo(Player* pl)
 	{
 		m_player = pl;
 	}
 private:
-	//囲いの最大数
-	static const int kakoi_max = 5;
-	CVector3 EnemySpot[kakoi_max];
-	Player* m_player;
-	Enemy* m_enemy[kakoi_max];
-	CVector3 CameraForword;
-	CVector3 CameraRight;
+	static const int kakoi_max = 5;	//囲いの最大数
+	CVector3 EnemySpot[kakoi_max];	//敵の場所データ
+	Player* m_player;				//プレイヤーのポインタ
+	Enemy* m_enemy[kakoi_max];		//エネミーのデータ
+	CVector3 CameraForword;			//カメラの前方向
+	CVector3 CameraRight;			//カメラの右方向
 	//使いたい範囲の数値
-	const float kyori = 100.0f;
-	const float half = 50.0f;
+	const float kyori = 100.0f;		//単位として使いたい
+	const float half = 50.0f;		//半単位として使いたい
 	//どの場所の囲いが使われているか。
 	//enemy型の配列にした方が都合がいいので設定。
 	bool m_enclosure[kakoi_max] = { false,false,false,false,false };

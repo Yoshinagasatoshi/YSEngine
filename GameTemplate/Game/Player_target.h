@@ -35,10 +35,10 @@ public:
 	}
 	void HoseiJujge();
 private:
-	Player* m_player = nullptr;
-	Enemy* m_enemy = nullptr;
-	CVector3 m_distans = CVector3::Zero();
-	bool m_isHosei = false;
+	Player* m_player = nullptr;				//プレイヤーのポインタ
+	Enemy* m_enemy = nullptr;				//エネミーのポインタ
+	CVector3 m_distans = CVector3::Zero();	//プレイヤーとエネミーの距離を入れる数値
+	bool m_isHosei = false;					//補正をかけるかどうかのフラグ
 	//std::list<Enemy*> m_enemyList;
 };
 

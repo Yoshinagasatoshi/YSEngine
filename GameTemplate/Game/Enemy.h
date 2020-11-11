@@ -71,7 +71,7 @@ protected:
 	SkinModel m_model_Row;		//ローポリのスキンモデル。アニメはつけない予定
 	CVector3 m_position;		//現在地
 	CQuaternion m_rotation;		//回転角度
-	CVector3 m_scale;
+	CVector3 m_scale;			//大きさ
 	CVector3 m_playerPos;		//プレイヤーのポジション
 	Player* m_player;			//プレイヤーのポイント型
 	GameCamera* m_gameCamera;	//ゲームカメラのポイント型。
@@ -81,6 +81,6 @@ protected:
 	const float BattleRange = 200.0f * 200.0f;			//この距離の範囲内に近づくとバトル(2乗)
 	const float VigilanceRange = 700.0f * 700.0f;		//この距離の範囲内ならプレイヤーに近づく(2乗)
 
-	bool m_isDeath = false;
+	bool m_isDeath = false;		//エネミーの死亡フラグ
 };
 

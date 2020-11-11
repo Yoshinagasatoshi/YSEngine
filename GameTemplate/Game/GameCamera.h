@@ -24,14 +24,14 @@ public:
 		return m_position;
 	}
 private:
-	CVector3 m_position;
-	CQuaternion m_rotation = CQuaternion::Identity();
-	CVector3 m_AxisY = CVector3{ 0.0f,1.0f,0.0f };
-	CVector3 m_target;
-	CVector3 m_toPos = CVector3{0,250,400};
-	CVector3 m_up = CVector3::Up();
-	float m_viewAngle = CMath::DegToRad(60.0f);		//画角。
+	CVector3 m_position;								//カメラ位置
+	CQuaternion m_rotation = CQuaternion::Identity();	//カメラの回転角度
+	CVector3 m_AxisY = CVector3{ 0.0f,1.0f,0.0f };		//Ｙ軸
+	CVector3 m_target;									//カメラ注視点
+	CVector3 m_toPos = CVector3{0,250,400};				//カメラの位置と注視点の距離
+	CVector3 m_up = CVector3::Up();						//上方向
+	float m_viewAngle = CMath::DegToRad(60.0f);			//画角。
 	//CMatrix m_matrix;
-	Player* m_player;
+	Player* m_player;									//プレイヤーのポインタ
 };
 

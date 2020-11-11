@@ -11,10 +11,18 @@ public:
 	Enemy_Busyo();
 	~Enemy_Busyo();
 
+	/// <summary>
+	/// 敵武将の場所をセットする
+	/// </summary>
+	/// <param name="pos"></param>
 	void SetPosition(const CVector3& pos)
 	{
 		m_position = pos;
 	}
+	/// <summary>
+	/// 敵武将の場所を受け取る
+	/// </summary>
+	/// <returns></returns>
 	const CVector3& Getposition()const
 	{
 		return m_position;
@@ -61,7 +69,7 @@ private:
 		LEFT_STEP,
 		AnimationClip_Num
 	};
-	Animation m_enemy_BusyoAnime;
+	Animation m_enemy_BusyoAnime;				//敵武将のアニメ管理
 
 	AnimationClip m_animClip[AnimationClip_Num];//アニメーションクリップ
 	CVector3 distance;							//距離。
@@ -74,7 +82,7 @@ private:
 	bool m_charaConUse = false;					//キャラコンが入っているか確認する変数。
 	bool m_isDeadfrag = false;					//死亡フラグ。
 	bool m_isFight = false;						//ファイトポーズをするかどうかのフラグ
-	bool m_isDestroyed = false;					
+	bool m_isDestroyed = false;					//敵武将の死亡フラグ。
 	bool m_isATKMode = false;					//攻撃態勢
 	bool m_isFightingKick = false;				//飛び蹴りをするかどうかの特殊なフラグ
 	float m_attackFrameNum = 0.0f;				//攻撃時間。この時間を超えると攻撃フラグがたつ

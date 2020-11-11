@@ -50,11 +50,9 @@ private:
 		enState_FadeOut,
 		enState_Idle
 	};
-	enState_Fade m_state = enState_Idle;
-	Sprite m_sprite;
+	enState_Fade m_state = enState_Idle;//状態遷移。
+	Sprite m_sprite;					//画像データ。ローディング画面用
 	float m_currentAlpha = 0.5f;		//α値。
-	bool m_isFade = true;
-	bool m_isEnd = false;
-	//
-	int m_timer = 0;
+	bool m_isFade = true;				//フェードしているかのフラグ
+	bool m_isEnd = false;				//フェードが終わったかのフラグ
 };

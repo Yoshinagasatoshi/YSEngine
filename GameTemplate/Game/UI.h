@@ -21,22 +21,22 @@ public:
 		m_game = game;
 	}
 private:
-	Sprite m_lifeGauge;
-	Sprite m_lifeGaugeura;
+	Sprite m_lifeGauge;					//体力ゲージ
+	Sprite m_lifeGaugeura;				//体力ゲージの裏側。体力ゲージが見えやすくするためのもの
 
-	Sprite m_musouGauge;
-	Sprite m_musouGaugeura;
+	Sprite m_musouGauge;				//無双ゲージ
+	Sprite m_musouGaugeura;				//無双ゲージの裏側。無双ゲージを見えやすくするもの
 
-	Sprite m_face;
+	Sprite m_face;						//武将アイコン
 
-	Sprite m_mapSprite;
+	Sprite m_mapSprite;					//ミニマップ画像
 
-	Sprite m_playerPointer;
-	Sprite m_playerPointer_yazirushi;
-
+	Sprite m_playerPointer;				//ミニマップのプレイヤーアイコン
+	//Sprite m_playerPointer_yazirushi;
 
 	//sprite1 体力ゲージのデータ
-	CVector3 m_position = CVector3{0.0f,-280.0f,0.0f};
+	//画像位置、画像角度、画像幅、画像基点の順に設定
+	CVector3 m_position = CVector3{0.0f,-280.0f,0.0f};	
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 m_scale = CVector3::One();
 	CVector2 m_pivot = { 0.0f,0.5f };
@@ -63,8 +63,8 @@ private:
 	//ディファートカラー。○○体以上倒したら、カラーを変えるようにしたいのでこいつはconstでは設定しない
 	CVector4 m_defeatColor = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。
 
-	Player* m_player;
-	Game*	m_game;
+	Player* m_player;		//プレイヤーのポインタ
+	Game*	m_game;			//ゲームのポインタ
 	Font m_font;			//討伐数用フォント
 	Font m_timeFont;		//制限時間用フォント
 	//プレイヤーのHPを保存
@@ -72,11 +72,10 @@ private:
 	//前フレームのプレイヤーのHPを保存
 	int m_oldPlayerHP;
 	//プレイヤー情報が入っているか？
-	bool m_isPLInfo = false;
-	float timer = 0.0f;
+	bool m_isPLInfo = false;	
+	float timer = 0.0f;			//どれだけ制限時間がたったかを記録する
 
-	float hyouzi = 0.0f;
-	float timeVal = 0.75f;
+	float hyouzi = 0.0f;		//無双ゲージをどれだけ表示するか
 
-	bool isTimeOver = false;
+	bool isTimeOver = false;	//時間切れになっているのか？
 };

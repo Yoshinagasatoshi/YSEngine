@@ -50,13 +50,13 @@ private:
 	//D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
 	//ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
 	//ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
-	Level m_level;
-	Level m_level_EnemyBusyo;
-	bool m_attack = false;
+	Level m_level;								//レベルの配置
+	Level m_level_EnemyBusyo;					//レベルその２．敵武将の配置
+	//bool m_attack = false;						//アタック中？
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 	bool m_gameDelete = false;					//ゲームから出る時にtrueになるようにする
-	Fade* m_fade;
-	CSoundEngine m_soundEngine;
-	CSoundSource m_bgm;
-	InGameSoundDirector* m_sd;
+	Fade* m_fade;								//フェードのポインタ
+	CSoundEngine m_soundEngine;					//ゲーム内のサウンドエンジン。BGMやSeを鳴らすのに必要
+	CSoundSource m_bgm;							//ゲーム内のBGM
+	InGameSoundDirector* m_sd;					//ゲーム内の効果音
 };

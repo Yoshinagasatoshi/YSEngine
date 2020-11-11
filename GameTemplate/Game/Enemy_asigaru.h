@@ -33,12 +33,18 @@ public:
 	//ゴーストのInit
 	//void ghostInit();
 
-	//ふっとばし量を受け取る。
+	/// <summary>
+	/// 吹き飛ばし量を受け取る
+	/// </summary>
+	/// <param name="recive"></param>
 	void SetDamage(float recive)
 	{
 		m_recivePower = recive;
 	}
-
+	/// <summary>
+	/// インスタンスを受け取る
+	/// </summary>
+	/// <returns></returns>
 	static Enemy_asigaru& GetInstans()
 	{
 		static Enemy_asigaru enemy;
@@ -73,10 +79,8 @@ public:
 	};
 	//配列数は待機場所の数。いまは5
 	static const int m_Waiting_Point = 5;			//待機場所の数
-	static IdlePos M_IDLEPOS[m_Waiting_Point];
-	CVector3 m_moveSpeed = CVector3::Zero();
-	CVector3 moveV = CVector3::Zero();
-	int i = 0;
+	static IdlePos M_IDLEPOS[m_Waiting_Point];		//待機場所のポイント配列
+	CVector3 m_moveSpeed = CVector3::Zero();		//移動速度
 private:
 	//攻撃時間が何秒か抽選する関数
 	//計測時間も初期化する
@@ -141,9 +145,9 @@ private:
 	int m_seStockCount = 0;
 	//鳴らしている？
 	bool m_isRingSE = false;
-	InGameSoundDirector* m_sd = nullptr;
-	float m_timer = 10.0f;
-	bool m_isFirstUpdate = true;
-	bool m_CCount = false;
+	InGameSoundDirector* m_sd = nullptr;//サウンドディレクターのポインタ
+	float m_timer = 10.0f;				//時間を図る。
+	bool m_isFirstUpdate = true;		//最初にUpdateをするかどうかを判断する
+	bool m_CCount = false;				//CharaCountの略。カウントさせるかどうかのフラグ
 }; 
 

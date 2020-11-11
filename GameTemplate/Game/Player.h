@@ -53,16 +53,27 @@ public:
 	{
 		m_damagefrag = true;
 	}
-	//プレイヤーは死んでいる状態かどうかを取得する
+	/// <summary>
+	/// プレイヤーは死んでいる状態かを決める
+	/// </summary>
+	/// <returns></returns>
 	const bool& GetPlayerDead()const
 	{
 		return m_deadFrag;
 	}
-	//プレイヤーの吹き飛ばし力を取得
+	/// <summary>
+	/// プレイヤーの吹き飛ばし力を設定
+	/// </summary>
+	/// <returns></returns>
 	const float& GetBlowOffPower()const
 	{
 		return m_blowOffPower;
 	}
+	/// <summary>
+	/// アニメーションイベントが行われているかのチェックコード
+	/// </summary>
+	/// <param name="clipName"></param>
+	/// <param name="eventName"></param>
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	{
 		(void)clipName;

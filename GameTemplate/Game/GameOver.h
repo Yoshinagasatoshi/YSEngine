@@ -23,18 +23,18 @@ private:
 	Sprite m_sprite2; //一つ目のスプライト
 	//Sprite m_sprite2; //二つ目のスプライト
 	SkinModel m_skinModel;//やられたプレイヤーを移す用。
-	SkinModel m_skinModelStage;
+	SkinModel m_skinModelStage;	//ステージ用のモデル
 
-	CVector3 m_position = CVector3::Zero();
-	CVector3 m_scale = CVector3::One();
-	CQuaternion m_rot = CQuaternion::Identity();
-	CVector2 m_pivot = { 0.5f,0.5f };
-	AnimationClip m_animClip[animClip_num];
-	Animation m_animeModel;
+	CVector3 m_position = CVector3::Zero();				//場所
+	CVector3 m_scale = CVector3::One();					//大きさ
+	CQuaternion m_rot = CQuaternion::Identity();		//回転角度
+	CVector2 m_pivot = { 0.5f,0.5f };					//起点
+	AnimationClip m_animClip[animClip_num];				//アニメーションクリップ
+	Animation m_animeModel;								//アニメモデルよう
 
-	CSoundEngine m_soundEngine;
+	CSoundEngine m_soundEngine;							//サウンドエンジン
 	CSoundSource m_se;									//効果音
-	CSoundSource m_bgm;
-	bool m_isWaitFadeOut = false;
+	CSoundSource m_bgm;									//ＢＧＭ
+	bool m_isWaitFadeOut = false;						//フェードが終わったかどうかのフラグ
 };
 
