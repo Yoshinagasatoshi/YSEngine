@@ -7,7 +7,7 @@
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
 
-const float BGM_VOL = 0.5f; //BGMのボリューム。数値によって変更可能
+const float BGM_VOL = 0.4f; //BGMのボリューム。数値によって変更可能
 const CVector3 CAMERA_POS = CVector3 { 0.0f,0.0f,-600.0f };	//カメラをどれだけひかせているか
 
 Title::Title()
@@ -48,7 +48,7 @@ void Title::Update()
 		if (!Fade::Getinstance().IsFade()) {
 			//m_bgm.Stop();
 			InGameSoundDirector::GetInstans().UpdateOn();
-			/*Game* game = */g_goMgr.NewGameObject<Game>("Game");
+			g_goMgr.NewGameObject<Game>("Game");
 			g_goMgr.DeleteGOObject(this);
 		}
 	}

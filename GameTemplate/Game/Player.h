@@ -8,7 +8,7 @@
 #include "sound/SoundSource.h"
 
 /// <summary>
-/// 
+/// プレイヤークラス
 /// </summary>
 class Game;
 class Enemy;

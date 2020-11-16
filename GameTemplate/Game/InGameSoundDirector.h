@@ -211,7 +211,7 @@ private:
 	//SoundDirectorクラスでゲーム内の音楽を全部管理することにした。
 	CSoundSource m_bgm;	//ゲーム中にかかっているBGM。タイトルとゲーム内で切り替わる
 
-	const float BGM_NormalVol = 0.8f;//通常時のBGM音
+	const float BGM_NormalVol = 0.5f;//通常時のBGM音
 	CSoundSource m_Swing;//剣を振る音
 	CSoundSource m_Swing2;//剣を振る音2 m_Swing1つでは足りなかったため追加
 	CSoundSource m_Slash;//斬る音

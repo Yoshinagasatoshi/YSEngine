@@ -3,6 +3,10 @@
 #include "graphics/Sprite.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+/// <summary>
+/// ゲームクリアクラス
+/// 敵武将を倒したときに呼ばれる
+/// </summary>
 class GameClear : public IGameObject
 {
 public:

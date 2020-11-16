@@ -1,6 +1,9 @@
 #pragma once
 #include "physics/PhysicsGhostObject.h"
 #include "gameObject/ysGameObject.h"
+/// <summary>
+/// •Ší”»’è‚ğì‚éƒNƒ‰ƒX
+/// </summary>
 class Player;
 class Wepon_ghost : public IGameObject
 {

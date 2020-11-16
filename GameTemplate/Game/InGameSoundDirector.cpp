@@ -2,7 +2,7 @@
 #include "InGameSoundDirector.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
-const float MIN_BGM_VOL = 0.4f;		//BGM音量の下限値
+const float MIN_BGM_VOL = 0.3f;		//BGM音量の下限値
 const float MAGNIFICATION = 0.1f;	//倍率。この数値を調整すると効果音が鳴る時にどれだけBGMの音量が小さくなるかが変わる
 const float RIGGZERO = 0;			//効果音のなっている数がゼロなら
 InGameSoundDirector::InGameSoundDirector()

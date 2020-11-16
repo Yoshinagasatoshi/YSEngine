@@ -237,6 +237,8 @@
     </ClCompile>
     <ClCompile Include="InGameSoundDirector.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Onigiri.cpp" />
+    <ClCompile Include="Komedawara.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -427,6 +429,8 @@
     </ClInclude>
     <ClInclude Include="InGameSoundDirector.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="Onigiri.h" />
+    <ClInclude Include="Komedawara.h" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\fade.png" />
@@ -434,6 +438,7 @@
     <ImageContentTask Include="Assets\sprite\minimap.png" />
     <ImageContentTask Include="Assets\sprite\PlayerPointer.png" />
     <ImageContentTask Include="Assets\sprite\PlayerPointer_yazirusi.png" />
+    <ImageContentTask Include="Assets\sprite\musougauge.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\sprite\Win2.png">
@@ -481,8 +486,7 @@
     <MeshContentTask Include="Assets\modelData\sotowakutukiStage.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\musougauge.png" />
+    <MeshContentTask Include="Assets\modelData\komedawara.fbx" />
+    <MeshContentTask Include="Assets\modelData\onigiri.fbx" />
   </ItemGroup>
 </Project>

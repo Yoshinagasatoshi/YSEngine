@@ -73,7 +73,7 @@ private:
 	int m_oldPlayerHP;
 	//プレイヤー情報が入っているか？
 	bool m_isPLInfo = false;	
-	float timer = 0.0f;			//どれだけ制限時間がたったかを記録する
+	int timer = 0;			//どれだけ制限時間がたったかを記録する
 
 	float hyouzi = 0.0f;		//無双ゲージをどれだけ表示するか
 

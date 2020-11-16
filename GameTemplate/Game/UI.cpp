@@ -16,16 +16,16 @@ const float MINIMAP_WEIGHT = 160.0f;	//ミニマップの横幅
 const float MINIMAP_HEIGHT = 160.0f;	//ミニマップの立幅
 const float MINI_PL_AICON_WEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
 const float MINI_PL_AICON_HEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
-const float TIMELIMIT = 6000.0f;		//制限時間の設定
+const int	 TIMELIMIT = 6000.0f;		//制限時間の設定
 
 const int TEXT_MAX = 255;				//テキスト文字上限値
 
 const float MINIMAP_TEKIOU = 62.0f;		//ミニマップに適応するための数値
 const float RESET = 0.0f;				//0にしたいときに使う
 const float MAINASU_VECTOR = -1.0f;		//ベクトルを逆方向にしたいときに使う
-const CVector4 COLOR = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。これは赤
+const CVector4 RED = CVector4{ 1.0f,0.0f,0.0f,1.0f };//フォントの色を変える。R,G,B,Aの順番に並んでます。これは赤
 const CVector4 GORLD = CVector4{ 0.85f,0.70f,0.0f,1.0f };//金色フォント
-const int COLORCHANGE_NUM = 10;			//色替えするために必要な数
+const int COLORCHANGE_NUM = 100;		//色替えするために必要な数
 
 const CVector2 TOUBATU_SU_FONTPOS = { 0.0f,650.0f }; //討伐数のフォントの位置
 const CVector2 TIMER_FONT_POS = { 0.0f,0.0f };		 //制限時間のフォントの位置
@@ -83,10 +83,11 @@ void UI::Update()
 	}
 	m_oldPlayerHP = m_playerHP;
 
-	if (g_goMgr.GetCount() > COLORCHANGE_NUM)
+	//一定数敵を倒すとフォントが金っぽい色になります
+	if (g_goMgr.GetCount() >= COLORCHANGE_NUM)
 	{
 		m_defeatColor = GORLD;
-	}
+	};
 
 	//無双ゲージ　草案
 	//ゲージがMAXではない時 => 時間経過、敵を斬ることでゲージがたまる。
@@ -146,9 +147,9 @@ void UI::PostDraw()
 
 
 	wchar_t teext[TEXT_MAX];
-	float RemainingTime = TIMELIMIT - timer;
-	swprintf_s(teext, L"制限時間 : %03f",  RemainingTime);
-	m_timeFont.DrawScreenPos(teext,TIMER_FONT_POS,COLOR);
+	int RemainingTime = TIMELIMIT - timer;
+	swprintf_s(teext, L"TimeLimit : %04d",  RemainingTime);
+	m_timeFont.DrawScreenPos(teext,TIMER_FONT_POS,RED);
 	
 	//m_playerPointer_yazirushi.Draw();
 }

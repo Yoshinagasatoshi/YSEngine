@@ -34,6 +34,9 @@ const float MUSOU_SYOUHI = 450.0f;				//無双奥義を打つ時に消費する数値
 const float ANIMFOOT_BAIRITU = 32.0f;			//アニメのフットステップに書ける倍率
 const float BIAS = -0.5f;						//アニメーションの移動量を調整するバイアス
 const float PLAYER_TIMER_RIMIT = 0.5f;			//アニメーションの限界
+const float MUSOU_GAUGE_ADD = 50.0f;			//攻撃を受けたときに加算されるゲージ量
+const float PLAYER_TIMER = 0.1f;				//プレイヤータイマーの条件式に使う
+const float EFFECT_POSITION = 100.0f;			//エフェクトの位置を少し高くするための数値
 
 const float X_ZERO = 0.0f;						//Xの数値を0にする
 const float Y_ZERO = 0.0f;						//Yの数値を0にする
@@ -48,6 +51,8 @@ const int	ANIMEVENTBORN = 20;					//アニメーションイベント情報が組み込まれている
 const float RELEASE_TIME = 0.4f;				//戦闘中のアニメーションイベントの解放条件。この数値より上なら開放
 
 const float SE_RUN_SPEED = 300.0f;				//移動速度がこの数値以上なら走る音を鳴らす
+
+const float CONSTANT_SPEED = 1.0f;				//一定のスピード。走るアニメーションの条件分岐に使用
 
 const int	PLAYER_BORN_NUM = 30;				//プレイヤーのボーンの数
 //アニメーションの補間時間・小
@@ -250,7 +255,7 @@ void Player::Update()
 				m_damagefrag = false;
 				if (m_PL_HP != ONEBROCK) {
 					m_PL_HP -= ONEBROCK;
-					g_goMgr.AddMusouGauge(50.0f);
+					g_goMgr.AddMusouGauge(MUSOU_GAUGE_ADD);//引数は足される無双奥義のゲージ量
 					//g_goMgr.HitStopOn();
 				}
 				else {
@@ -322,7 +327,7 @@ void Player::Move()
 		}
 	}
 	//一定の速さで進んでいるなら走るSEを追加
-	if (m_moveSpeed.Length() > 1.0f
+	if (m_moveSpeed.Length() > CONSTANT_SPEED
 		&&!m_Jumpfrag) {
 		InGameSoundDirector::GetInstans().RingSE_Run();
 	}
@@ -363,7 +368,7 @@ void Player::Turn()
 
 void Player::AttackMove()
 {
-	if (g_pad->IsTrigger(enButtonX)&&m_playTimer>0.1f) {
+	if (g_pad->IsTrigger(enButtonX)&&m_playTimer> PLAYER_TIMER) {
 		
 	//m_busyoState = BusyoAttack;
 		if (!m_underAttack)
@@ -554,7 +559,7 @@ void Player::ThisDamage()
 				PlayerDamage();
 
 				
-				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + 100.0f, m_position.z);
+				g_Effect.m_playEffectHandle = g_Effect.m_effekseerManager->Play(g_Effect.m_sampleEffect, m_position.x, m_position.y + EFFECT_POSITION, m_position.z);
 			}
 			});
 		return true;

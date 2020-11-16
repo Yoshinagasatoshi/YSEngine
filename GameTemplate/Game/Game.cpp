@@ -6,6 +6,7 @@
 #include "Enemy_Busyo.h"
 #include "Enemy_Bomber.h"
 #include "BackGround.h"
+#include "Komedawara.h"
 #include "GameCamera.h"
 #include "GameData.h"
 #include "UI.h"
@@ -75,6 +76,13 @@ Game::Game()
 					m_enemy->SetPos(objdata.position);
 					m_enemy->SetPlayerInfo(m_player);
 					m_enemy->SetGameinfo(this);
+					return true;
+				}
+				//俵を設置
+				if (wcscmp(objdata.name, L"komedawara") == STRING_MATCH) {
+					//インスタンスの作成
+					m_komedawara = g_goMgr.NewGameObject<Komedawara>("Komedawara");
+					m_enemy->SetPos(objdata.position);
 					return true;
 				}
 			return true;

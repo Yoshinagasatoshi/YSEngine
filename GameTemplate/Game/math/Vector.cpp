@@ -6,9 +6,6 @@
 #include "Vector.h"
 #include "Matrix.h"
 
-
-
-
 /*!
 *@brief	行列からクォータニオンを作成。
 */

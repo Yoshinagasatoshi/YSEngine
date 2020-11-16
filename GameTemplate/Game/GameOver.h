@@ -5,6 +5,10 @@
 #include "graphics/animation/AnimationClip.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+/// <summary>
+/// ゲームオーバーになった時に呼ばれるクラス
+/// プレイヤーが死ぬかタイムオーバーになった時によばれっる
+/// </summary>
 class GameOver : public IGameObject
 {
 public:

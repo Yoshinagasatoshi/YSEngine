@@ -138,6 +138,7 @@
     <ClCompile Include="graphics\Sprite.cpp" />
     <ClCompile Include="graphics\Sprite_Reserve.cpp" />
     <ClCompile Include="HID\Pad.cpp" />
+    <ClCompile Include="Komedawara.cpp" />
     <ClCompile Include="kunai.cpp" />
     <ClCompile Include="level\Level.cpp" />
     <ClCompile Include="level\MapChip.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="math\kMath.cpp" />
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
+    <ClCompile Include="Onigiri.cpp" />
     <ClCompile Include="physics\BoxCollider.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
@@ -212,12 +214,14 @@
     <ClInclude Include="graphics\Sprite.h" />
     <ClInclude Include="graphics\Sprite_Reserve.h" />
     <ClInclude Include="HID\Pad.h" />
+    <ClInclude Include="Komedawara.h" />
     <ClInclude Include="kunai.h" />
     <ClInclude Include="level\Level.h" />
     <ClInclude Include="level\MapChip.h" />
     <ClInclude Include="math\kMath.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
+    <ClInclude Include="Onigiri.h" />
     <ClInclude Include="physics\BoxCollider.h" />
     <ClInclude Include="physics\ICollider.h" />
     <ClInclude Include="physics\MeshCollider.h" />
@@ -266,6 +270,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\komedawara.fbx" />
     <MeshContentTask Include="Assets\modelData\kunai.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -276,6 +281,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\onigiri.fbx" />
     <MeshContentTask Include="Assets\modelData\protoenemy_busyo.fbx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

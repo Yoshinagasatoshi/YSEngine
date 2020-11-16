@@ -6,6 +6,9 @@
 #include "level/Level.h"
 #include "sound/SoundEngine.h"
 #include "sound/SoundSource.h"
+/// <summary>
+/// ゲームクラス。ゲーム中様々なクラスを管理するクラス
+/// </summary>
 class Fade;
 class UI;
 class Player;
@@ -13,6 +16,7 @@ class Enemy;
 class BackGround;
 class GameCamera;
 class InGameSoundDirector;
+class Komedawara;
 class Game : public IGameObject
 {
 public:
@@ -38,21 +42,23 @@ public:
 	//void InitCamera();
 
 private:
-	//プレイヤー
+	//プレイヤー、エネミー、背景、カメラなどのポインタ群をまとめる
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	BackGround* m_backGround = nullptr;
 	GameCamera* m_gameCamera = nullptr;
 	GameData* m_gamedata = nullptr;
 	UI* m_ui;
+	Komedawara* m_komedawara = nullptr;
+
 	//RenderTarget m_renderTarget;				//メインレンダリングターゲット
-	//Sprite m_copyMainRtToFrameBufferSprite;		//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
-	//D3D11_VIEWPORT m_frameBufferViewports;		//フレームバッファのビューポート
+	//Sprite m_copyMainRtToFrameBufferSprite;	//メインレンダリングに描かれた絵をフレームバッファにコピーするためのスプライト
+	//D3D11_VIEWPORT m_frameBufferViewports;	//フレームバッファのビューポート
 	//ID3D11RenderTargetView* m_frameBufferRenderTargetView = nullptr;	//フレームバッファのレンダリングターゲットビュー
 	//ID3D11DepthStencilView* m_frameBufferDepthStencilView = nullptr;	//フレームバッファのデプスステンシルビュー
 	Level m_level;								//レベルの配置
 	Level m_level_EnemyBusyo;					//レベルその２．敵武将の配置
-	//bool m_attack = false;						//アタック中？
+	//bool m_attack = false;					//アタック中？
 	bool m_isWireDraw = false;					//ワイヤーフレームを表示するかどうか。trueでついている
 	bool m_gameDelete = false;					//ゲームから出る時にtrueになるようにする
 	Fade* m_fade;								//フェードのポインタ
