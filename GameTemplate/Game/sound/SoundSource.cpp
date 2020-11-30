@@ -15,7 +15,10 @@ CSoundSource::CSoundSource()
 }
 CSoundSource::~CSoundSource()
 {
-	Release();
+	if (!g_soundEngine)
+	{
+		Release();
+	}
 }
 void CSoundSource::InitCommon()
 {

@@ -573,14 +573,17 @@ void Player::DeadPlayer()
 	//ƒvƒŒƒCƒ„[‚ª€‚ñ‚Å‚¢‚é‚Ìˆ—
 	m_moveSpeed = CVector3::Zero();
 	m_busyoAnime.Play(animClip_busyo_dead);
-	if (!m_busyoAnime.IsPlaying()
-		&& !m_isDestroyed) {
-		Fade::Getinstance().StartFadeIn();
-	}
-	if (!Fade::Getinstance().IsFade()) {
+	if (!m_busyoAnime.IsPlaying()) {
+		if (m_isDestroyed) {
+			Fade::Getinstance().StartFadeIn();
+		}
 		m_isDestroyed = true;
-		//InGameSoundDirector::GetInstans().UpdateOff();
-		g_goMgr.NewGameObject<GameOver>("GameOver");
-		m_game->GameDelete();
+		if (!Fade::Getinstance().IsFade()) {
+			//InGameSoundDirector::GetInstans().UpdateOff();
+			g_goMgr.NewGameObject<GameOver>("GameOver");
+			InGameSoundDirector::GetInstans().UpdateOff();
+			InGameSoundDirector::GetInstans().SoundRelease();
+			m_game->GameDelete();
+		}
 	}
 }

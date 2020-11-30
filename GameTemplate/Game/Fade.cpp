@@ -30,12 +30,13 @@ void Fade::Update()
 		else {
 			m_currentAlpha = FEEDIN_VALUE;
 			m_isFade = false;
+			m_isEnd = true;
 			m_state = enState_Idle;
 		}
 		break;
 	case enState_FadeOut:
 		//a’l‚ª0ˆÈã‚È‚ç”–‚­‚µ‚Ä‚¢‚­
-		if (m_currentAlpha >= FEEDAUTO_VALUE) {
+		if (m_currentAlpha > FEEDAUTO_VALUE) {
 			m_currentAlpha -= ADD_VAL;
 			m_isFade = true;
 			m_isEnd = false;

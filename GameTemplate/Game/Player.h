@@ -159,6 +159,11 @@ public:
 	{
 		return m_XTrigger;
 	}
+	//攻撃したかどうかのフラグ
+	const bool IsAttack()const
+	{
+		return m_underAttack;
+	}
 private:
 	//囲いの数
 	static const int DestinationNum = 5;
@@ -204,7 +209,6 @@ private:
 	//CSoundSource m_bgm;									//ＢＧＭ
 	//CSoundSource m_se;									//効果音
 	//CSoundSource m_se2;									//効果音
-
 
 	PhysicsGhostObject m_ghostObject;					//プレイヤー本体のゴースト
 	Wepon_ghost* m_pl_Wepon = nullptr;					//武器のゴーストを出す。plはプレイヤーが出すゴースト

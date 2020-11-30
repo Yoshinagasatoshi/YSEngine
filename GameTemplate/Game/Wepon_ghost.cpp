@@ -37,8 +37,8 @@ void Wepon_ghost::Update()
 
 void Wepon_ghost::GhostInit()
 {
-	//nullptrなら
-	//if (m_player != nullptr) {
+	//当たり判定を作る
+	//プレイヤーから呼ばれたらプレイヤーの位置に判定を設置
 	if(m_playerCall){
 		if (!m_hanteifin) {
 			m_ghostObject.CreateBox(
@@ -49,6 +49,7 @@ void Wepon_ghost::GhostInit()
 		}
 		m_hanteifin = true;
 	}
+	//それ以外は自分のポジションをセッティングする
 	else {
 		if (!m_hanteifin) {
 			m_ghostObject.CreateBox(

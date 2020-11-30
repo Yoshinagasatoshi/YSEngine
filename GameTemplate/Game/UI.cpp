@@ -16,7 +16,7 @@ const float MINIMAP_WEIGHT = 160.0f;	//ミニマップの横幅
 const float MINIMAP_HEIGHT = 160.0f;	//ミニマップの立幅
 const float MINI_PL_AICON_WEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
 const float MINI_PL_AICON_HEIGHT = 8.0f;//ミニマップ状のプレイヤーアイコンの横幅
-const int	 TIMELIMIT = 6000.0f;		//制限時間の設定
+const int	TIMELIMIT = 6000.0f;		//制限時間の設定
 
 const int TEXT_MAX = 255;				//テキスト文字上限値
 
@@ -31,6 +31,7 @@ const CVector2 TOUBATU_SU_FONTPOS = { 0.0f,650.0f }; //討伐数のフォントの位置
 const CVector2 TIMER_FONT_POS = { 0.0f,0.0f };		 //制限時間のフォントの位置
 UI::UI()
 {
+	//画像のロード
 	isTimeOver = false;
 	m_lifeGauge.Init(L"Assets/sprite/Green.dds", GAUGE_WEIGHT, GAUGE_HEIGHT);
 	m_lifeGaugeura.Init(L"Assets/sprite/Green_ura.dds", GAUGEURA_WEIGHT, GAUGEURA_HEIGHT);
@@ -38,10 +39,6 @@ UI::UI()
 	m_musouGauge.Init(L"Assets/sprite/musougauge.dds", MUSOU_GAUGEMAX, GAUGE_HEIGHT);
 	m_musouGaugeura.Init(L"Assets/sprite/Green_ura.dds", MUSOUGAUGE_HEIGHT, GAUGEURA_HEIGHT);
 	
-
-	//m_sprite.SetPosition(m_position);
-	//m_sprite.SetRotation(m_rotation);
-	//m_sprite.SetScale(m_scale);
 	m_face.Init(L"Assets/sprite/new_Busyo_icon.dds", FACEAICON_WEIGHT, FACEAICON_HEIGHT);
 	m_mapSprite.Init(L"Assets/sprite/minimap.dds", MINIMAP_WEIGHT, MINIMAP_HEIGHT);
 	m_playerPointer.Init(L"Assets/sprite/PlayerPointer.dds", MINI_PL_AICON_WEIGHT, MINI_PL_AICON_HEIGHT);
@@ -56,12 +53,15 @@ UI::~UI()
 
 void UI::Update()
 {
+	//タイムオーバーフラグが立ってない
 	if (!isTimeOver) {
+		//タイムリミットを超えたら死ぬ
 		if (timer >= TIMELIMIT) {
 			m_player->ConpulsionDead();
 			isTimeOver = true;
 		}
 	}
+	//プレイヤーの情報を元にゲージ設定
 	const CVector3& lifeVarPos = CVector3::Zero();
 	if (m_isPLInfo) {
 		m_playerHP = m_player->GetPlayerHP();
@@ -128,6 +128,7 @@ void UI::Update()
 
 void UI::PostDraw()
 {
+	//画像群の描画
 	m_lifeGaugeura.Draw();
 	m_lifeGauge.Draw();
 
@@ -137,6 +138,8 @@ void UI::PostDraw()
 	m_face.Draw();
 	m_mapSprite.Draw();
 	m_playerPointer.Draw();
+
+	//撃破数やタイマーの表示
 	wchar_t text[TEXT_MAX];
 	int defeadNum = g_goMgr.GetCount();
 

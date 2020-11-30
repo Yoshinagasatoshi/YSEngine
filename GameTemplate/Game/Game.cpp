@@ -44,7 +44,7 @@ Game::Game()
 	//敵の総数は何体？数えます。
 	g_goMgr.EnemyNumResetCount();
 	//レベルでモデルを出す。
-	m_level.Init(L"Assets/level/musou_honkakustage.tkl",
+	m_level.Init(L"Assets/level/kometukistage.tkl",
 		[&](const LevelObjectData& objdata) {
 			//足軽
 				if (wcscmp(objdata.name, L"asigaru") == STRING_MATCH) {
@@ -82,7 +82,8 @@ Game::Game()
 				if (wcscmp(objdata.name, L"komedawara") == STRING_MATCH) {
 					//インスタンスの作成
 					m_komedawara = g_goMgr.NewGameObject<Komedawara>("Komedawara");
-					m_enemy->SetPos(objdata.position);
+					m_komedawara->SetPos(objdata.position);
+					m_komedawara->SetPlayerInfo(m_player);
 					return true;
 				}
 			return true;
