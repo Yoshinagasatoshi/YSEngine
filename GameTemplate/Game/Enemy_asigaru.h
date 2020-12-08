@@ -149,5 +149,6 @@ private:
 	float m_timer = 10.0f;				//時間を図る。
 	bool m_isFirstUpdate = true;		//最初にUpdateをするかどうかを判断する
 	bool m_CCount = false;				//CharaCountの略。カウントさせるかどうかのフラグ
+
 }; 
 

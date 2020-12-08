@@ -2,9 +2,10 @@
 #include "Onigiri.h"
 #include "gameObject/ysGameObjectManager.h"
 #include "Player.h"
+#include "InGameSoundDirector.h"
 const CVector3 AXIS_Y = { 0.0f,1.0f,0.0f };	//Y軸
 const float ADD_ROT = 5.0f;					//毎フレームどれだけ回転させるか
-const float GET_ITEM_RANGE = 50.0f;			//アイテムをゲットしたといえる範囲
+const float GET_ITEM_RANGE = 100.0f;			//アイテムをゲットしたといえる範囲
 Onigiri::Onigiri()
 {
 	m_onigiriModel.Init(L"Assets/modelData/onigiri.cmo");
@@ -29,6 +30,8 @@ void Onigiri::Update()
 	//プレイヤーと近ければ取得扱いになる
 	if (Distance.Length() < GET_ITEM_RANGE) {
 		GetAitem();
+		InGameSoundDirector::GetInstans().RingSE_HEAL();
+		m_player->PLAYER_HEAL();
 	}
 
 }

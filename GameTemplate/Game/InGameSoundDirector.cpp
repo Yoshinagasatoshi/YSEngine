@@ -20,6 +20,8 @@ InGameSoundDirector::~InGameSoundDirector()
 	m_Kick1.Release();
 	m_Kick2.Release();
 	m_zoriRun.Release();
+	m_onigiri.Release();
+	m_houkai.Release();
 }
 
 void InGameSoundDirector::Update()
@@ -55,6 +57,14 @@ void InGameSoundDirector::Update()
 				m_seRingCount--;
 			}
 			else if (!m_Destruct.IsPlaying()) {
+				//SEが再生し終えたのならカウントを減らす。
+				m_seRingCount--;
+			}
+			else if (!m_onigiri.IsPlaying()) {
+				//SEが再生し終えたのならカウントを減らす。
+				m_seRingCount--;
+			}
+			else if (!m_houkai.IsPlaying()) {
 				//SEが再生し終えたのならカウントを減らす。
 				m_seRingCount--;
 			}

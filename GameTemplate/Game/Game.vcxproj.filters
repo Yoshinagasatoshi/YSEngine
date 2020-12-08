@@ -239,6 +239,8 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Onigiri.cpp" />
     <ClCompile Include="Komedawara.cpp" />
+    <ClCompile Include="culling\ysObjectFrustumCulling.cpp" />
+    <ClCompile Include="culling\ysBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -431,6 +433,9 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="Onigiri.h" />
     <ClInclude Include="Komedawara.h" />
+    <ClInclude Include="culling\ysObjectFrustumCulling.h" />
+    <ClInclude Include="culling\ysBox.h" />
+    <ClInclude Include="culling\ysObjectCulling.h" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\fade.png" />

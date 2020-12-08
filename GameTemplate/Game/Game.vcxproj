@@ -102,6 +102,8 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="bom.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
+    <ClCompile Include="culling\ysBox.cpp" />
+    <ClCompile Include="culling\ysObjectFrustumCulling.cpp" />
     <ClCompile Include="DebugWireframe.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy_asigaru.cpp" />
@@ -177,6 +179,9 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="bom.h" />
     <ClInclude Include="character\CharacterController.h" />
+    <ClInclude Include="culling\ysBox.h" />
+    <ClInclude Include="culling\ysObjectCulling.h" />
+    <ClInclude Include="culling\ysObjectFrustumCulling.h" />
     <ClInclude Include="DebugWireframe.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy_asigaru.h" />

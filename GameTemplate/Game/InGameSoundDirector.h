@@ -184,6 +184,26 @@ public:
 			addringnum();
 		}
 	}
+	///SE_回復音
+	void RingSE_HEAL()
+	{
+		if (m_seRingCount < Max_RingNum) {
+			m_onigiri.Init(L"Assets/sound/magic-charge.wav");
+			m_onigiri.Play(false);
+			m_onigiri.SetVolume(2.5f);
+			addringnum();
+		}
+	}
+	///SE_崩壊音
+	void RingSE_COLLAPSED()
+	{
+		if (m_seRingCount < Max_RingNum) {
+			m_houkai.Init(L"Assets/sound/se_gareki.wav");
+			m_houkai.Play(false);
+			m_houkai.SetVolume(1.0f);
+			addringnum();
+		}
+	}
 	///Updateをオンにする
 	void UpdateOn()
 	{
@@ -221,7 +241,8 @@ private:
 	CSoundSource m_Kick1;//けり音1
 	CSoundSource m_Kick2;//けり音2 m_Swing2と同じ
 	CSoundSource m_zoriRun;//草履で走る音。プレイヤーだけ呼ぶ
-
+	CSoundSource m_onigiri;//回復音。おにぎりを取った音
+	CSoundSource m_houkai;//崩壊音。米俵を壊した
 
 	bool m_isUpdate = false;//アプデ関数呼ぶかどうか。
 };

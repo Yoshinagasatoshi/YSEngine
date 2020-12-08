@@ -3,7 +3,8 @@
 #include "SkinModelEffect.h"
 #include "Skeleton.h"
 #include "shadow\CascadeShadowMap.h"
-
+#include "../culling/ysObjectFrustumCulling.h"
+#include "../culling/ysBox.h"
 /*!
 *@brief	FBXの上方向。
 */
@@ -14,6 +15,8 @@ enum EnFbxUpAxis {
 /*!
 *@brief	スキンモデルクラス。
 */
+class CObjectFrustumCulling;
+class CBox;
 class SkinModel
 {
 public:
@@ -225,6 +228,9 @@ private:
 	ID3D11ShaderResourceView* m_albedoTextureSRV = nullptr;//!<アルベドテクスチャ。
 	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//法線マップのSRV
 	ID3D11ShaderResourceView* m_specularMapSRV = nullptr;		//スぺキュラマップのSRV
+
+	CObjectFrustumCulling m_culling;		//化リング
+	CBox m_box;							//化リングに必要なボックスデータ
 
 	const int Lightnumber = 4;
 	bool m_isShadowReciever = true;

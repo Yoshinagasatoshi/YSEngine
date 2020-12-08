@@ -117,6 +117,10 @@ Game::~Game()
 		g_goMgr.DeleteGOObject(enemy);
 		return true;
 		});
+	g_goMgr.FindGameObjects<Komedawara>("Komedawara", [&](Komedawara* kome) {
+		g_goMgr.DeleteGOObject(kome);
+		return true;
+		});
 	g_goMgr.ResetCount();
 }
 

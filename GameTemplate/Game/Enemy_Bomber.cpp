@@ -195,6 +195,7 @@ void Enemy_Bomber::DeathMove()
 	if (m_isDeadfrag) {
 		m_state = Asigaru_dead;
 		m_bomberAnime.Play(m_state, INTERPOLATION_TIME);
+		g_goMgr.EnemyNumSubtract();
 		if (!m_bomberAnime.IsPlaying()) {
 			DeleteGO(this);
 		}

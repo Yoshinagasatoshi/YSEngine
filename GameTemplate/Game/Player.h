@@ -100,7 +100,15 @@ public:
 		m_PL_HP = 0;
 		m_deadFrag = true;
 	}
-
+	//プレイヤーが回復する
+	void PLAYER_HEAL()
+	{
+		m_PL_HP += m_PL_HP_MAX / 4;//25%回復する
+		//体力最大値を超えそうなら、体力最大値のままに
+		if (m_PL_HP >= m_PL_HP_MAX) {
+			m_PL_HP = m_PL_HP_MAX;
+		}
+	}
 	//武将の状態を格納
 	enum busyoState {
 		BusyoNormal = 0,//通常の武将
@@ -175,7 +183,8 @@ private:
 	int m_oldAnimStep= 0;								//古いアニメーションステート
 	float m_playTimer = 0.0f;							//アニメが流されてどれくらい時間がたっているか。単位：秒。
 	int m_TimerRelease = 13;							//ステートが解放されるまでの猶予時間。20は単位
-	int m_PL_HP = 480;									//今の体力 24 デバック用の数字です
+	int m_PL_HP = 480;									//今の体力
+	int m_PL_HP_MAX = 480;								//体力の最大値
 	float m_gravity_keisuu = 0.1f;						//重力が強くかかるようになる係数。1.0fが上限
 	float m_blowOffPower;								//敵を吹き飛ばす威力
 	float WideMoveL;									//LスティックのX入力量を受け取る
@@ -202,8 +211,7 @@ private:
 	bool m_jumpAttackfrag = false;						//ジャンプアタック中？
 	bool m_gamefinal = false;							//ゲームが終わるフラグ
 	bool m_isDestroyed = false;							//1度のみゲームオーバーを呼ぶ
-	bool m_plWeponSwhich = true;
-	bool m_XTrigger = false;
+	bool m_XTrigger = false;							//必殺技対応のボタンが押されているかのフラグ
 	bool m_muteki = false;								//無敵スイッチ、ダメージを食らわなくなる。
 	//
 	//CSoundSource m_bgm;									//ＢＧＭ

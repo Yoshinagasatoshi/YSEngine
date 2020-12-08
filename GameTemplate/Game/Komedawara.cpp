@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Onigiri.h"
 #include "gameObject/ysGameObjectManager.h"
+#include "InGameSoundDirector.h"
 const float NEAR_IF = 100.0f*100.0f;	//プレイヤーと近いと言える範囲　累乗
 
 Komedawara::Komedawara()
@@ -22,6 +23,7 @@ void Komedawara::Update()
 
 	if (Distans.LengthSq() <= NEAR_IF
 		&&m_player->IsAttack()) {
+		InGameSoundDirector::GetInstans().RingSE_COLLAPSED();
 		m_onigiri = g_goMgr.NewGameObject<Onigiri>("Onigiri");
 		m_onigiri->SetPosition(m_position);		//自分の位置におにぎりを出す
 		m_onigiri->SetPlayer(m_player);			//プレイヤーの情報を受け渡す

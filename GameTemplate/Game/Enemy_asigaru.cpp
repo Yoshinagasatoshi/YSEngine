@@ -256,7 +256,7 @@ void Enemy_asigaru::Draw()
 		if (toCamera.LengthSq() > CULLING_AREA * CULLING_AREA) {
 			return;
 		}
-
+		//m_culling->Execute();
 		//CVector3 cameraPos = m_gameCamera->GetCameraPos();
 		//CVector3 Lenght = cameraPos - m_position;
 		//Lenght.y = 0.0f;	

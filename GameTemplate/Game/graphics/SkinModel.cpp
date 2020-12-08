@@ -47,6 +47,35 @@ void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 	//SkinModelDataManagerを使用してCMOファイルのロード。
 	m_modelDx = g_skinModelDataManager.Load(filePath, m_skeleton);
 
+	FindMesh([&](auto& mesh) {
+		auto vMax = CVector3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+		auto vMin = CVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+		auto deviceContext = g_graphicsEngine->GetD3DDeviceContext();
+		{
+			D3D11_MAPPED_SUBRESOURCE subresource;
+			auto hr = deviceContext->Map(mesh->vertexBuffer.Get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &subresource);
+			if (FAILED(hr)) {
+				return;
+			}
+			D3D11_BUFFER_DESC bufferDesc;
+			mesh->vertexBuffer->GetDesc(&bufferDesc);
+			auto vertexCount = (int)(bufferDesc.ByteWidth / mesh->vertexStride);
+			auto pData = reinterpret_cast<char*>(subresource.pData);
+			for (int i = 0; i < vertexCount; i++) {
+				auto pos = *reinterpret_cast<CVector3*>(pData);
+				vMax.Max(pos);
+				vMin.Min(pos);
+				//次の頂点へ。
+				pData += mesh->vertexStride;
+			}
+			//頂点バッファをアンロック
+			deviceContext->Unmap(mesh->vertexBuffer.Get(), 0);
+		}
+
+		auto halfSize = (vMax - vMin) * 0.5f;
+		m_box.Init(halfSize);
+		});
+
 	m_enFbxUpAxis = enFbxUpAxis;
 }
 void SkinModel::InitSkeleton(const wchar_t* filePath)
@@ -184,6 +213,13 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 }
 void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix, EnRenderMode enRenderMode)
 {
+	//ボックスのアップデート。引数にワールド行列を渡して更新
+	m_box.Update(m_worldMatrix);
+	m_culling.Execute(m_box);
+	if (m_culling.IsCulling()) {
+		return;
+	}
+
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
 
 	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
