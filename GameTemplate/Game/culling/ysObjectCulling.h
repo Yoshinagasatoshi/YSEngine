@@ -41,5 +41,5 @@
 			m_isCulling = flag;
 		}
 	private:
-		bool	m_isCulling = false;
+		bool	m_isCulling = false;	//カリングをしているのかどうかのフラグ
 	};

@@ -22,18 +22,10 @@
 		 *@brief	デストラクタ。
 		 */
 		~CObjectFrustumCulling();
-		/*!
-		 *@brief	初期化。
-		 */
-		//void Init(Camera& camera )
-		//{
-		//	m_camera = &camera;
-		//}
-		/*!
+		/*
 		 *@brief	カリングアルゴリズムの実行。
 		 *@param[in]	box	カリングを行いたいオブジェクトをバウンディングボックス。
 		 */
 		void Execute(const CBox& box) override;
 	private:
-		 //Camera*	m_camera = nullptr;
 	};

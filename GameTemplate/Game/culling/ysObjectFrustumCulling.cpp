@@ -17,7 +17,7 @@ CObjectFrustumCulling::~CObjectFrustumCulling()
 {
 }
 /*!
- *@brief	カリングアルゴリズムの実行。
+ *@brief	カリングの実行。
  */
 void CObjectFrustumCulling::Execute(const CBox& box)
 {
