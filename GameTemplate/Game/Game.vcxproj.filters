@@ -494,4 +494,7 @@
     <MeshContentTask Include="Assets\modelData\komedawara.fbx" />
     <MeshContentTask Include="Assets\modelData\onigiri.fbx" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\100_slashe.png" />
+  </ItemGroup>
 </Project>
